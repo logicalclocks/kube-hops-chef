@@ -1,0 +1,74 @@
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+# Directory and file locations.
+dir               = /srv/hops/certs-dir/kube
+certs             = $dir/certs
+crl_dir           = $dir/crl
+new_certs_dir     = $dir/newcerts
+database          = $dir/index.txt
+serial            = $dir/serial
+RANDFILE          = $dir/private/.rand
+
+# The root key and root certificate.
+private_key       = $dir/private/kube-ca.key.pem
+certificate       = $dir/certs/kube-ca.cert.pem
+
+# For certificate revocation lists.
+crlnumber         = $dir/crlnumber
+crl               = $dir/crl/kube-ca.crl.pem
+crl_extensions    = crl_ext
+default_crl_days  = 30
+
+# SHA-1 is deprecated, so use SHA-2 instead.
+default_md        = sha256
+
+name_opt          = ca_default
+cert_opt          = ca_default
+default_days      = 375
+preserve          = no
+policy            = policy_loose
+
+[ req ]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+
+[ policy_loose ]
+# Allow the intermediate CA to sign a more diverse range of certificates.
+# See the POLICY FORMAT section of the `ca` man page.
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+[ dn ]
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = <%= @master_hostname %>
+DNS.2 = <%= node['kube-hops']['cluster_name'] %>
+DNS.3 = <%= node['kube-hops']['cluster_name'] %>.default
+DNS.4 = <%= node['kube-hops']['cluster_name'] %>.default.svc
+DNS.5 = <%= node['kube-hops']['cluster_name'] %>.default.svc.cluster
+DNS.6 = <%= node['kube-hops']['cluster_name'] %>.default.svc.cluster.local
+DNS.7 = registry.docker-registry.svc.cluster.local
+IP.1 = <%= node['kube-hops']['cidr'].split('/')[0] %>
+IP.2 = <%= @master_cluster_ip %>
+IP.3 = 127.0.0.1
+IP.4 = <%= node['kube-hops']['dns_ip'] %>
+
+[ v3_ext ]
+authorityKeyIdentifier=keyid,issuer:always
+basicConstraints=CA:FALSE
+keyUsage=keyEncipherment,dataEncipherment,digitalSignature
+extendedKeyUsage=serverAuth,clientAuth
+subjectAltName=@alt_names

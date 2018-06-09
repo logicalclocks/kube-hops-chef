@@ -1,0 +1,19 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: <%= @ca_cert_data %>
+    server: https://<%= @master_ip %>:6443
+  name: <%= node['kube-hops']['cluster_name'] %>
+contexts:
+- context:
+    cluster: <%= node['kube-hops']['cluster_name'] %>
+    user: system:<%= @component %>
+  name: system:<%= @component %>@<%= node['kube-hops']['cluster_name'] %>
+current-context: system:<%= @component %>@<%= node['kube-hops']['cluster_name'] %>
+kind: Config
+preferences: {}
+users:
+- name: system:<%= @component %>
+  user:
+    client-certificate-data: <%= @client_cert_data %>
+    client-key-data: <%= @client_key_data %>
