@@ -57,7 +57,6 @@ template "#{kube_intermediate_ca_dir}/kube-ca.cnf" do
   owner node['kube-hops']['pki']['ca_api_user']
   group node['kube-hops']['pki']['ca_api_group']
   variables ({
-    'master_ip': '10.244.0.1', #TODO(Fabio) fix this hardcoded parameter
     'master_cluster_ip': master_cluster_ip,
     'master_hostname': master_hostname
   })
