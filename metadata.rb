@@ -6,6 +6,7 @@ description             'Installs/Configures kube-hops-chef'
 version                 '0.1.0'
 
 depends 'kagent'
+depends 'ndb'
 depends 'sysctl'
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'

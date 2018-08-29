@@ -1,3 +1,5 @@
+include_attribute "ndb"
+
 default['kube-hops']['user']                              = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 default['kube-hops']['group']                             = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 
