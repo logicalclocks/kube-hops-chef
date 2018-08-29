@@ -27,11 +27,10 @@ end
 master_cluster_ip = private_recipe_ip('kube-hops', 'master')
 
 template "#{theDomain}/flyway/sql/R__kube-settings.sql" do
-    source "sql/dml/#{version}.sql.erb"
+    source "settings.sql.erb"
     owner glassfish_user
     mode 0750
     variables({
       'master_ip': master_cluster_ip
     })
 end
-
