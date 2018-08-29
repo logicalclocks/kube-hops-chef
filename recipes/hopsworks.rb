@@ -4,15 +4,13 @@
 domains_dir = "/srv/hops/domains"
 domain_name = "domain1"
 
-domains_dir = node['hopsworks']['domains_dir']
-
 if node.attribute?('hopsworks')
   if node['hopsworks'].attribute?('domain_name')
-    domain_name= node['hopsworks']['domain_name']
+    domain_name = node['hopsworks']['domain_name']
   end
 
   if node['hopsworks'].attribute?('domains_dir')
-    domain_name= node['hopsworks']['domains_dir']
+    domains_dir = node['hopsworks']['domains_dir']
   end
 end
 theDomain="#{domains_dir}/#{domain_name}"

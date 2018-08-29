@@ -182,7 +182,7 @@ if node['kube-hops']['master']['untaint'].eql?("true")
   bash 'untaint_master' do
     user node['kube-hops']['user']
     group node['kube-hops']['group']
-    code<<-EOH
+    code <<-EOH
       kubectl taint nodes --all node-role.kubernetes.io/master-
     EOH
   end
