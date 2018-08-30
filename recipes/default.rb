@@ -1,4 +1,16 @@
 # For Flannel (overlay network) to work we need to pass bridged IPv4 traffic to iptables’ chains
+
+if node['platform'].eql?('centos')
+  # For centos, at least on a VM we need to load some kernel modules
+  kernel_module 'bridge' do
+    action :install
+  end
+
+  kernel_module 'br_netfilter' do
+    action :install
+  end
+end
+
 sysctl_param 'net.bridge.bridge-nf-call-iptables' do
   value 1
 end
@@ -9,7 +21,12 @@ service 'docker' do
 end
 
 # Install g++ to be able to install http-cookie gem
-package 'g++'
+case node['platform']
+when 'centos'
+  package 'gcc-c++'
+when 'ubuntu'
+  package 'g++'
+end
 
 # Install gem as helper to send Hopsworks requrests to sign certificates
 chef_gem 'http-cookie'

@@ -124,7 +124,7 @@ spec:
         args:
         - --ip-masq
         - --kube-subnet-mgr
-        - --iface= <%= node['kagent']['network']['interface'] %>
+        - --iface=<%= node['kagent']['network']['interface'] %>
         resources:
           requests:
             cpu: "100m"

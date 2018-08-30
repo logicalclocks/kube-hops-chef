@@ -9,6 +9,7 @@ depends 'kagent'
 depends 'ndb'
 depends 'sysctl'
 depends 'resolver'
+depends 'kernel_module'
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
 recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
