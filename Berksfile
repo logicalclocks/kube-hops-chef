@@ -7,4 +7,4 @@ cookbook 'kagent', github: "logicalclocks/kagent-chef", branch: "master"
 cookbook 'ndb', github: "logicalclocks/ndb-chef", branch: "master"
 
 cookbook 'sysctl', '~> 1.0.3'
-cookbook 'resolvconf', '= 0.2.8'
+cookbook 'resolver', '~> 2.1.0'

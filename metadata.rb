@@ -8,6 +8,7 @@ version                 '0.1.0'
 depends 'kagent'
 depends 'ndb'
 depends 'sysctl'
+depends 'resolver'
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
 recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
