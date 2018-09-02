@@ -3,7 +3,7 @@ include_attribute "ndb"
 default['kube-hops']['user']                              = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 default['kube-hops']['group']                             = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 
-default['kube-hops']['cgroup-driver']                     = "cgroupfs"
+default['kube-hops']['cgroup-driver']                     = node['platform'].eql?("ubuntu") ? "cgroupfs" : "systemd"
 
 # General cluster configuration
 default['kube-hops']['kubernetes_version']                = "v1.11.0"

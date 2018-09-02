@@ -18,7 +18,6 @@ end
 
 
 # On all the nodes Kubernetes run, swap needs to be disabled.
-# This code does not edit the /etc/fstab.
 # In the setup-chef cookbook we should check that on the nodes dedicated to Kubernetes,
 # not swap is enabled.
 
@@ -27,6 +26,9 @@ bash 'disable-swap' do
   group 'root'
   code <<-EOH
       swapoff -a
+      # Edit /etc/fstab to comment out all the swap entries
+      # A backup of the old fstab file will be available at /etc/fstab.bck
+      sed -i.bak -r 's/(.+ swap .+)/#\1/' /etc/fstab
     EOH
 end
 
@@ -63,6 +65,7 @@ when 'centos'
     group 'root'
     code <<-EOH
       setenforce 0
+      sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
     EOH
   end
 
