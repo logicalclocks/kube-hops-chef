@@ -12,7 +12,7 @@ default['kube-hops']['image_repo']                        = "k8s.gcr.io"
 
 # Network configuration
 default['kube-hops']['cidr']                              = "10.244.0.0/16"
-default['kube-hops']['dns_ip']                            = "10.96.0.1"
+default['kube-hops']['dns_ip']                            = "10.96.0.10"
 
 # Apiserver
 default['kube-hops']['apiserver']['port']                 = "6443"

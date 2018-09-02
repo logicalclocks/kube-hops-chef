@@ -89,13 +89,14 @@ remote_file "/home/#{node['kube-hops']['user']}/docker-images.tgz" do
 end
 
 directory "/home/#{node['kube-hops']['user']}/docker-images" do
+  recursive true
   action :delete
   only_if  { ::File.directory?("/home/#{node['kube-hops']['user']}/docker-images") }
 end
 
 bash "extract" do
   user node['kube-hops']['user']
-  cwd "/home/"
+  cwd "/home/#{node['kube-hops']['user']}"
   code <<-EOH
     tar xf docker-images.tgz
   EOH
@@ -107,8 +108,8 @@ bash "build_and_push" do
   code <<-EOH
     for image in */ ; do
       cd "$image"
-      docker build . -t registry.docker-registry.svc.cluster.local/$image
-      docker push registry.docker-registry.svc.cluster.local/$image
+      docker build . -t registry.docker-registry.svc.cluster.local/${image%/}
+      docker push registry.docker-registry.svc.cluster.local/${image%/}
     done
   EOH
 end
