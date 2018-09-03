@@ -1,7 +1,7 @@
 # Change machine DNS to use the Kubernetes internal one
 # It will fall back to something if you look for logicalclocks.com
 # Not sure how to configure the fallback yethk
-node.override['resolver']['nameservers'] = node['kube-hops']['dns_ip']
+node.override['resolver']['nameservers'] = ["#{node['kube-hops']['dns_ip']}"]
 include_recipe "resolver::default"
 
 # Add ca.crt to /etc/docker/cert.d/docker-regstry for docker
