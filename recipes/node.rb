@@ -40,11 +40,19 @@ end
 
 # As we are not using kubeadm to join the node we need to template an env file for the
 # kubelet unit
+centos_conf = ""
+if node['platform'].eql?("centos")
+  centos_conf = "--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice"
+end
+
 template "#{node['kube-hops']['kubelet_dir']}/kubeadm-flags.env" do
   source "kubeadm-flags.erb"
   owner "root"
   group "root"
   mode "644"
+  variables ({
+    'centos_conf': centos_conf
+  })
 end
 
 # Join node using the token
