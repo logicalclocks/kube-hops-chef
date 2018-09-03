@@ -68,7 +68,7 @@ kubeletConfiguration:
       webhook:
         cacheAuthorizedTTL: 5m0s
         cacheUnauthorizedTTL: 30s
-    cgroupDriver: cgroupfs
+    cgroupDriver: <%= node['kube-hops']['cgroup-driver'] %>
     cgroupsPerQOS: true
     clusterDNS:
       - <%= node['kube-hops']['dns_ip'] %>
