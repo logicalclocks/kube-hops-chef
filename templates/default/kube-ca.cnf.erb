@@ -65,6 +65,7 @@ IP.1 = <%= node['kube-hops']['cidr'].split('/')[0].reverse.sub('0', '1').reverse
 IP.2 = <%= @master_cluster_ip %>
 IP.3 = 127.0.0.1
 IP.4 = <%= node['kube-hops']['dns_ip'] %>
+IP.5 = 10.96.0.1
 
 [ v3_ext ]
 authorityKeyIdentifier=keyid,issuer:always
