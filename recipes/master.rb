@@ -187,5 +187,3 @@ if node['kube-hops']['master']['untaint'].eql?("true")
     EOH
   end
 end
-
-include_recipe "kube-hops::default_post"

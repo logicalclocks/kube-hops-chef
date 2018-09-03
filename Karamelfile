@@ -1,7 +1,9 @@
 dependencies:
+
   - recipe: kube-hops::ca
     global:
       - hopsworks::default
+
   - recipe: kube-hops::master
     global:
       - kube-hops::ca
@@ -11,9 +13,14 @@ dependencies:
   - recipe: kube-hops::node
     global:
       - kube-hops::master
-  - recipe: kube-hops::addons
+
+  - recipe: kube-hops::post_conf
     global:
       - kube-hops::node
+
+  - recipe: kube-hops::addons
+    global:
+      - kube-hops::post_conf
 
 # Wait to run the hopsworks recipe after install
   - recipe: kube-hops::hopsworks

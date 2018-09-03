@@ -54,5 +54,3 @@ end
 service 'kubelet' do
   action :start
 end
-
-include_recipe "kube-hops::default_post"
