@@ -1,6 +1,6 @@
 REPLACE INTO `variables` VALUES ('kube_master_url', 'https://<%= @master_ip %>:<%= node["kube-hops"]["apiserver"]["port"] %>');
 REPLACE INTO `variables` VALUES ('kube_user', 'hopsworks');
-REPLACE INTO `variables` VALUES ('kube_ca_certfile', '<%= node["certs"]["dir"] %>/kube/certs/ca.cert.pem');
+REPLACE INTO `variables` VALUES ('kube_ca_certfile', '<%= node["certs"]["dir"] %>/kube/certs/kube-ca.cert.pem');
 REPLACE INTO `variables` VALUES ('kube_client_keyfile', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks.key.pem');
 REPLACE INTO `variables` VALUES ('kube_client_certfile', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks.cert.pem');
 REPLACE INTO `variables` VALUES ('kube_client_keypass', '<%= node['kube-hops']['hopsworks_cert_pwd'] %>');
