@@ -1,11 +1,4 @@
 # Deploy RBAC rule for Hopsworks user
-
-if node.attribute?('hopsworks')
-  if node['hopsworks'].attribute?('user')
-    node.override['kube-hops']['pki']['ca_api_user'] = node['hopsworks']['user']
-  end
-end
-
 template "#{node['kube-hops']['conf_dir']}/hopsworks-rbac.yaml" do
   source "hopsworks-rbac.erb"
   owner node['kube-hops']['user']
@@ -28,7 +21,6 @@ if node.attribute?('hopsworks')
 end
 
 node.override['kube-hops']['pki']['ca_api'] = "#{hopsworks_ip}:#{hopsworks_https_port}"
-
 
 if node.attribute?('hopsworks')
   if node['hopsworks'].attribute?('user')
