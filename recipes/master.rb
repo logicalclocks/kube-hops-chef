@@ -2,7 +2,6 @@
 include_recipe "kube-hops::default"
 
 private_ip = my_private_ip()
-hostname = my_hostname()
 
 # Create pki directories
 directory node['kube-hops']['pki']['dir'] do
@@ -46,7 +45,7 @@ template "#{node['kube-hops']['pki']['dir']}/kube-ca.cnf" do
   group node['kube-hops']['group']
   variables ({
     'master_cluster_ip': private_ip,
-    'master_hostname': hostname
+    'master_hostname': node['hostname'] 
   })
 end
 
@@ -118,7 +117,7 @@ end
 # Generate configuration for kubelet
 kube_hops_conf "kubelet" do
   path        node['kube-hops']['conf_dir']
-  subject     "/CN=system:node:#{hostname}/O=system:nodes"
+  subject     "/CN=system:node:#{node['hostname']}/O=system:nodes"
   master_ip   private_ip
   not_if      { ::File.exist?("#{node['kube-hops']['conf_dir']}/kubelet.conf") }
 end
