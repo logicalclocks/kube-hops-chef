@@ -20,7 +20,7 @@ end
 # Create kubelet.conf
 kube_hops_conf "kubelet" do
   path        node['kube-hops']['conf_dir']
-  subject     "/CN=system:node:#{node['hostname']}/O=system:nodes"
+  subject     "/CN=system:node:#{node['fqdn']}/O=system:nodes"
   master_ip   master_cluster_ip
   not_if      { ::File.exist?("#{node['kube-hops']['conf_dir']}/kubelet.conf") }
 end
