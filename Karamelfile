@@ -17,6 +17,7 @@ dependencies:
   - recipe: kube-hops::post_conf
     global:
       - kube-hops::node
+      - kube-hops::master
 
   - recipe: kube-hops::addons
     global:
