@@ -42,3 +42,4 @@ default['kube-hops']['pki']['verify_hopsworks_cert']       = "true"
 default['kube-hops']['hopsworks_cert_pwd']                 = "adminpw"
 
 default['kube-hops']['docker_img_url']                     = node['download_url'] + "/docker.tgz"
+default['kube-hops']['docker_dir']                         = "/var/lib/docker"

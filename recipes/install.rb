@@ -41,6 +41,15 @@ when 'ubuntu'
   package 'docker.io'
 end
 
+# Configure Docker
+template '/etc/docker/daemon.json' do
+  source 'daemon.json.erb'
+  owner 'root'
+  group '3'
+  mode '0755'
+  action :create
+end
+
 # Install:
 # Kubeadm: utility to boostrap a kubernetes cluster
 # Kubectl: command line tool to manage a kubernetes cluster
