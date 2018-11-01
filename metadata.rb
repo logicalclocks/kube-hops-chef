@@ -98,3 +98,7 @@ attribute "kube-hops/pki/hopsworks_cert_pwd",
           :description =>  "Password for the Hopsworks certificate",
           :type => 'string'
 
+attribute "kube-hops/docker_dir",
+          :description =>  "Path on the host machine to be used to store docker containers,imgs,logs",
+          :type => 'string'
+
