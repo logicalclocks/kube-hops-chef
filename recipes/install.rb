@@ -48,14 +48,13 @@ if !node['kube-hops']['docker_dir'].eql?("/var/lib/docker")
     mode '0711'
     action :create
   end
-  
+
 end
 
 # Configure Docker
 template '/etc/docker/daemon.json' do
   source 'daemon.json.erb'
   owner 'root'
-  group '3'
   mode '0755'
   action :create
 end
