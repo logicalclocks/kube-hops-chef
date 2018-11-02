@@ -41,6 +41,16 @@ when 'ubuntu'
   package 'docker.io'
 end
 
+if !node['kube-hops']['docker_dir'].eql?("/var/lib/docker")
+  directory node['kube-hops']['docker_dir'] do
+    owner 'root'
+    group 'root'
+    mode '0711'
+    action :create
+  end
+  
+end
+
 # Configure Docker
 template '/etc/docker/daemon.json' do
   source 'daemon.json.erb'
