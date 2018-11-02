@@ -121,7 +121,7 @@ kubeletConfiguration:
     streamingConnectionIdleTimeout: 4h0m0s
     syncFrequency: 1m0s
     volumeStatsAggPeriod: 1m0s
-kubernetesVersion: <% node['kube-hops']['kubernetes_version'] %>
+kubernetesVersion: <%= node['kube-hops']['kubernetes_version'] %>
 networking:
   dnsDomain: cluster.local
   podSubnet: "<%= node['kube-hops']['cidr'] %>"
