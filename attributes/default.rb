@@ -6,7 +6,7 @@ default['kube-hops']['group']                             = node['install']['use
 default['kube-hops']['cgroup-driver']                     = node['platform'].eql?("ubuntu") ? "cgroupfs" : "systemd"
 
 # General cluster configuration
-default['kube-hops']['kubernetes_version']                = "v1.11.0"
+default['kube-hops']['kubernetes_version']                = "v1.12.2"
 default['kube-hops']['cluster_name']                      = "hops-kubernetes"
 default['kube-hops']['image_repo']                        = "k8s.gcr.io"
 
