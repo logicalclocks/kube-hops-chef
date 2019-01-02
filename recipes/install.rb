@@ -45,7 +45,7 @@ end
 template '/etc/docker/daemon.json' do
   source 'daemon.json.erb'
   owner 'root'
-  group '3'
+  group 'root'
   mode '0755'
   action :create
 end
