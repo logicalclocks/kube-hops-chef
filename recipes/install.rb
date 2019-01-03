@@ -86,6 +86,19 @@ when 'centos'
     EOH
   end
 
+  # Install packages
+  package 'kubelet' do
+    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['centos-release']}"
+  end
+
+  package 'kubectl' do
+    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['centos-release']}"
+  end
+
+  package 'kubeadm' do
+    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['centos-release']}" 
+  end
+
 when 'ubuntu'
   package ['apt-transport-https','curl']
 
@@ -96,19 +109,18 @@ when 'ubuntu'
     key 'https://packages.cloud.google.com/apt/doc/apt-key.gpg'
   end
 
-end
+  # Install packages
+  package 'kubelet' do
+    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['ubuntu-release']}"
+  end
 
-# Install packages
-package 'kubeadm' do
-  version node['kube-hops']['kubernetes_version'] 
-end
+  package 'kubectl' do
+    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['ubuntu-release']}"
+  end
 
-package 'kubelet' do
-  version node['kube-hops']['kubernetes_version'] 
-end
-
-package 'kubectl' do
-  version node['kube-hops']['kubernetes_version'] 
+  package 'kubeadm' do
+    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['ubuntu-release']}" 
+  end
 end
 
 
