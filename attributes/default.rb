@@ -10,6 +10,10 @@ default['kube-hops']['kubernetes_version']                = "v1.12.3"
 default['kube-hops']['cluster_name']                      = "hops-kubernetes"
 default['kube-hops']['image_repo']                        = "k8s.gcr.io"
 
+# Binaries configuration
+default['kube-hops']['bin']['ubuntu-release']             = "00"
+default['kube-hops']['bin']['centos-release']             = "0"
+
 # Network configuration
 default['kube-hops']['cidr']                              = "10.244.0.0/16"
 default['kube-hops']['dns_ip']                            = "10.96.0.10"
