@@ -99,7 +99,18 @@ when 'ubuntu'
 end
 
 # Install packages
-package ['kubeadm', 'kubectl', 'kubelet']
+package 'kubeadm' do
+  version node['kube-hops']['kubernetes_version'] 
+end
+
+package 'kubelet' do
+  version node['kube-hops']['kubernetes_version'] 
+end
+
+package 'kubectl' do
+  version node['kube-hops']['kubernetes_version'] 
+end
+
 
 # Make sure that Kubernetes cgroup's driver matches the Docker one
 bash 'cgroup-driver-sed' do
