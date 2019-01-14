@@ -40,7 +40,7 @@ end
 # As we are not using kubeadm to join the node we need to template an env file for the
 # kubelet unit
 centos_conf = ""
-if node['platform'].eql?("centos")
+if node['platform_family'].eql?("rhel")
   centos_conf = "--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice"
 end
 

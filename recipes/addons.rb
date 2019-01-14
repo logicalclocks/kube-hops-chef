@@ -72,36 +72,34 @@ kube_hops_kubectl 'deploy_docker_registry' do
 end
 
 # Push default images on the registry
-remote_file "/home/#{node['kube-hops']['user']}/docker-images.tgz" do
-  source node['kube-hops']['docker_img_url']
-  owner node['kube-hops']['user']
-  group node['kube-hops']['group']
-  mode "0644"
-  action :create
+if not node['kube-hops']['docker_img_tar_url'].eql?("")
+  hops_images = "#{Chef::Config['file_cache_path']}/docker-images-#{node['install']['version']}.tar" 
+  remote_file hops_images do
+    source node['kube-hops']['docker_img_tar_url']
+    owner node['kube-hops']['user']
+    group node['kube-hops']['group']
+    mode "0644"
+    action :create_if_missing
+  end
+
+  bash "load" do 
+    user 'root'
+    group 'root'
+    code <<-EOH
+      docker load < #{hops_images}
+    EOH
+  end
+else
+  # TODO(Fabio): pull from registry
 end
 
-directory "/home/#{node['kube-hops']['user']}/docker-images" do
-  recursive true
-  action :delete
-  only_if  { ::File.directory?("/home/#{node['kube-hops']['user']}/docker-images") }
-end
-
-bash "extract" do
-  user node['kube-hops']['user']
-  cwd "/home/#{node['kube-hops']['user']}"
-  code <<-EOH
-    tar xf docker-images.tgz
-  EOH
-end
-
-bash "build_and_push" do
-  user "root"
-  cwd "/home/#{node['kube-hops']['user']}/docker-images"
-  code <<-EOH
-    for image in */ ; do
-      cd "$image"
-      docker build . -t registry.docker-registry.svc.cluster.local/${image%/}
-      docker push registry.docker-registry.svc.cluster.local/${image%/}
-    done
-  EOH
+node['kube-hops']['docker_img'].split(",").each do |img|
+  img_name = img.split("/")[1]
+  bash "tag_and_push" do
+    user "root"
+    code <<-EOH
+      docker tag #{img} registry.docker-registry.svc.cluster.local/#{img_name}
+      docker push registry.docker-registry.svc.cluster.local/#{img_name}
+    EOH
+  end
 end

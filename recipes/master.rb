@@ -153,7 +153,7 @@ end
 # On Centos we should replace the kubelet-flags.env and restart the kubelet daemon
 # so that kubelet get the correct cgroup configuration
 # This used to be done by the kubeadm tool, but apparently it's not working.
-if node['platform'].eql?("centos")
+if node['platform_family'].eql?("rhel")
   centos_conf = "--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice"
 
   template "#{node['kube-hops']['kubelet_dir']}/kubeadm-flags.env" do
