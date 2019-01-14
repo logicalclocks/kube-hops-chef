@@ -102,3 +102,14 @@ attribute "kube-hops/docker_dir",
           :description =>  "Path on the host machine to be used to store docker containers,imgs,logs",
           :type => 'string'
 
+attribute "kube-hops/docker_img",
+          :description =>  "Comma separated list of images to load in the docker registry",
+          :type => 'string'
+
+attribute "kube-hops/docker_img_tar_url",
+          :description =>  "Remote location of the tar with the images to laod",
+          :type => 'string'
+
+attribute "kube-hops/docker_img_reg_url",
+          :description =>  "Remote container images registry from which to fetch the images",
+          :type => 'string'

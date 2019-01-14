@@ -34,8 +34,8 @@ end
 
 # Install and start Docker
 
-case node['platform']
-when 'centos'
+case node['platform_family']
+when 'rhel'
   package 'docker'
 when 'ubuntu'
   package 'docker.io'
@@ -63,15 +63,33 @@ end
 # Kubectl: command line tool to manage a kubernetes cluster
 # Kubelet: Kubernetes node agent
 
-# Add repositories
-case node['platform']
-when 'centos'
+# Download  and install binaries 
+kubernetes_version = node['kube-hops']['kubernetes_version'][1..-1]
+package_type = node['platform_family'].eql?("debian") ? "_amd64.deb" : ".x86_64.rpm"
+packages = ["cri-tools-#{node['kube-hops']['cri-tools_version']}#{package_type}", "kubelet-#{kubernetes_version}#{package_type}", "kubernetes-cni-#{node['kube-hops']['kubernetes-cni_version']}#{package_type}", "kubectl-#{kubernetes_version}#{package_type}", "kubeadm-#{kubernetes_version}#{package_type}"]
 
-  yum_repository 'kubernetes' do
-    baseurl 'https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64'
-    gpgkey ['https://packages.cloud.google.com/yum/doc/yum-key.gpg',
-            'https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg']
+packages.each do |pkg| 
+  remote_file "#{Chef::Config['file_cache_path']}/#{pkg}" do
+    source "#{node['kube-hops']['bin']['download_url']}/#{pkg}" 
+    owner 'root'
+    group 'root'
+    mode '0755'
     action :create
+  end
+end
+
+# Install packages & Platform specific configuration
+case node['platform_family']
+when 'rhel'
+
+  bash "install_pkgs" do
+    user 'root'
+    group 'root'
+    cwd Chef::Config['file_cache_path']
+    code <<-EOH
+        yum install -y #{packages.join(" ")}
+    EOH
+    not_if "yum list installed kubeadm-#{kubernetes_version}"
   end
 
   # Disabling SELinux by running setenforce 0 is required to allow containers to access
@@ -86,40 +104,15 @@ when 'centos'
     EOH
   end
 
-  # Install packages
-  package 'kubelet' do
-    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['centos-release']}"
-  end
+when 'debian'
 
-  package 'kubectl' do
-    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['centos-release']}"
-  end
-
-  package 'kubeadm' do
-    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['centos-release']}" 
-  end
-
-when 'ubuntu'
-  package ['apt-transport-https','curl']
-
-  apt_repository 'kubernetes' do
-    uri 'http://apt.kubernetes.io/'
-    distribution 'kubernetes-xenial'
-    components ['main']
-    key 'https://packages.cloud.google.com/apt/doc/apt-key.gpg'
-  end
-
-  # Install packages
-  package 'kubelet' do
-    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['ubuntu-release']}"
-  end
-
-  package 'kubectl' do
-    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['ubuntu-release']}"
-  end
-
-  package 'kubeadm' do
-    version "#{node['kube-hops']['kubernetes_version'][1..-1]}-#{node['kube-hops']['bin']['ubuntu-release']}" 
+  bash "install_pkgs" do
+    user 'root'
+    group 'root'
+    cwd Chef::Config['file_cache_path']
+    code <<-EOH
+        apt-get install -y #{packages.join(" ")}
+    EOH
   end
 end
 
