@@ -1,6 +1,15 @@
 # Change machine DNS to use the Kubernetes internal one
-# It will fall back to something if you look for logicalclocks.com
-# Not sure how to configure the fallback yethk
+# It will fall back to the specified dns server if you look for logicalclocks.com
+
+# Make a backup before overwriting it.
+remote_file "/etc/resolv.conf.bck" do 
+  owner "root"
+  group "root"
+  source "file:///etc/resolv.conf"
+  mode "644"
+  action :create_if_missing
+end
+
 node.override['resolver']['nameservers'] = ["#{node['kube-hops']['dns_ip']}"]
 include_recipe "resolver::default"
 

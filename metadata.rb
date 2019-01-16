@@ -38,6 +38,10 @@ attribute "kube-hops/dns_ip",
           :description =>  "Ip of the DNS service",
           :type => 'string'
 
+attribute "kube-hops/fallback_dns",
+          :description =>  "IP of the fallback DNS server for non-cluster resolution",
+          :type => 'string'
+
 attribute "kube-hops/apiserver/port",
           :description =>  "Port on which the apiserver listens for requests",
           :type => 'string'
