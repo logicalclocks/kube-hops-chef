@@ -197,6 +197,22 @@ kube_hops_kubectl 'apply_flannel' do
   url "/home/#{node['kube-hops']['user']}/kube-flannel.yml"
 end
 
+# Configure CoreDNS with user-specified fallback address
+template "/home/#{node['kube-hops']['user']}/coredns-configmap.yml" do
+  source "coredns.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+  variables ({
+      'fallback_dns': node['kube-hops']['fallback_dns'].eql?("") ? "8.8.8.8" : node['kube-hops']['fallback_dns']
+  })
+end
+
+kube_hops_kubectl 'apply_coredns_config' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  url "/home/#{node['kube-hops']['user']}/coredns-configmap.yml"
+end
+
 # Untaint master
 if node['kube-hops']['master']['untaint'].eql?("true")
   bash 'untaint_master' do
