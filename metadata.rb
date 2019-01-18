@@ -18,6 +18,10 @@ recipe 'kube-hops::addons', 'Deploy addons on the cluster'
 recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
 
 
+attribute "kube-hops/user",
+          :description =>  "Cgroup driver",
+          :type => 'string'
+
 attribute "kube-hops/cgroup-driver",
           :description =>  "Cgroup driver",
           :type => 'string'
