@@ -10,3 +10,5 @@ REPLACE INTO `variables` VALUES ('kube_keystore_path', '<%= node["certs"]["dir"]
 REPLACE INTO `variables` VALUES ('kube_keystore_key', '<%= node['kube-hops']['hopsworks_cert_pwd'] %>');
 REPLACE INTO `variables` VALUES ('kube_ca_path', '<%= node["certs"]["dir"] %>/kube');
 REPLACE INTO `variables` VALUES ('kube_ca_password', '<%= node['kube-hops']['pki']['ca_keypw'] %>');
+REPLACE INTO `variables` VALUES ('kube_registry', '<%= node['kube-hops']['registry'] %>');
+REPLACE INTO `variables` VALUES ('kube_pull_policy', '<%= node['kube-hops']['pull_policy'] %>');
