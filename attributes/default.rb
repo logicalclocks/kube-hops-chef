@@ -49,6 +49,11 @@ default['kube-hops']['pki']['verify_hopsworks_cert']       = "true"
 
 default['kube-hops']['hopsworks_cert_pwd']                 = "adminpw"
 
+# Images configuration
+
+default['kube-hops']['registry']                           = "registry.docker-registry.svc.cluster.local"
+default['kube-hops']['pull_policy']                        = "Always"
+
 default['kube-hops']['docker_dir']                         = "/var/lib/docker"
 
 default['kube-hops']['docker_img']                         = "logicalclocks/tf,logicalclocks/filebeat"

@@ -121,3 +121,11 @@ attribute "kube-hops/docker_img_tar_url",
 attribute "kube-hops/docker_img_reg_url",
           :description =>  "Remote container images registry from which to fetch the images",
           :type => 'string'
+
+attribute "kube-hops/registry",
+          :description =>  "Service name for the internal registry deployed in kubernetes",
+          :type => 'string'
+
+attribute "kube-hops/pull_policy",
+          :description =>  "Image pull policy for new containers",
+          :type => 'string'
