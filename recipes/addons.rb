@@ -15,8 +15,8 @@ end
 hopsworks_ip = private_recipe_ip('hopsworks', 'default')
 hopsworks_https_port = 8181
 if node.attribute?('hopsworks')
-  if node['hopsworks'].attribute?('secure_port')
-    hopsworks_https_port = node['hopsworks']['secure_port']
+  if node['hopsworks'].attribute?('https') and node['hopsworks']['https'].attribute?('port')
+    hopsworks_https_port = node['hopsworks']['https']['port']
   end
 end
 
