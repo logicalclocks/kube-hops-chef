@@ -76,6 +76,7 @@ action :generate do
                 request.body = {'csr' => csr}.to_json
                 request['Content-Type'] = "application/json"
                 request['Cookie'] = ::HTTP::Cookie.cookie_value(jar.cookies(ca_url))
+		request['Authorization'] = response['Authorization']
                 response = connection.request(request)
 
                 if ( response.is_a? (Net::HTTPSuccess))
@@ -149,6 +150,7 @@ action :fetch_cert do
 
               request = Net::HTTP::Get.new(ca_url)
               request['Cookie'] = ::HTTP::Cookie.cookie_value(jar.cookies(ca_url))
+	      request['Authorization'] = response['Authorization']
               response = connection.request(request)
 
               if ( response.is_a? (Net::HTTPSuccess))
