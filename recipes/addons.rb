@@ -73,16 +73,15 @@ end
 
 # Push default images on the registry
 if not node['kube-hops']['docker_img_tar_url'].eql?("")
-  hops_images = "#{Chef::Config['file_cache_path']}/docker-images-#{node['install']['version']}.tar" 
+  hops_images = "#{Chef::Config['file_cache_path']}/docker-images.tar"
   remote_file hops_images do
     source node['kube-hops']['docker_img_tar_url']
     owner node['kube-hops']['user']
     group node['kube-hops']['group']
     mode "0644"
-    action :create_if_missing
   end
 
-  bash "load" do 
+  bash "load" do
     user 'root'
     group 'root'
     code <<-EOH
@@ -93,13 +92,15 @@ else
   # TODO(Fabio): pull from registry
 end
 
-node['kube-hops']['docker_img'].split(",").each do |img|
-  img_name = img.split("/")[1]
-  bash "tag_and_push" do
+bash "tag_and_push" do
     user "root"
     code <<-EOH
-      docker tag #{img} registry.docker-registry.svc.cluster.local/#{img_name}
-      docker push registry.docker-registry.svc.cluster.local/#{img_name}
+      set -e
+      for image in $(docker images --format '{{.Repository}}:{{.Tag}}' | grep #{node['kube-hops']['docker_img_version']})
+      do
+        img_name=(${image//\// })
+        docker tag $image #{node['kube-hops']['registry']}/${img_name[1]}
+        docker push #{node['kube-hops']['registry']}/${img_name[1]}
+      done
     EOH
-  end
 end

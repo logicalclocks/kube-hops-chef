@@ -1,3 +1,12 @@
 {
-    "graph": "<%= node['kube-hops']['docker_dir'] %>"
+    "graph": "<%= node['kube-hops']['docker_dir'] %>",
+    "exec-opts": ["native.cgroupdriver=<%= node['kube-hops']['cgroup-driver'] %>"],
+    "log-driver": "json-file",
+    "log-opts": {
+      "max-size": "100m"
+    },
+    "storage-driver":  "overlay2",
+    "storage-opts": [
+      "<%= @storage_opts %>"
+    ]
 }

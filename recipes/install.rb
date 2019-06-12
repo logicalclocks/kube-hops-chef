@@ -46,15 +46,39 @@ if !node['kube-hops']['docker_dir'].eql?("/var/lib/docker")
     owner 'root'
     group 'root'
     mode '0711'
+    recursive true
     action :create
   end
 end
 
 # Configure Docker
+# On CENTOS docker comes down already with a basic configuration which might conflict with the 
+# daemon.json configuration we template here. So we replace the configuration file
+if node['platform_family'].eql?("rhel")
+  storage_opts = "overlay2.override_kernel_check=true"
+ 
+  template '/lib/systemd/system/docker.service' do
+    source 'docker.service.erb'
+    owner 'root'
+    mode '0755'
+    action :create
+  end
+
+  template '/etc/sysconfig/docker' do
+    source 'docker.erb'
+    owner 'root'
+    mode '0755'
+    action :create
+  end
+end
+
 template '/etc/docker/daemon.json' do
   source 'daemon.json.erb'
   owner 'root'
   mode '0755'
+  variables ({
+    'storage_opts': storage_opts
+  })
   action :create
 end
 
@@ -63,14 +87,14 @@ end
 # Kubectl: command line tool to manage a kubernetes cluster
 # Kubelet: Kubernetes node agent
 
-# Download  and install binaries 
+# Download  and install binaries
 kubernetes_version = node['kube-hops']['kubernetes_version'][1..-1]
 package_type = node['platform_family'].eql?("debian") ? "_amd64.deb" : ".x86_64.rpm"
 packages = ["cri-tools-#{node['kube-hops']['cri-tools_version']}#{package_type}", "kubelet-#{kubernetes_version}#{package_type}", "kubernetes-cni-#{node['kube-hops']['kubernetes-cni_version']}#{package_type}", "kubectl-#{kubernetes_version}#{package_type}", "kubeadm-#{kubernetes_version}#{package_type}"]
 
-packages.each do |pkg| 
+packages.each do |pkg|
   remote_file "#{Chef::Config['file_cache_path']}/#{pkg}" do
-    source "#{node['kube-hops']['bin']['download_url']}/#{pkg}" 
+    source "#{node['kube-hops']['bin']['download_url']}/#{pkg}"
     owner 'root'
     group 'root'
     mode '0755'
