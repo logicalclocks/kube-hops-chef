@@ -52,7 +52,7 @@ default['kube-hops']['hopsworks_cert_pwd']                 = "adminpw"
 # Images configuration
 
 default['kube-hops']['registry']                           = "registry.docker-registry.svc.cluster.local"
-default['kube-hops']['pull_policy']                        = "Always"
+default['kube-hops']['pull_policy']                        = "IfNotPresent"
 
 default['kube-hops']['docker_dir']                         = node['install']['dir'].empty? ? "/var/lib/docker" : "#{node['install']['dir']}/docker"
 
