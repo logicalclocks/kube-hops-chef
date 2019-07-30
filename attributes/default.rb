@@ -21,6 +21,7 @@ default['kube-hops']['bin']['download_url']               = "#{node['download_ur
 default['kube-hops']['cidr']                              = "10.244.0.0/16"
 default['kube-hops']['dns_ip']                            = "10.96.0.10"
 default['kube-hops']['fallback_dns']                      = ""
+default['kube-hops']['flannel']['iface-regex']            = ""
 
 # Apiserver
 default['kube-hops']['apiserver']['port']                 = "6443"
