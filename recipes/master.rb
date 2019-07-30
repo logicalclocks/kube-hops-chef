@@ -166,7 +166,7 @@ if node['platform_family'].eql?("rhel")
     })
   end
 
-  service 'kubelet' do 
+  service 'kubelet' do
     action [:restart]
   end
 end
@@ -184,47 +184,10 @@ remote_file "/home/#{node['kube-hops']['user']}/.kube/config" do
   group node['kube-hops']['group']
 end
 
-
-# Flannel will use the default route for interhost communication, 
-# This is an issue on the VBox VMs as the default route goes to the
-# Vbox daemon, not the other VMs. 
-# The daemon set will deploy the same configuration on all the hosts. 
-# Flannel allows to specify a regex to get the IP and interface to use 
-# for interhost communication. 
-# Here we find the netmask of our IP and we configure Flannel to use
-# *.*.*.* as regex where the number of * depends on the netmask.
-regex = node['kube-hops']['flannel']['iface-regex']
-if regex.eql?("")
-  node['network']['interfaces'].each do |key, iface| 
-    iface['addresses'].each do |addr, value| 
-      # Found the specification of my IP 
-      if addr.eql?(my_private_ip)
-        prefix_len=value['prefixlen'].to_i
-        octects = my_private_ip.split(".")
-        num_octects = prefix_len / 8
-
-        num_octects.times do |i|
-          regex += octects[i] + "."
-        end
-
-        (4 - num_octects).times do |i|
-          regex += "*."
-        end
-
-        # Remove the last . 
-        regex = regex[0...-1]
-      end
-    end
-  end
-end
-
 template "/home/#{node['kube-hops']['user']}/kube-flannel.yml" do
   source "kube-flannel.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
-  variables ({
-    'regex': regex
-  })
 end
 
 # Deploy overlay network
@@ -255,8 +218,10 @@ if node['kube-hops']['master']['untaint'].eql?("true")
   bash 'untaint_master' do
     user node['kube-hops']['user']
     group node['kube-hops']['group']
+    environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
     code <<-EOH
       kubectl taint nodes --all node-role.kubernetes.io/master-
     EOH
+    not_if "kubectl describe nodes #{node['fqdn']} | grep Taints | grep none", :environment => { 'HOME' => ::Dir.home(node['kube-hops']['user']) }
   end
 end
