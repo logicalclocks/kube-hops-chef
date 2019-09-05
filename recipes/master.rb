@@ -235,7 +235,7 @@ end
 
 # Configure CoreDNS with user-specified fallback address
 template "/home/#{node['kube-hops']['user']}/coredns-configmap.yml" do
-  source "coredns.yml.erb"
+  source "coredns-configmap.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables ({
@@ -247,6 +247,19 @@ kube_hops_kubectl 'apply_coredns_config' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   url "/home/#{node['kube-hops']['user']}/coredns-configmap.yml"
+end
+
+# Configure CoreDNS to propagate /etc/hosts
+template "/home/#{node['kube-hops']['user']}/coredns.yml" do
+  source "coredns.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
+kube_hops_kubectl 'apply_coredns' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  url "/home/#{node['kube-hops']['user']}/coredns.yml"
 end
 
 # Untaint master
