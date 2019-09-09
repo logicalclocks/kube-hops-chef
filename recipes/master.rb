@@ -274,3 +274,12 @@ if node['kube-hops']['master']['untaint'].eql?("true")
     not_if "kubectl describe nodes #{node['fqdn']} | grep Taints | grep none", :environment => { 'HOME' => ::Dir.home(node['kube-hops']['user']) }
   end
 end
+
+bash 'wait_for_core_dns' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
+  code <<-EOH
+    kubectl wait --for=condition=available --timeout=600s deployment/coredns -n kube-system
+  EOH
+end
