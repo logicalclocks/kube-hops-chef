@@ -16,6 +16,7 @@ REPLACE INTO `variables` VALUES ('kube_pull_policy', '<%= node['kube-hops']['pul
 REPLACE INTO `variables` VALUES ('kube_tf_img_version', '<%= node['kube-hops']['imgs']['tf']['version'] %>');
 REPLACE INTO `variables` VALUES ('kube_sklearn_img_version', '<%= node['kube-hops']['imgs']['sklearn']['version'] %>');
 REPLACE INTO `variables` VALUES ('kube_filebeat_img_version', '<%= node['kube-hops']['imgs']['filebeat']['version'] %>');
+REPLACE INTO `variables` VALUES ('kube_jupyter_img_version', '<%= node['kube-hops']['imgs']['jupyter']['version'] %>');
 
 REPLACE INTO `variables` VALUES ('jupyter_host', '<%= @master_ip %>');
 
