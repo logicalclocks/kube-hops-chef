@@ -11,7 +11,7 @@ REPLACE INTO `variables` VALUES ('kube_keystore_key', '<%= node['kube-hops']['ho
 REPLACE INTO `variables` VALUES ('kube_ca_path', '<%= node["certs"]["dir"] %>/kube');
 REPLACE INTO `variables` VALUES ('kube_ca_password', '<%= node['kube-hops']['pki']['ca_keypw'] %>');
 REPLACE INTO `variables` VALUES ('kube_registry', '<%= node['kube-hops']['registry'] %>');
-REPLACE INTO `variables` VALUES ('kube_pull_policy', '<%= node['kube-hops']['pull_policy'] %>');
+REPLACE INTO `variables` VALUES ('kube_img_pull_policy', '<%= node['kube-hops']['pull_policy'] %>');
 
 REPLACE INTO `variables` VALUES ('kube_tf_img_version', '<%= node['kube-hops']['imgs']['tf']['version'] %>');
 REPLACE INTO `variables` VALUES ('kube_sklearn_img_version', '<%= node['kube-hops']['imgs']['sklearn']['version'] %>');
