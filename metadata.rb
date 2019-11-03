@@ -3,7 +3,7 @@ maintainer              'Logical Clocks AB'
 maintainer_email        'fabio@logicalclocks.com'
 license                 ''
 description             'Installs/Configures kube-hops-chef'
-version                 '1.0.0'
+version                 '1.1.0'
 
 depends 'kagent'
 depends 'ndb'
