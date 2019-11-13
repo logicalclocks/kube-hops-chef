@@ -13,6 +13,10 @@ REPLACE INTO `variables` VALUES ('kube_ca_password', '<%= node['kube-hops']['pki
 REPLACE INTO `variables` VALUES ('kube_registry', '<%= node['kube-hops']['registry'] %>');
 REPLACE INTO `variables` VALUES ('kube_img_pull_policy', '<%= node['kube-hops']['pull_policy'] %>');
 
+REPLACE INTO `variables` VALUES ('kube_docker_max_memory_allocation', '<%= node['kube-hops']['docker_max_memory_allocation'] %>');
+REPLACE INTO `variables` VALUES ('kube_docker_max_cores_allocation', '<%= node['kube-hops']['docker_max_cores_allocation'] %>');
+REPLACE INTO `variables` VALUES ('kube_docker_cores_fraction', '<%= node['kube-hops']['docker_cores_fraction'] %>');
+
 REPLACE INTO `variables` VALUES ('kube_tf_img_version', '<%= node['kube-hops']['imgs']['tf']['version'] %>');
 REPLACE INTO `variables` VALUES ('kube_sklearn_img_version', '<%= node['kube-hops']['imgs']['sklearn']['version'] %>');
 REPLACE INTO `variables` VALUES ('kube_filebeat_img_version', '<%= node['kube-hops']['imgs']['filebeat']['version'] %>');

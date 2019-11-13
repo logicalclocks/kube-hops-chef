@@ -17,6 +17,12 @@ default['kube-hops']['control_plane_imgs_url']            = "#{node['download_ur
 # Binaries configuration
 default['kube-hops']['bin']['download_url']               = "#{node['download_url']}/kube/#{node['kube-hops']['kubernetes_version']}/#{node['platform_family']}/"
 
+
+# Resource allocation configuration
+default['kube-hops']['docker_max_memory_allocation'] = "8192"
+default['kube-hops']['docker_max_cores_allocation']  = "4"
+default['kube-hops']['docker_cores_fraction']        = "1.0"
+
 # Network configuration
 default['kube-hops']['cidr']                              = "10.244.0.0/16"
 default['kube-hops']['dns_ip']                            = "10.96.0.10"
