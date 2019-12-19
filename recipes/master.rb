@@ -275,6 +275,19 @@ if node['kube-hops']['master']['untaint'].eql?("true")
   end
 end
 
+# Install daemonset for scheduling and discovering NVIDIA GPUs
+# https://github.com/NVIDIA/k8s-device-plugin
+if node['kube-hops']['device'].eql?("nvidia")
+  bash 'install_nvidia_daemonset' do
+    user node['kube-hops']['user']
+    group node['kube-hops']['group']
+    environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
+    code <<-EOH
+      kubectl create -f "#{node['download_url']}/kube/nvidia/nvidia-device-plugin.yml"
+    EOH
+  end
+end
+
 bash 'wait_for_core_dns' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']

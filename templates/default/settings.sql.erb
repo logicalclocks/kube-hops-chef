@@ -16,6 +16,7 @@ REPLACE INTO `variables` VALUES ('kube_img_pull_policy', '<%= node['kube-hops'][
 REPLACE INTO `variables` VALUES ('kube_docker_max_memory_allocation', '<%= node['kube-hops']['docker_max_memory_allocation'] %>');
 REPLACE INTO `variables` VALUES ('kube_docker_max_cores_allocation', '<%= node['kube-hops']['docker_max_cores_allocation'] %>');
 REPLACE INTO `variables` VALUES ('kube_docker_cores_fraction', '<%= node['kube-hops']['docker_cores_fraction'] %>');
+REPLACE INTO `variables` VALUES ('kube_docker_max_gpus_allocation', '<%= node['kube-hops']['docker_max_gpus_allocation'] %>');
 
 REPLACE INTO `variables` VALUES ('kube_tf_img_version', '<%= node['kube-hops']['imgs']['tf']['version'] %>');
 REPLACE INTO `variables` VALUES ('kube_sklearn_img_version', '<%= node['kube-hops']['imgs']['sklearn']['version'] %>');

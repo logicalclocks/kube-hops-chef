@@ -1,4 +1,20 @@
 {
+    <% if node['kube-hops']['device'].eql?("") %>
+    "default-runtime": "docker-runc",
+    "runtimes": {
+        "docker-runc": {
+            "path": "/usr/libexec/docker/docker-runc-current"
+        }
+    },
+    <% end -%>
+    <% if node['kube-hops']['device'].eql?("nvidia") %>
+    "default-runtime": "nvidia",
+    "runtimes": {
+        "nvidia": {
+            "path": "/usr/bin/nvidia-container-runtime"
+        }
+    },
+	<% end -%>
     "graph": "<%= node['kube-hops']['docker_dir'] %>",
     "exec-opts": ["native.cgroupdriver=<%= node['kube-hops']['cgroup-driver'] %>"],
     "log-driver": "json-file",

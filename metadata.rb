@@ -22,6 +22,10 @@ attribute "kube-hops/cgroup-driver",
           :description =>  "Cgroup driver",
           :type => 'string'
 
+attribute "kube-hops/device",
+          :description =>  "Device plugin to configure for master and nodes, for no device set '' or 'nvidia' for NVIDIA GPUs",
+          :type => 'string'
+
 attribute "kube-hops/kubernetes_version",
           :description =>  "kubernetes_version",
           :type => 'string'
@@ -128,4 +132,20 @@ attribute "kube-hops/registry",
 
 attribute "kube-hops/pull_policy",
           :description =>  "Image pull policy for new containers",
+          :type => 'string'
+
+attribute "kube-hops/docker_max_memory_allocation",
+          :description =>  "Maximum memory that can be allocated for Docker containers",
+          :type => 'string'
+
+attribute "kube-hops/docker_max_cores_allocation",
+          :description =>  "Maximum number of cores that can be allocated for Docker containers",
+          :type => 'string'
+
+attribute "kube-hops/docker_cores_fraction",
+          :description =>  "Fraction used to scale core allocation",
+          :type => 'string'
+
+attribute "kube-hops/docker_max_gpus_allocation",
+          :description =>  "Maximum number of GPUs that can be allocated for Docker containers",
           :type => 'string'

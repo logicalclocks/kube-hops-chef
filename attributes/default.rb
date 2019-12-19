@@ -4,6 +4,7 @@ default['kube-hops']['user']                              = node['install']['use
 default['kube-hops']['group']                             = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 
 default['kube-hops']['cgroup-driver']                     = "systemd"
+default['kube-hops']['device']                            = ""
 
 # General cluster configuration
 default['kube-hops']['kubernetes_version']                = "v1.12.4"
@@ -22,6 +23,7 @@ default['kube-hops']['bin']['download_url']               = "#{node['download_ur
 default['kube-hops']['docker_max_memory_allocation'] = "8192"
 default['kube-hops']['docker_max_cores_allocation']  = "4"
 default['kube-hops']['docker_cores_fraction']        = "1.0"
+default['kube-hops']['docker_max_gpus_allocation']   = "0"
 
 # Network configuration
 default['kube-hops']['cidr']                              = "10.244.0.0/16"
