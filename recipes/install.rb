@@ -102,6 +102,20 @@ packages.each do |pkg|
   end
 end
 
+if node['kube-hops']['device'].eql?("nvidia")
+  nvidia_docker_packages = ["libnvidia-container1-1.0.5-1#{package_type}", "libnvidia-container-tools-1.0.5-1#{package_type}", "nvidia-container-toolkit-1.0.5-2#{package_type}", "nvidia-container-runtime-2.0.0-1.docker1.13.1#{package_type}"]
+  nvidia_docker_packages.each do |pkg|
+    remote_file "#{Chef::Config['file_cache_path']}/#{pkg}" do
+      source "#{node['download_url']}/kube/nvidia/#{pkg}"
+      owner 'root'
+      group 'root'
+      mode '0755'
+      action :create
+    end
+  end
+  packages.concat(nvidia_docker_packages)
+end
+
 # Install packages & Platform specific configuration
 case node['platform_family']
 when 'rhel'
