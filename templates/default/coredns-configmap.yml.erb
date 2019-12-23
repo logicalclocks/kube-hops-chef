@@ -11,10 +11,10 @@ data:
         hosts {
            fallthrough
         }
-        kubernetes cluster.local in-addr.arpa ip6.arpa {
+        kubernetes cluster.local {
            pods verified
            upstream
-           fallthrough in-addr.arpa ip6.arpa
+           fallthrough
         }
         prometheus :9153
         proxy . <%= @fallback_dns %>
@@ -22,4 +22,7 @@ data:
         loop
         reload
         loadbalance
+    } 
+    in-addr.arpa ip6.arpa { 
+      proxy . <%= @fallback_dns %>
     }
