@@ -30,6 +30,7 @@ default['kube-hops']['cidr']                              = "10.244.0.0/16"
 default['kube-hops']['dns_ip']                            = "10.96.0.10"
 default['kube-hops']['fallback_dns']                      = ""
 default['kube-hops']['flannel']['iface-regex']            = ""
+default['kube-hops']['cluster_domain']                    = "cluster.local"
 
 # Apiserver
 default['kube-hops']['apiserver']['port']                 = "6443"
@@ -60,7 +61,7 @@ default['kube-hops']['hopsworks_cert_pwd']                 = "adminpw"
 
 # Images configuration
 
-default['kube-hops']['registry']                           = "registry.docker-registry.svc.cluster.local"
+default['kube-hops']['registry']                           = "registry.docker-registry.svc.#{node['kube-hops']['cluster_domain']}"
 default['kube-hops']['pull_policy']                        = "IfNotPresent"
 
 default['kube-hops']['docker_dir']                         = node['install']['dir'].empty? ? "/var/lib/docker" : "#{node['install']['dir']}/docker"

@@ -8,8 +8,8 @@ version                 '1.3.0'
 depends 'kagent'
 depends 'ndb'
 depends 'sysctl'
-depends 'resolver'
 depends 'kernel_module'
+depends 'consul'
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
 recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
@@ -48,6 +48,10 @@ attribute "kube-hops/fallback_dns",
 
 attribute "kube-hops/flannel/iface-regex",
           :description =>  "iface-regex to configure flannel daemonset",
+          :type => 'string'
+          
+attribute "kube-hops/cluster_domain",
+          :description =>  "Kubernetes cluster domain. Default: cluster.local",
           :type => 'string'
 
 attribute "kube-hops/apiserver/port",
