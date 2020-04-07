@@ -22,7 +22,12 @@ data:
         loop
         reload
         loadbalance
-    } 
-    in-addr.arpa ip6.arpa { 
+    }
+    <%= node['consul']['domain'] %>:53 {
+     errors
+     cache 30
+     forward . /etc/resolv.conf
+    }
+    in-addr.arpa ip6.arpa {
       proxy . <%= @fallback_dns %>
     }

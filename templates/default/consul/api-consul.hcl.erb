@@ -1,0 +1,18 @@
+services = [
+    {
+        id = "k8s/api"
+        name = "kubernetes"
+        tags = [
+            "api"
+        ]
+        port = <%= node['kube-hops']['apiserver']['port'] %>
+        check = {
+            id = "api-health-check"
+            name = "Health check for Kubernetes API server"
+            http = "https://localhost:<%= node['kube-hops']['apiserver']['port'] %>/healthz"
+            tls_skip_verify = true
+            interval = "10s"
+            timeout = "5s"
+        }
+    }
+]

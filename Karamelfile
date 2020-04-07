@@ -22,6 +22,7 @@ dependencies:
   - recipe: kube-hops::addons
     global:
       - kube-hops::post_conf
+      - consul::default
 
 # Wait to run the hopsworks recipe after install
   - recipe: kube-hops::hopsworks
