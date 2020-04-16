@@ -25,3 +25,5 @@ REPLACE INTO `variables` VALUES ('kube_jupyter_img_version', '<%= node['kube-hop
 
 REPLACE INTO `variables` VALUES ('jupyter_host', '<%= @master_ip %>');
 
+REPLACE INTO `hopsworks`.`variables` VALUES ("logstash_port_python_jobs", "<%= node['logstash']['beats']['python_jobs_port'] %>");
+REPLACE INTO `hopsworks`.`variables` VALUES ("kube_python_img_version", "<%= node['kube-hops']['imgs']['python']['version'] %>");
