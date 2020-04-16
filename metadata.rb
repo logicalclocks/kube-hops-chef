@@ -10,6 +10,8 @@ cookbook 'resolver', '~> 2.1.0'
 cookbook 'kernel_module', '~> 1.1.1'
 depends 'kagent'
 depends 'ndb'
+depends 'consul'
+
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
 recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
@@ -48,6 +50,10 @@ attribute "kube-hops/fallback_dns",
 
 attribute "kube-hops/flannel/iface-regex",
           :description =>  "iface-regex to configure flannel daemonset",
+          :type => 'string'
+          
+attribute "kube-hops/cluster_domain",
+          :description =>  "Kubernetes cluster domain. Default: cluster.local",
           :type => 'string'
 
 attribute "kube-hops/apiserver/port",

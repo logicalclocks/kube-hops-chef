@@ -239,7 +239,7 @@ template "/home/#{node['kube-hops']['user']}/coredns-configmap.yml" do
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables ({
-      'fallback_dns': node['kube-hops']['fallback_dns'].eql?("") ? "8.8.8.8" : node['kube-hops']['fallback_dns']
+    'fallback_dns': node['kube-hops']['fallback_dns'].eql?("") ? "8.8.8.8" : node['kube-hops']['fallback_dns']
   })
 end
 
@@ -295,4 +295,11 @@ bash 'wait_for_core_dns' do
   code <<-EOH
     kubectl wait --for=condition=available --timeout=600s deployment/coredns -n kube-system
   EOH
+end
+
+# Register API serverwith Consul
+consul_service "Registering API server with Consul" do
+  service_definition "consul/api-consul.hcl.erb"
+  reload_consul false
+  action :register
 end
