@@ -5,11 +5,12 @@ license                 ''
 description             'Installs/Configures kube-hops-chef'
 version                 '1.3.0'
 
+cookbook 'sysctl', '~> 1.0.3'
+cookbook 'kernel_module', '~> 1.1.1'
 depends 'kagent'
 depends 'ndb'
-depends 'sysctl'
-depends 'kernel_module'
 depends 'consul'
+
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
 recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
