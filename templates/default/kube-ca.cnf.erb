@@ -60,7 +60,6 @@ DNS.3 = <%= node['kube-hops']['cluster_name'] %>.default
 DNS.4 = <%= node['kube-hops']['cluster_name'] %>.default.svc
 DNS.5 = <%= node['kube-hops']['cluster_name'] %>.default.svc.cluster
 DNS.6 = <%= node['kube-hops']['cluster_name'] %>.default.svc.cluster.local
-DNS.7 = registry.docker-registry.svc.cluster.local
 IP.1 = <%= node['kube-hops']['cidr'].split('/')[0].reverse.sub('0', '1').reverse %>
 IP.2 = <%= @master_cluster_ip %>
 IP.3 = 127.0.0.1

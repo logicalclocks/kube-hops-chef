@@ -16,7 +16,7 @@
     },
 	<% end -%>
     "graph": "<%= node['kube-hops']['docker_dir'] %>",
-    "exec-opts": ["native.cgroupdriver=<%= node['kube-hops']['cgroup-driver'] %>"],
+    "exec-opts": ["native.cgroupdriver=<%= node['hops']['cgroup-driver'] %>"],
     "log-driver": "json-file",
     "log-opts": {
       "max-size": "100m"

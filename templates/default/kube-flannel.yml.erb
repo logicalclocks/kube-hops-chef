@@ -55,6 +55,7 @@ data:
   cni-conf.json: |
     {
       "name": "cbr0",
+      "cniVersion": "0.2.0",
       "plugins": [
         {
           "type": "flannel",
@@ -79,7 +80,7 @@ data:
       }
     }
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-flannel-ds-amd64
@@ -88,11 +89,15 @@ metadata:
     tier: node
     app: flannel
 spec:
+  selector:
+    matchLabels:
+      name: kube-flannel-ds-amd64
   template:
     metadata:
       labels:
         tier: node
         app: flannel
+        name: kube-flannel-ds-amd64
     spec:
       hostNetwork: true
       nodeSelector:
@@ -158,7 +163,7 @@ spec:
           configMap:
             name: kube-flannel-cfg
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-flannel-ds-arm64
@@ -167,11 +172,15 @@ metadata:
     tier: node
     app: flannel
 spec:
+  selector:
+    matchLabels:
+      name: kube-flannel-ds-arm64
   template:
     metadata:
       labels:
         tier: node
         app: flannel
+        name: kube-flannel-ds-arm64
     spec:
       hostNetwork: true
       nodeSelector:
@@ -236,7 +245,7 @@ spec:
           configMap:
             name: kube-flannel-cfg
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-flannel-ds-arm
@@ -245,11 +254,15 @@ metadata:
     tier: node
     app: flannel
 spec:
+  selector:
+    matchLabels:
+      name: kube-flannel-ds-arm
   template:
     metadata:
       labels:
         tier: node
         app: flannel
+        name: kube-flannel-ds-arm
     spec:
       hostNetwork: true
       nodeSelector:
@@ -314,7 +327,7 @@ spec:
           configMap:
             name: kube-flannel-cfg
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-flannel-ds-ppc64le
@@ -323,11 +336,15 @@ metadata:
     tier: node
     app: flannel
 spec:
+  selector:
+    matchLabels:
+      name: kube-flannel-ds-ppc64le
   template:
     metadata:
       labels:
         tier: node
         app: flannel
+        name: kube-flannel-ds-ppc64le
     spec:
       hostNetwork: true
       nodeSelector:
@@ -392,7 +409,7 @@ spec:
           configMap:
             name: kube-flannel-cfg
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-flannel-ds-s390x
@@ -401,11 +418,15 @@ metadata:
     tier: node
     app: flannel
 spec:
+  selector:
+    matchLabels:
+      name: kube-flannel-ds-s390x
   template:
     metadata:
       labels:
         tier: node
         app: flannel
+        name: kube-flannel-ds-s390x
     spec:
       hostNetwork: true
       nodeSelector:
