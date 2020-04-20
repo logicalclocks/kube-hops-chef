@@ -130,18 +130,6 @@ when 'rhel'
     not_if "yum list installed kubeadm-#{kubernetes_version}"
   end
 
-  # Disabling SELinux by running setenforce 0 is required to allow containers to access
-  # the host filesystem, which is required by pod networks for example.
-  # You have to do this until SELinux support is improved in the kubelet.
-  bash 'disable_selinux' do
-    user 'root'
-    group 'root'
-    code <<-EOH
-      setenforce 0
-      sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
-    EOH
-  end
-
 when 'debian'
 
   bash "install_pkgs" do
