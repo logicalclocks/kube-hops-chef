@@ -15,6 +15,10 @@ etcd:
     image: ""
 imageRepository: <%= node['kube-hops']['image_repo'] %>
 kind: MasterConfiguration
+<% if node['kube-hops']['hostname_override'].casecmp?("true") -%>
+nodeRegistration:
+  name: <%= @node_name %>
+<% end -%>
 kubeProxy:
   config:
     bindAddress: 0.0.0.0
@@ -34,7 +38,7 @@ kubeProxy:
       tcpEstablishedTimeout: 24h0m0s
     enableProfiling: false
     healthzBindAddress: 0.0.0.0:10256
-    hostnameOverride: ""
+    hostnameOverride: "<%= @node_name %>"
     iptables:
       masqueradeAll: false
       masqueradeBit: 14

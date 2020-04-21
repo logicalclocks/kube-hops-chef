@@ -130,6 +130,11 @@ kube_hops_conf "admin" do
   not_if      { ::File.exist?("#{node['kube-hops']['conf_dir']}/admin.conf") }
 end
 
+if node['kube-hops']['hostname_override'].casecmp?("true")
+  node_name = node['fqdn']
+else
+  node_name = ""
+end
 # Template kubeadm configuration file
 template "#{node['kube-hops']['conf_dir']}/kubeadm.conf" do
   source "kubeadm-config.erb"
@@ -137,7 +142,8 @@ template "#{node['kube-hops']['conf_dir']}/kubeadm.conf" do
   group "root"
   mode "700"
   variables ({
-    'api_address': private_ip
+    'api_address': private_ip,
+    'node_name': node_name
   })
 end
 
