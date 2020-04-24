@@ -74,3 +74,4 @@ default['kube-hops']['imgs']['tf']['version']              = default['kube-hops'
 default['kube-hops']['imgs']['sklearn']['version']         = default['kube-hops']['docker_img_version']
 default['kube-hops']['imgs']['filebeat']['version']        = default['kube-hops']['docker_img_version']
 default['kube-hops']['imgs']['jupyter']['version']         = default['kube-hops']['docker_img_version']
+default['kube-hops']['imgs']['python']['version']          = default['kube-hops']['docker_img_version']
