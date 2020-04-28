@@ -31,6 +31,7 @@ default['kube-hops']['dns_ip']                            = "10.96.0.10"
 default['kube-hops']['fallback_dns']                      = ""
 default['kube-hops']['flannel']['iface-regex']            = ""
 default['kube-hops']['cluster_domain']                    = "cluster.local"
+default['kube-hops']['hostname_override']                 = "true"
 
 # Apiserver
 default['kube-hops']['apiserver']['port']                 = "6443"
