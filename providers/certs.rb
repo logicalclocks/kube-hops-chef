@@ -41,7 +41,7 @@ action :generate do
           require 'http-cookie'
           require 'json'
 
-          url = URI.parse("https://#{node['kube-hops']['pki']['ca_api']}/hopsworks-api/api/auth/login")
+          url = URI.parse("https://#{node['kube-hops']['pki']['ca_api']}/hopsworks-api/api/auth/service")
           ca_url = URI.parse("https://#{node['kube-hops']['pki']['ca_api']}/hopsworks-ca/v2/certificate/kube")
 
 
@@ -119,7 +119,7 @@ action :fetch_cert do
         require 'http-cookie'
         require 'json'
 
-        url = URI.parse("https://#{node['kube-hops']['pki']['ca_api']}/hopsworks-api/api/auth/login")
+        url = URI.parse("https://#{node['kube-hops']['pki']['ca_api']}/hopsworks-api/api/auth/service")
         ca_url = URI.parse("https://#{node['kube-hops']['pki']['ca_api']}/hopsworks-ca/v2/certificate/kube")
 
         params =  {
