@@ -1,28 +1,28 @@
-REPLACE INTO `variables` VALUES ('kube_master_url', 'https://<%= @master_ip %>:<%= node["kube-hops"]["apiserver"]["port"] %>');
-REPLACE INTO `variables` VALUES ('kube_user', 'hopsworks');
-REPLACE INTO `variables` VALUES ('kube_ca_certfile', '<%= node["certs"]["dir"] %>/kube/certs/kube-ca.cert.pem');
-REPLACE INTO `variables` VALUES ('kube_client_keyfile', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks.key.pem');
-REPLACE INTO `variables` VALUES ('kube_client_certfile', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks.cert.pem');
-REPLACE INTO `variables` VALUES ('kube_client_keypass', '<%= node['kube-hops']['hopsworks_cert_pwd'] %>');
-REPLACE INTO `variables` VALUES ('kube_truststore_path', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks__tstore.jks');
-REPLACE INTO `variables` VALUES ('kube_truststore_key', '<%= node['kube-hops']['hopsworks_cert_pwd'] %>');
-REPLACE INTO `variables` VALUES ('kube_keystore_path', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks__kstore.jks');
-REPLACE INTO `variables` VALUES ('kube_keystore_key', '<%= node['kube-hops']['hopsworks_cert_pwd'] %>');
-REPLACE INTO `variables` VALUES ('kube_ca_path', '<%= node["certs"]["dir"] %>/kube');
-REPLACE INTO `variables` VALUES ('kube_ca_password', '<%= node['kube-hops']['pki']['ca_keypw'] %>');
-REPLACE INTO `variables` VALUES ('kube_registry', '<%= node['kube-hops']['registry'] %>');
-REPLACE INTO `variables` VALUES ('kube_img_pull_policy', '<%= node['kube-hops']['pull_policy'] %>');
+REPLACE INTO `variables` VALUES ('kube_master_url', 'https://<%= @master_ip %>:<%= node["kube-hops"]["apiserver"]["port"] %>', 0);
+REPLACE INTO `variables` VALUES ('kube_user', 'hopsworks', 0);
+REPLACE INTO `variables` VALUES ('kube_ca_certfile', '<%= node["certs"]["dir"] %>/kube/certs/kube-ca.cert.pem', 0);
+REPLACE INTO `variables` VALUES ('kube_client_keyfile', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks.key.pem', 0);
+REPLACE INTO `variables` VALUES ('kube_client_certfile', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks.cert.pem', 0);
+REPLACE INTO `variables` VALUES ('kube_client_keypass', '<%= node['kube-hops']['hopsworks_cert_pwd'] %>', 0);
+REPLACE INTO `variables` VALUES ('kube_truststore_path', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks__tstore.jks', 0);
+REPLACE INTO `variables` VALUES ('kube_truststore_key', '<%= node['kube-hops']['hopsworks_cert_pwd'] %>', 0);
+REPLACE INTO `variables` VALUES ('kube_keystore_path', '<%= node["certs"]["dir"] %>/kube/hopsworks/hopsworks__kstore.jks', 0);
+REPLACE INTO `variables` VALUES ('kube_keystore_key', '<%= node['kube-hops']['hopsworks_cert_pwd'] %>', 0);
+REPLACE INTO `variables` VALUES ('kube_ca_path', '<%= node["certs"]["dir"] %>/kube', 0);
+REPLACE INTO `variables` VALUES ('kube_ca_password', '<%= node['kube-hops']['pki']['ca_keypw'] %>', 0);
+REPLACE INTO `variables` VALUES ('kube_registry', '<%= node['kube-hops']['registry'] %>', 0);
+REPLACE INTO `variables` VALUES ('kube_img_pull_policy', '<%= node['kube-hops']['pull_policy'] %>', 0);
 
-REPLACE INTO `variables` VALUES ('kube_docker_max_memory_allocation', '<%= node['kube-hops']['docker_max_memory_allocation'] %>');
-REPLACE INTO `variables` VALUES ('kube_docker_max_cores_allocation', '<%= node['kube-hops']['docker_max_cores_allocation'] %>');
-REPLACE INTO `variables` VALUES ('kube_docker_cores_fraction', '<%= node['kube-hops']['docker_cores_fraction'] %>');
-REPLACE INTO `variables` VALUES ('kube_docker_max_gpus_allocation', '<%= node['kube-hops']['docker_max_gpus_allocation'] %>');
+REPLACE INTO `variables` VALUES ('kube_docker_max_memory_allocation', '<%= node['kube-hops']['docker_max_memory_allocation'] %>', 1);
+REPLACE INTO `variables` VALUES ('kube_docker_max_cores_allocation', '<%= node['kube-hops']['docker_max_cores_allocation'] %>', 1);
+REPLACE INTO `variables` VALUES ('kube_docker_cores_fraction', '<%= node['kube-hops']['docker_cores_fraction'] %>', 1);
+REPLACE INTO `variables` VALUES ('kube_docker_max_gpus_allocation', '<%= node['kube-hops']['docker_max_gpus_allocation'] %>', 1);
 
-REPLACE INTO `variables` VALUES ('kube_tf_img_version', '<%= node['kube-hops']['imgs']['tf']['version'] %>');
-REPLACE INTO `variables` VALUES ('kube_sklearn_img_version', '<%= node['kube-hops']['imgs']['sklearn']['version'] %>');
-REPLACE INTO `variables` VALUES ('kube_filebeat_img_version', '<%= node['kube-hops']['imgs']['filebeat']['version'] %>');
-REPLACE INTO `variables` VALUES ('kube_jupyter_img_version', '<%= node['kube-hops']['imgs']['jupyter']['version'] %>');
+REPLACE INTO `variables` VALUES ('kube_tf_img_version', '<%= node['kube-hops']['imgs']['tf']['version'] %>', 1);
+REPLACE INTO `variables` VALUES ('kube_sklearn_img_version', '<%= node['kube-hops']['imgs']['sklearn']['version'] %>', 1);
+REPLACE INTO `variables` VALUES ('kube_filebeat_img_version', '<%= node['kube-hops']['imgs']['filebeat']['version'] %>', 1);
+REPLACE INTO `variables` VALUES ('kube_jupyter_img_version', '<%= node['kube-hops']['imgs']['jupyter']['version'] %>', 1);
 
-REPLACE INTO `variables` VALUES ('jupyter_host', '<%= @master_ip %>');
+REPLACE INTO `variables` VALUES ('jupyter_host', '<%= @master_ip %>', 0);
 
-REPLACE INTO `hopsworks`.`variables` VALUES ("kube_python_img_version", "<%= node['kube-hops']['imgs']['python']['version'] %>");
+REPLACE INTO `hopsworks`.`variables` VALUES ("kube_python_img_version", "<%= node['kube-hops']['imgs']['python']['version'] %>", 1);
