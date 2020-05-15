@@ -36,10 +36,7 @@ kube_hops_certs 'apiserver-kubelet-client' do
   not_if      { ::File.exist?("#{node['kube-hops']['pki']['dir']}/apiserver-kubelet-client.crt") }
 end
 
-master_hostname = node['hostname']
-if node['platform_family'].eql?("rhel")
-  master_hostname = node['fqdn']
-end
+master_hostname = node['fqdn']
   
 # ETCD certificates
 # Etcd has its own separate CA.
