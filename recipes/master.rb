@@ -274,6 +274,8 @@ if node['kube-hops']['master']['untaint'].eql?("true")
     user node['kube-hops']['user']
     group node['kube-hops']['group']
     environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
+    retries 6
+    retry_delay 30
     code <<-EOH
       kubectl taint nodes --all node-role.kubernetes.io/master-
     EOH
