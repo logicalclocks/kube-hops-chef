@@ -17,11 +17,12 @@ kube_hops_certs 'ca' do
   not_if { ::File.exist?("#{node['kube-hops']['pki']['dir']}/ca.crt") }
 end
 
-# Create kubelet.conf
+# Generate configuration for kubelet
 kube_hops_conf "kubelet" do
   path        node['kube-hops']['conf_dir']
-  subject     "/CN=system:node:#{node['fqdn']}/O=system:nodes"
+  subject     "/CN=system:node:#{node['hostname']}/O=system:nodes"
   master_ip   master_cluster_ip
+  component   "system:node:#{node['hostname']}"
   not_if      { ::File.exist?("#{node['kube-hops']['conf_dir']}/kubelet.conf") }
 end
 
@@ -39,19 +40,12 @@ end
 
 # As we are not using kubeadm to join the node we need to template an env file for the
 # kubelet unit
-centos_conf = ""
-if node['platform_family'].eql?("rhel")
-  centos_conf = "--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice"
-end
 
 template "#{node['kube-hops']['kubelet_dir']}/kubeadm-flags.env" do
   source "kubeadm-flags.erb"
   owner "root"
   group "root"
   mode "644"
-  variables ({
-    'centos_conf': centos_conf
-  })
 end
 
 # Join node using the token
@@ -60,4 +54,8 @@ end
 # We provide the kubelet configuration with the cert already signed and the kubelet configuration.
 service 'kubelet' do
   action :start
+end
+
+service 'kubelet' do
+  action [:enable]
 end

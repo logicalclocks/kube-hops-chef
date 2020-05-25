@@ -7,13 +7,13 @@ clusters:
 contexts:
 - context:
     cluster: <%= node['kube-hops']['cluster_name'] %>
-    user: system:<%= @component %>
-  name: system:<%= @component %>@<%= node['kube-hops']['cluster_name'] %>
-current-context: system:<%= @component %>@<%= node['kube-hops']['cluster_name'] %>
+    user: <%= @component %>
+  name: <%= @component %>@<%= node['kube-hops']['cluster_name'] %>
+current-context: <%= @component %>@<%= node['kube-hops']['cluster_name'] %>
 kind: Config
 preferences: {}
 users:
-- name: system:<%= @component %>
+- name: <%= @component %>
   user:
     client-certificate-data: <%= @client_cert_data %>
     client-key-data: <%= @client_key_data %>

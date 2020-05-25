@@ -39,7 +39,7 @@ action :generate do
       h['ca_cert_data'] = ca_cert_data
       h['client_cert_data'] = client_cert_data
       h['client_key_data'] = client_key_data
-      h['component'] = "kube-#{new_resource.name}"
+      h['component'] = new_resource.component
       h
     })
   end

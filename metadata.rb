@@ -10,6 +10,7 @@ cookbook 'kernel_module', '~> 1.1.1'
 depends 'kagent'
 depends 'ndb'
 depends 'consul'
+depends 'hops'
 
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
@@ -18,10 +19,6 @@ recipe 'kube-hops::node', 'Configure a node as Kubernetes slave'
 recipe 'kube-hops::addons', 'Deploy addons on the cluster'
 recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
 
-
-attribute "kube-hops/cgroup-driver",
-          :description =>  "Cgroup driver",
-          :type => 'string'
 
 attribute "kube-hops/device",
           :description =>  "Device plugin to configure for master and nodes, for no device set '' or 'nvidia' for NVIDIA GPUs",
@@ -133,10 +130,6 @@ attribute "kube-hops/docker_img_tar_url",
 
 attribute "kube-hops/docker_img_reg_url",
           :description =>  "Remote container images registry from which to fetch the images",
-          :type => 'string'
-
-attribute "kube-hops/registry",
-          :description =>  "Service name for the internal registry deployed in kubernetes",
           :type => 'string'
 
 attribute "kube-hops/pull_policy",

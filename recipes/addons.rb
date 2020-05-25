@@ -28,49 +28,6 @@ if node.attribute?('hopsworks')
   end
 end
 
-kube_hops_certs 'domain' do
-  path        "/home/#{node['kube-hops']['user']}"
-  owner       node['kube-hops']['user']
-  group       node['kube-hops']['group']
-  subject     "/CN=registry.docker-registry.svc.cluster.local"
-  not_if      { ::File.exist?("/home/#{node['kube-hops']['user']}/domain.crt") }
-end
-
-crt = ""
-key = ""
-
-# Read the content of the files
-ruby_block 'read_crypto' do
-  block do
-    require 'base64'
-
-    crt = ::File.read("/home/#{node['kube-hops']['user']}/domain.crt")
-    crt = ::Base64.strict_encode64(crt)
-
-    key = ::File.read("/home/#{node['kube-hops']['user']}/domain.key")
-    key = ::Base64.strict_encode64(key)
-  end
-end
-
-# TODO (Fabio) : TLS, authentication and deploy default images
-template "#{node['kube-hops']['conf_dir']}/registry.yaml" do
-  source "registry.erb"
-  owner node['kube-hops']['user']
-  group node['kube-hops']['group']
-  variables( lazy {
-      h = {}
-      h['crt'] = crt
-      h['key'] = key
-      h
-    })
-end
-
-kube_hops_kubectl 'deploy_docker_registry' do
-  user node['kube-hops']['user']
-  group node['kube-hops']['group']
-  url "#{node['kube-hops']['conf_dir']}/registry.yaml"
-end
-
 # Push default images on the registry
 if not node['kube-hops']['docker_img_tar_url'].eql?("")
   hops_images = "#{Chef::Config['file_cache_path']}/docker-images.tar"
@@ -92,6 +49,14 @@ else
   # TODO(Fabio): pull from registry
 end
 
+begin
+  registry_ip = private_recipe_ip("hops","docker_registry")
+  registry_host = resolve_hostname(registry_ip)
+rescue
+  registry_host = "localhost"
+  Chef::Log.warn "could not find the docker registry ip!"
+end
+
 bash "tag_and_push" do
     user "root"
     code <<-EOH
@@ -99,8 +64,8 @@ bash "tag_and_push" do
       for image in $(docker images --format '{{.Repository}}:{{.Tag}}' | grep #{node['kube-hops']['docker_img_version']})
       do
         img_name=(${image//\// })
-        docker tag $image #{node['kube-hops']['registry']}/${img_name[1]}
-        docker push #{node['kube-hops']['registry']}/${img_name[1]}
+        docker tag $image #{registry_host}:#{node['hops']['docker']['registry']['port']}/${img_name[1]}
+        docker push #{registry_host}:#{node['hops']['docker']['registry']['port']}/${img_name[1]}
       done
     EOH
 end

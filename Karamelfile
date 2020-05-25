@@ -14,15 +14,12 @@ dependencies:
     global:
       - kube-hops::master
 
-  - recipe: kube-hops::post_conf
+  - recipe: kube-hops::addons
     global:
       - kube-hops::node
       - kube-hops::master
-
-  - recipe: kube-hops::addons
-    global:
-      - kube-hops::post_conf
       - consul::default
+      - hops::docker_registry
 
 # Wait to run the hopsworks recipe after install
   - recipe: kube-hops::hopsworks

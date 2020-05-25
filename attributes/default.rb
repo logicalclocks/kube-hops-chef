@@ -3,13 +3,12 @@ include_attribute "ndb"
 default['kube-hops']['user']                              = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 default['kube-hops']['group']                             = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 
-default['kube-hops']['cgroup-driver']                     = "systemd"
 default['kube-hops']['device']                            = ""
 
 # General cluster configuration
-default['kube-hops']['kubernetes_version']                = "v1.12.4"
-default['kube-hops']['kubernetes-cni_version']            = "0.6.0"
-default['kube-hops']['cri-tools_version']                 = "1.12.0"
+default['kube-hops']['kubernetes_version']                = "v1.18.0"
+default['kube-hops']['kubernetes-cni_version']            = "0.7.5"
+default['kube-hops']['cri-tools_version']                 = "1.13.0"
 default['kube-hops']['cluster_name']                      = "hops-kubernetes"
 default['kube-hops']['image_repo']                        = "k8s.gcr.io"
 
@@ -62,8 +61,7 @@ default['kube-hops']['hopsworks_cert_pwd']                 = "adminpw"
 
 # Images configuration
 
-default['kube-hops']['registry']                           = "registry.docker-registry.svc.#{node['kube-hops']['cluster_domain']}"
-default['kube-hops']['pull_policy']                        = "IfNotPresent"
+default['kube-hops']['pull_policy']                        = "Always"
 
 default['kube-hops']['docker_dir']                         = node['install']['dir'].empty? ? "/var/lib/docker" : "#{node['install']['dir']}/docker"
 

@@ -1,5 +1,7 @@
-address: 0.0.0.0
 apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+port: 10250
+address: 0.0.0.0
 authentication:
   anonymous:
     enabled: false
@@ -13,10 +15,10 @@ authorization:
   webhook:
     cacheAuthorizedTTL: 5m0s
     cacheUnauthorizedTTL: 30s
-cgroupDriver: <%= node['kube-hops']['cgroup-driver'] %>
+cgroupDriver: <%= node['hops']['cgroup-driver'] %>
 cgroupsPerQOS: true
 clusterDNS:
--  <%= node['kube-hops']['dns_ip'] %>
+- <%= node['kube-hops']['dns_ip'] %>
 clusterDomain: cluster.local
 containerLogMaxFiles: 5
 containerLogMaxSize: 10Mi
@@ -47,19 +49,17 @@ imageGCLowThresholdPercent: 80
 imageMinimumGCAge: 2m0s
 iptablesDropBit: 15
 iptablesMasqueradeBit: 14
-kind: KubeletConfiguration
 kubeAPIBurst: 10
 kubeAPIQPS: 5
 makeIPTablesUtilChains: true
 maxOpenFiles: 1000000
 maxPods: 110
+nodeStatusReportFrequency: 0s
 nodeStatusUpdateFrequency: 10s
 oomScoreAdj: -999
 podPidsLimit: -1
-port: 10250
 registryBurst: 10
 registryPullQPS: 5
-resolvConf: /etc/resolv.conf
 rotateCertificates: true
 runtimeRequestTimeout: 2m0s
 serializeImagePulls: true
@@ -67,9 +67,3 @@ staticPodPath: <%= node['kube-hops']['conf_dir'] %>/manifests
 streamingConnectionIdleTimeout: 4h0m0s
 syncFrequency: 1m0s
 volumeStatsAggPeriod: 1m0s
-kubernetesVersion: <% node['kube-hops']['kubernetes_version'] %>
-networking:
-  dnsDomain: cluster.local
-  podSubnet: <%= node['kube-hops']['cidr'] %>
-  serviceSubnet: 10.96.0.0/12
-
