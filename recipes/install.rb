@@ -16,6 +16,12 @@ user node['kube-hops']['user'] do
   not_if "getent passwd #{node['kube-hops']['user']}"
 end
 
+group node['hops']['group'] do
+  gid node['hops']['group_id']
+  action :create
+  not_if "getent group #{node['hops']['group']}"
+  not_if { node['install']['external_users'].casecmp("true") == 0 }
+end
 
 # On all the nodes Kubernetes run, swap needs to be disabled.
 # In the setup-chef cookbook we should check that on the nodes dedicated to Kubernetes,
