@@ -7,7 +7,7 @@ dependencies:
   - recipe: kube-hops::master
     global:
       - kube-hops::ca
-      - hopsworks::default
+      - consul::default
 # Wait also for Hopsworks::dev as it restarts the webserver and the CA won't work.
       - hopsworks::dev
   - recipe: kube-hops::node
@@ -18,7 +18,6 @@ dependencies:
     global:
       - kube-hops::node
       - kube-hops::master
-      - consul::default
       - hops::docker_registry
 
 # Wait to run the hopsworks recipe after install
