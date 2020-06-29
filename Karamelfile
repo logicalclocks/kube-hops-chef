@@ -19,6 +19,7 @@ dependencies:
       - kube-hops::node
       - kube-hops::master
       - hops::docker_registry
+      - kube-hops::hopsworks
 
 # Wait to run the hopsworks recipe after install
   - recipe: kube-hops::hopsworks
