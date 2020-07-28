@@ -49,14 +49,7 @@ else
   # TODO(Fabio): pull from registry
 end
 
-begin
-  registry_ip = private_recipe_ip("hops","docker_registry")
-  registry_host = resolve_hostname(registry_ip)
-rescue
-  registry_host = "localhost"
-  Chef::Log.warn "could not find the docker registry ip!"
-end
-
+registry_host=consul_helper.get_service_fqdn("registry")
 bash "tag_and_push" do
     user "root"
     code <<-EOH
