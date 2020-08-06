@@ -21,7 +21,7 @@ dependencies:
       - kube-hops::master
   - recipe: kube-hops::addons
     global:
-      - kube-hops::post_conf
+      - kube-hops::master
 
 # Wait to run the hopsworks recipe after install
   - recipe: kube-hops::hopsworks
