@@ -65,11 +65,9 @@ kagent_config service_name do
   action :systemd_reload
 end
 
-
 if node['kagent']['enabled'] == "true"
   kagent_config service_name do
     service "kubernetes"
-    log_file "/var/log/kubelet.log"
   end
 end
 
