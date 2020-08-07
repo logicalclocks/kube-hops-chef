@@ -7,7 +7,8 @@ dependencies:
   - recipe: kube-hops::master
     global:
       - kube-hops::ca
-      - consul::default
+      - consul::master
+      - consul::slave
 # Wait also for Hopsworks::dev as it restarts the webserver and the CA won't work.
       - hopsworks::dev
 
