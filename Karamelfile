@@ -20,6 +20,8 @@ dependencies:
       - kube-hops::node
       - kube-hops::master
       - hops::docker_registry
+# This is needed for 1.3
+      - kube-hops::post_conf
 
 # Wait to run the hopsworks recipe after install
   - recipe: kube-hops::hopsworks
