@@ -48,6 +48,7 @@ template "#{node['kube-hops']['kubelet_dir']}/kubeadm-flags.env" do
   mode "644"
 end
 
+service_name='kubelet'
 # Join node using the token
 # Here we don't use kubeadm join command as it will go through the tls bootstrap prcess and the
 # csrsigner controller on the master cannot sign csr as it doesn't have access to the ca key.
@@ -56,6 +57,22 @@ service 'kubelet' do
   action :start
 end
 
-service 'kubelet' do
+service service_name do
   action [:enable]
+end
+
+kagent_config service_name do
+  action :systemd_reload
+end
+
+if node['kagent']['enabled'] == "true"
+  kagent_config service_name do
+    service "kubernetes"
+  end
+end
+
+if conda_helpers.is_upgrade
+  kagent_config "#{service_name}" do
+    action :systemd_reload
+  end
 end

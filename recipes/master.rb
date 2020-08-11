@@ -284,7 +284,25 @@ consul_service "Registering API server with Consul" do
   action :register
 end
 
-service 'kubelet' do
+service_name='kubelet'
+service service_name do
   action [:enable]
 end
 
+kagent_config service_name do
+  action :systemd_reload
+end
+
+
+if node['kagent']['enabled'] == "true"
+  kagent_config service_name do
+    service "kubernetes"
+    log_file ""
+  end
+end
+
+if conda_helpers.is_upgrade
+  kagent_config "#{service_name}" do
+    action :systemd_reload
+  end
+end
