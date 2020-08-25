@@ -68,9 +68,3 @@ default['kube-hops']['docker_dir']                         = node['install']['di
 default['kube-hops']['docker_img_version']                 = node['install']['version']
 default['kube-hops']['docker_img_tar_url']                 = node['download_url'] + "/kube/docker-images/#{node['kube-hops']['docker_img_version']}/docker-images.tar"
 default['kube-hops']['docker_img_reg_url']                 = ""
-
-default['kube-hops']['imgs']['tf']['version']              = default['kube-hops']['docker_img_version']
-default['kube-hops']['imgs']['sklearn']['version']         = default['kube-hops']['docker_img_version']
-default['kube-hops']['imgs']['filebeat']['version']        = default['kube-hops']['docker_img_version']
-default['kube-hops']['imgs']['jupyter']['version']         = default['kube-hops']['docker_img_version']
-default['kube-hops']['imgs']['python']['version']          = default['kube-hops']['docker_img_version']

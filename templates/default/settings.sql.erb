@@ -18,11 +18,4 @@ REPLACE INTO `variables` VALUES ('kube_docker_max_cores_allocation', '<%= node['
 REPLACE INTO `variables` VALUES ('kube_docker_cores_fraction', '<%= node['kube-hops']['docker_cores_fraction'] %>', 1);
 REPLACE INTO `variables` VALUES ('kube_docker_max_gpus_allocation', '<%= node['kube-hops']['docker_max_gpus_allocation'] %>', 1);
 
-REPLACE INTO `variables` VALUES ('kube_tf_img_version', '<%= node['kube-hops']['imgs']['tf']['version'] %>', 1);
-REPLACE INTO `variables` VALUES ('kube_sklearn_img_version', '<%= node['kube-hops']['imgs']['sklearn']['version'] %>', 1);
-REPLACE INTO `variables` VALUES ('kube_filebeat_img_version', '<%= node['kube-hops']['imgs']['filebeat']['version'] %>', 1);
-REPLACE INTO `variables` VALUES ('kube_jupyter_img_version', '<%= node['kube-hops']['imgs']['jupyter']['version'] %>', 1);
-
 REPLACE INTO `variables` VALUES ('jupyter_host', '<%= @master_ip %>', 0);
-
-REPLACE INTO `hopsworks`.`variables` VALUES ("kube_python_img_version", "<%= node['kube-hops']['imgs']['python']['version'] %>", 1);
