@@ -65,7 +65,7 @@ default['kube-hops']['pull_policy']                        = "Always"
 
 default['kube-hops']['docker_dir']                         = node['install']['dir'].empty? ? "/var/lib/docker" : "#{node['install']['dir']}/docker"
 
-default['kube-hops']['docker_img_version']                 = node['install']['version'].gsub("-SNAPSHOT", "")
+default['kube-hops']['docker_img_version']                 = node['install']['version']
 default['kube-hops']['docker_img_tar_url']                 = node['download_url'] + "/kube/docker-images/#{node['kube-hops']['docker_img_version']}/docker-images.tar"
 default['kube-hops']['docker_img_reg_url']                 = ""
 
