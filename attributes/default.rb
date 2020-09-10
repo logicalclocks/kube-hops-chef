@@ -6,8 +6,8 @@ default['kube-hops']['group']                             = node['install']['use
 default['kube-hops']['device']                            = ""
 
 # General cluster configuration
-default['kube-hops']['kubernetes_version']                = "v1.18.0"
-default['kube-hops']['kubernetes-cni_version']            = "0.7.5"
+default['kube-hops']['kubernetes_version']                = "v1.18.8"
+default['kube-hops']['kubernetes-cni_version']            = "0.8.7"
 default['kube-hops']['cri-tools_version']                 = "1.13.0"
 default['kube-hops']['cluster_name']                      = "hops-kubernetes"
 default['kube-hops']['image_repo']                        = "k8s.gcr.io"

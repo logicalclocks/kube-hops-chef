@@ -54,7 +54,7 @@ emailAddress            = optional
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.1 = <%= @master_hostname %>
+DNS.1 = <%= node['fqdn'] %>
 DNS.2 = <%= node['kube-hops']['cluster_name'] %>
 DNS.3 = <%= node['kube-hops']['cluster_name'] %>.default
 DNS.4 = <%= node['kube-hops']['cluster_name'] %>.default.svc
