@@ -1,5 +1,4 @@
 # For Flannel (overlay network) to work we need to pass bridged IPv4 traffic to iptables’ chains
-
 if node['platform_family'].eql?('rhel')
   # For centos, at least on a VM we need to load some kernel modules
   kernel_module 'bridge' do

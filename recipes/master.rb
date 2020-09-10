@@ -36,8 +36,6 @@ kube_hops_certs 'apiserver-kubelet-client' do
   not_if      { ::File.exist?("#{node['kube-hops']['pki']['dir']}/apiserver-kubelet-client.crt") }
 end
 
-master_hostname = node['fqdn']
-  
 # ETCD certificates
 # Etcd has its own separate CA.
 # Template the CA configuration on the master
@@ -46,8 +44,7 @@ template "#{node['kube-hops']['pki']['dir']}/kube-ca.cnf" do
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables ({
-    'master_cluster_ip': private_ip,
-    'master_hostname': master_hostname
+    'master_cluster_ip': private_ip
   })
 end
 
@@ -120,9 +117,9 @@ end
 # Generate configuration for kubelet
 kube_hops_conf "kubelet" do
   path        node['kube-hops']['conf_dir']
-  subject     "/CN=system:node:#{master_hostname}/O=system:nodes"
+  subject     "/CN=system:node:#{node['fqdn']}/O=system:nodes"
   master_ip   private_ip
-  component   "system:node:#{master_hostname}"
+  component   "system:node:#{node['fqdn']}"
   not_if      { ::File.exist?("#{node['kube-hops']['conf_dir']}/kubelet.conf") }
 end
 
@@ -251,7 +248,7 @@ if node['kube-hops']['master']['untaint'].eql?("true")
     code <<-EOH
       kubectl taint nodes --all node-role.kubernetes.io/master-
     EOH
-    not_if "kubectl describe nodes #{master_hostname} | grep Taints | grep none", :environment => { 'HOME' => ::Dir.home(node['kube-hops']['user']) }
+    not_if "kubectl describe nodes #{node['fqdn']} | grep Taints | grep none", :environment => { 'HOME' => ::Dir.home(node['kube-hops']['user']) }
   end
 end
 
