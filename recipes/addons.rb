@@ -62,3 +62,7 @@ bash "tag_and_push" do
       done
     EOH
 end
+
+if node['kube-hops']['kfserving_enabled'].eql?("true")
+  include_recipe "kube-hops::kfserving"
+end

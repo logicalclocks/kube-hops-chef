@@ -11,14 +11,14 @@ depends 'kagent'
 depends 'ndb'
 depends 'consul'
 depends 'hops'
-
+depends 'magic_shell', '~> 1.0.0'
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
 recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
 recipe 'kube-hops::node', 'Configure a node as Kubernetes slave'
 recipe 'kube-hops::addons', 'Deploy addons on the cluster'
 recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
-
+recipe 'kube-hops::kfserving', 'Configure and install KFServing (helm, istio, knative) on Kubernetes'
 
 
 attribute "kube-hops/hopsworks_user",
@@ -155,4 +155,8 @@ attribute "kube-hops/docker_cores_fraction",
 
 attribute "kube-hops/docker_max_gpus_allocation",
           :description =>  "Maximum number of GPUs that can be allocated for Docker containers",
+          :type => 'string'
+
+attribute "kube-hops/kfserving_enabled",
+          :description =>  "Default false. Set to 'true' to enable kfserving",
           :type => 'string'
