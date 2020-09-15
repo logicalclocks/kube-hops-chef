@@ -22,8 +22,8 @@ bash 'install-helm' do
 end
 
 bash 'configure-helm' do
-  user ['kube-hops']['user']
-  group ['kube-hops']['group']
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
   code <<-EOH
     helm repo add stable https://kubernetes-charts.storage.googleapis.com/
     helm repo add jetstack https://charts.jetstack.io # cert-manager
@@ -71,8 +71,8 @@ end
 # Notes: targetPort cannot be lower than 1024.
 #        istioctl manifest apply not known, use install to apply manifests
 bash 'configure-istio' do
-  user ['kube-hops']['user']
-  group ['kube-hops']['group']
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
   code <<-EOH
     cat <<EOF | istio-#{node['kube-hops']['istio_version']}/bin/istioctl manifest install -f -
     apiVersion: install.istio.io/v1alpha1
@@ -125,8 +125,8 @@ end
 # Install Knative Operator
 # Note: Only knative serving is required. (Knative eventing can be installed independently)
 bash 'install-knative' do
-  user ['kube-hops']['user']
-  group ['kube-hops']['group']
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
   code <<-EOH
     kubectl apply -f https://github.com/knative/operator/releases/download/v0.17.0/operator.yaml
     EOH
@@ -135,8 +135,8 @@ end
 
 # Install Knative Serving component
 bash 'configure-knative' do
-  user ['kube-hops']['user']
-  group ['kube-hops']['group']
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
   code <<-EOH
     cat <<EOF | kubectl apply -f -
     apiVersion: v1
@@ -160,8 +160,8 @@ end
 
 # Install Cert-manager
 bash 'install-cert-manager' do
-  user ['kube-hops']['user']
-  group ['kube-hops']['group']
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
   code <<-EOH
     cat <<EOF | kubectl apply -f -
     apiVersion: v1
@@ -187,8 +187,8 @@ end
 
 # Note: KFServing v0.4.0 not supported with Kubernetes 1.18
 bash 'install-kfserving' do
-  user ['kube-hops']['user']
-  group ['kube-hops']['group']
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
   code <<-EOH
     kubectl apply -f kfserving.yaml
     EOH
