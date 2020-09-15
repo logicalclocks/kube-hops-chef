@@ -18,7 +18,7 @@ recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
 recipe 'kube-hops::node', 'Configure a node as Kubernetes slave'
 recipe 'kube-hops::addons', 'Deploy addons on the cluster'
 recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
-
+recipe 'kube-hops::kfserving', 'Configure and install KFServing (helm, istio, knative) on Kubernetes'
 
 
 attribute "kube-hops/hopsworks_user",
