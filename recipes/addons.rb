@@ -62,3 +62,5 @@ bash "tag_and_push" do
       done
     EOH
 end
+
+include_recipe "kube-hops::kfserving"
