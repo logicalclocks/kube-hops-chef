@@ -23,7 +23,7 @@ end
 case node['platform_family']
 when 'rhel'
   package 'gcc-c++'
-when 'ubuntu'
+when 'debian'
   package 'g++'
 end
 
