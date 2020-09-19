@@ -1,5 +1,7 @@
 # Install KFServing and required tools
 
+private_ip = my_private_ip()
+
 # Helm
 
 # The script detects arch/os and install helm accordingly
@@ -26,9 +28,9 @@ bash 'configure-helm' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
-    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-    helm repo add jetstack https://charts.jetstack.io # cert-manager
-    helm repo update
+    /usr/local/bin/helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    /usr/local/bin/helm repo add jetstack https://charts.jetstack.io # cert-manager
+    /usr/local/bin/helm repo update
     EOH
 #  not_if ""
 end
@@ -36,17 +38,20 @@ end
 # Istio
 
 # Download binaries
-bash 'install-istio' do
+bash 'install-istio1' do
   user 'root'
   group 'root'
   code <<-EOH
+    cd "#{Chef::Config['file_cache_path']}"
+    export PATH=$PATH:/usr/local/bin
     curl -L #{node['kube-hops']['istio_script_url']} | ISTIO_VERSION=#{node['kube-hops']['istio_version']} sh -
     EOH
 #  not_if ""
 end
 
+#    port: <%= node['kube-hops']['apiserver']['port'] %>
 # Install CRDs
-bash 'install-istio' do
+bash 'install-istio2' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
@@ -59,7 +64,8 @@ bash 'install-istio' do
         name: istio-system
     EOF
 
-    helm template istio-#{node['kube-hops']['istio_version']}/manifests/charts/istio-operator/ \
+    /usr/local/bin/helm --kube-apiserver https://#{private_ip}:#{node['kube-hops']['apiserver']['port']}\
+      template istio-#{node['kube-hops']['istio_version']}/manifests/charts/istio-operator/ \
       --set hub=docker.io/istio \
       --set tag=#{node['kube-hops']['istio_version']} \
       --set operatorNamespace=istio-operator \
@@ -173,7 +179,7 @@ bash 'install-cert-manager' do
         name: cert-manager
     EOF
 
-    helm install \
+    /usr/local/bin/helm install \
       cert-manager jetstack/cert-manager \
       --namespace cert-manager \
       --version v1.0.1 \
