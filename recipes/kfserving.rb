@@ -16,6 +16,7 @@ bash 'install-helm' do
   user 'root'
   group 'root'
   code <<-EOH
+    export PATH=$PATH:/usr/local/bin
     curl #{node['kube-hops']['helm_script_url']} | bash
     EOH
 #  not_if ""
@@ -46,8 +47,8 @@ end
 
 # Install CRDs
 bash 'install-istio' do
-  user ['kube-hops']['user']
-  group ['kube-hops']['group']
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
   code <<-EOH
     cat <<EOF | kubectl apply -f -
     apiVersion: v1
