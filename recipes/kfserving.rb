@@ -8,11 +8,36 @@ private_ip = my_private_ip()
 # Optional args:
 # -v | --version: define specific version
 # --no-sudo: install without sudo
+template "/home/#{node['kube-hops']['user']}/istio.yml" do
+  source "istio.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
+template "/home/#{node['kube-hops']['user']}/istio-configure.yml" do
+  source "istio-configure.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
+template "/home/#{node['kube-hops']['user']}/knative-configure.yml" do
+  source "knative-configure.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
+template "/home/#{node['kube-hops']['user']}/certmgr.yml" do
+  source "knative-configure.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
 template "/home/#{node['kube-hops']['user']}/kfserving.yml" do
   source "kfserving.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
 end
+
 
 bash 'install-helm' do
   user 'root'
@@ -29,9 +54,11 @@ end
 bash 'configure-helm' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  ignore_failure true
+#  ignore_failure true
   code <<-EOH
-    chmod 400 ~/.kube/config
+    export PATH=$PATH:/usr/local/bin
+    cd /home/#{node['kube-hops']['user']}
+    chmod 400 .kube/config
     /usr/local/bin/helm repo add stable https://kubernetes-charts.storage.googleapis.com/
     /usr/local/bin/helm repo add jetstack https://charts.jetstack.io # cert-manager
     /usr/local/bin/helm repo update
@@ -45,8 +72,12 @@ bash 'install-istio1' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
-    curl -L #{node['kube-hops']['istio_script_url']} | ISTIO_VERSION=#{node['kube-hops']['istio_version']} sh -
+    wget -nc #{node['kube-hops']['istio_url']}
+    tar zxf istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz" 
+    rm -f $HOME/istio
+    ln -s $HOME/istio-#{node['kube-hops']['istio_version']} $HOME/istio
     EOH
+  not_if { File.exist? "/home/#{node['kube-hops']['user'}/istioctl/bin" }
 end
 
 #    port: <%= node['kube-hops']['apiserver']['port'] %>
@@ -55,27 +86,31 @@ bash 'install-istio2' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
-    export PATH=$PATH:/usr/local/bin:$HOME/.istioctl/bin
+    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
+    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
+    kubectl apply -f istio.yml
+    EOH
+end
 
-    cat <<EOF | kubectl apply -f -
-    apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: istio-system
-      labels:
-        name: istio-system
-    EOF
+bash 'install-istio3' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  cwd "home/" + node['kube-hops']['user']
+  code <<-EOH
+    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
+    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
 
-#      --kube-apiserver https://#{private_ip}:#{node['kube-hops']['apiserver']['port']} \
-#      --insecure-skip-tls-verify \
-
-    /usr/local/bin/helm template istio-#{node['kube-hops']['istio_version']}/manifests/charts/istio-operator/ \
+    helm template istio-#{node['kube-hops']['istio_version']}/manifests/charts/istio-operator/ \
+      --kube-apiserver https://#{private_ip}:#{node['kube-hops']['apiserver']['port']} \
+      --insecure-skip-tls-verify \
       --set hub=docker.io/istio \
       --set tag=#{node['kube-hops']['istio_version']} \
       --set operatorNamespace=istio-operator \
-      --set watchedNamespaces=istio-system | kubectl apply -f -
+      --set watchedNamespaces=istio-system > kube-helm.yml
+    kubectl apply -f kube-helm.yml
     EOH
 end
+
 
 # Install Istio Operator: without sidecar injection
 # Notes: targetPort cannot be lower than 1024.
@@ -84,47 +119,11 @@ bash 'configure-istio' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
-    export PATH=$PATH:/usr/local/bin:$HOME/.istioctl/bin
-    cat <<EOF | istio-#{node['kube-hops']['istio_version']}/bin/istioctl manifest install -f -
-    apiVersion: install.istio.io/v1alpha1
-    kind: IstioOperator
-    spec:
-      values:
-        global:
-          proxy:
-            autoInject: disabled
-          useMCP: false
-          # The third-party-jwt is not enabled on all k8s.
-          # See: https://istio.io/docs/ops/best-practices/security/#configure-third-party-service-account-tokens
-          jwtPolicy: first-party-jwt
-      addonComponents:
-        pilot:
-          enabled: true
-        prometheus:
-          enabled: false
-      components:
-        ingressGateways:
-          - name: istio-ingressgateway
-            enabled: true
-          - name: cluster-local-gateway
-            enabled: true
-            label:
-              istio: cluster-local-gateway
-              app: cluster-local-gateway
-            k8s:
-              service:
-                type: ClusterIP
-                ports:
-                - port: 15020
-                  name: status-port
-                  targetPort: 15020
-                - port: 80
-                  name: http2
-                  targetPort: 8080
-                - port: 443
-                  name: https
-                  targetPort: 8443
-    EOF
+    chmod 400 $HOME/.kube/config
+    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
+    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
+    cd /home/#{node['kube-hops']['user']}
+    istioctl manifest install -f istio-configure.yml
     EOH
 #  not_if ""
 end
@@ -139,7 +138,10 @@ bash 'install-knative' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
-    kubectl apply -f #{node['kube-hops']['knative_chart']}
+    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
+    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
+    cd /home/#{node['kube-hops']['user']}
+    ./istio/bin/kubectl apply -f #{node['kube-hops']['knative_chart']}
     EOH
 #  not_if ""
 end
@@ -149,20 +151,11 @@ bash 'configure-knative' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
-    cat <<EOF | kubectl apply -f -
-    apiVersion: v1
-    kind: Namespace
-    metadata:
-    name: knative-serving
-    ---
-    apiVersion: operator.knative.dev/v1alpha1
-    kind: KnativeServing
-    metadata:
-      name: knative-serving
-      namespace: knative-serving
-    EOF
+    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
+    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
+    cd /home/#{node['kube-hops']['user']}
+    ./istio/bin/kubectl apply -f knative-configure.yml
     EOH
-#  not_if ""
 end
 
 #
@@ -174,24 +167,24 @@ bash 'install-cert-manager' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
-    cat <<EOF | kubectl apply -f -
-    apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: cert-manager
-      labels:
-        name: cert-manager
-    EOF
-
-    /usr/local/bin/helm install \
-      cert-manager jetstack/cert-manager \
-#      --kube-apiserver https://#{private_ip}:#{node['kube-hops']['apiserver']['port']} \
-#      --insecure-skip-tls-verify \
-      --namespace cert-manager \
-      --version v#{node['kube-hops']['certmgr_version']} \
-      --set installCRDs=true
+    cd /home/#{node['kube-hops']['user']}
+    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
+    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
+    kubectl apply -f certmgr.yml
     EOH
-#  not_if ""
+end
+
+bash 'helm-cert-manager' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  code <<-EOH
+    cd /home/#{node['kube-hops']['user']}
+    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
+    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
+
+    helm install cert-manager jetstack/cert-manager --namespace cert-manager \
+      --version v#{node['kube-hops']['certmgr_version']} --set installCRDs=true
+    EOH
 end
 
 #
@@ -203,7 +196,8 @@ bash 'install-kfserving' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
+    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
+    cd /home/#{node['kube-hops']['user']}
     kubectl apply -f kfserving.yaml
     EOH
-#  not_if ""
 end
