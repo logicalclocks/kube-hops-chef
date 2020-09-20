@@ -43,8 +43,8 @@ bash 'install-helm' do
   user 'root'
   group 'root'
   code <<-EOH
-    export PATH=$PATH:/usr/local/bin
     cd "#{Chef::Config['file_cache_path']}"
+    export PATH=$PATH:/usr/local/bin
     curl -fsSL -o get_helm.sh #{node['kube-hops']['helm_script_url']}
     chmod 700 get_helm.sh
     ./get_helm.sh
@@ -57,8 +57,8 @@ bash 'configure-helm' do
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })    
 #  ignore_failure true
   code <<-EOH
-    export PATH=$PATH:/usr/local/bin
     cd /home/#{node['kube-hops']['user']}
+    export PATH=$PATH:/usr/local/bin
     chmod 400 .kube/config
     helm repo add stable https://kubernetes-charts.storage.googleapis.com/
     helm repo add jetstack https://charts.jetstack.io # cert-manager
@@ -90,6 +90,7 @@ bash 'install-istio2' do
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })    
   code <<-EOH
+    cd /home/#{node['kube-hops']['user']}
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
     kubectl apply -f istio.yml
@@ -101,6 +102,7 @@ bash 'install-istio3' do
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
+    cd /home/#{node['kube-hops']['user']}
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
 
@@ -124,10 +126,10 @@ bash 'configure-istio' do
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
+    cd /home/#{node['kube-hops']['user']}
     chmod 400 $HOME/.kube/config
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
-    cd /home/#{node['kube-hops']['user']}
     istioctl manifest install -f istio-configure.yml
     EOH
 #  not_if ""
@@ -144,10 +146,10 @@ bash 'install-knative' do
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
+    cd /home/#{node['kube-hops']['user']}
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
-    cd /home/#{node['kube-hops']['user']}
-    ./istio/bin/kubectl apply -f #{node['kube-hops']['knative_chart']}
+    kubectl apply -f #{node['kube-hops']['knative_chart']}
     EOH
 #  not_if ""
 end
@@ -158,10 +160,10 @@ bash 'configure-knative' do
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
+    cd /home/#{node['kube-hops']['user']}
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
-    cd /home/#{node['kube-hops']['user']}
-    ./istio/bin/kubectl apply -f knative-configure.yml
+    kubectl apply -f knative-configure.yml
     EOH
 end
 
@@ -182,19 +184,19 @@ bash 'install-cert-manager' do
     EOH
 end
 
-bash 'helm-cert-manager' do
-  user node['kube-hops']['user']
-  group node['kube-hops']['group']
-  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
-  code <<-EOH
-    cd /home/#{node['kube-hops']['user']}
-    export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
-    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
+# bash 'helm-cert-manager' do
+#   user node['kube-hops']['user']
+#   group node['kube-hops']['group']
+#   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
+#   code <<-EOH
+#     cd /home/#{node['kube-hops']['user']}
+#     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
+#     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
 
-    helm install cert-manager jetstack/cert-manager --namespace cert-manager \
-      --version v#{node['kube-hops']['certmgr_version']} --set installCRDs=true
-    EOH
-end
+#     helm install cert-manager jetstack/cert-manager --namespace cert-manager \
+#       --version v#{node['kube-hops']['certmgr_version']} --set installCRDs=true
+#     EOH
+# end
 
 #
 # KFServing
@@ -208,6 +210,7 @@ bash 'install-kfserving' do
   code <<-EOH
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
     cd /home/#{node['kube-hops']['user']}
+    export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     kubectl apply -f kfserving.yaml
     EOH
 end
