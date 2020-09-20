@@ -76,14 +76,19 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 #
 # VERSIONS:
 # Helm -> 3
-# Knative -> 0.17 // latests
+# Knative -> 0.17 // latest
 # Istio -> 1.7.1 // <1.6 requires Helm 2 // >1.5.2 required by Knative
 # Cert-manager -> 1.0.1 // latest
 # KFServing -> 0.3.0  // 0.4.0 not supported in Kubernetes 1.18
+#    kubectl apply -f https://github.com/knative/operator/releases/download/v0.17.0/operator.yaml
 
+default['kube-hops']['kfserving_enabled']                  = "false"
 
-default['kube-hops']['istio_version']                      = "1.7.1"
+default['kube-hops']['istio_version']                      = "1.7.2"
 default['kube-hops']['kfserving_version']                  = "0.3.0"
+default['kube-hops']['knative_version']                    = "0.17.0"
+default['kube-hops']['certmgr_version']                    = "1.0.1"
 
 default['kube-hops']['helm_script_url']                    = node['download_url'] + "/kfserving/get-helm-3.sh"
 default['kube-hops']['istio_script_url']                   = node['download_url'] + "/kfserving/downloadIstio.sh"
+default['kube-hops']['knative_chart']                      = node['download_url'] + "/kfserving/knative/#{node['kube-hops']['knative_version']}/operator.yaml"
