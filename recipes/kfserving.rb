@@ -54,14 +54,15 @@ end
 bash 'configure-helm' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })    
 #  ignore_failure true
   code <<-EOH
     export PATH=$PATH:/usr/local/bin
     cd /home/#{node['kube-hops']['user']}
     chmod 400 .kube/config
-    /usr/local/bin/helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-    /usr/local/bin/helm repo add jetstack https://charts.jetstack.io # cert-manager
-    /usr/local/bin/helm repo update
+    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    helm repo add jetstack https://charts.jetstack.io # cert-manager
+    helm repo update
     EOH
 end
 
@@ -71,13 +72,15 @@ end
 bash 'install-istio1' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })  
   code <<-EOH
+    cd /home/#{node['kube-hops']['user']}
     wget -nc #{node['kube-hops']['istio_url']}
-    tar zxf istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz" 
+    tar zxf istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz
     rm -f $HOME/istio
     ln -s $HOME/istio-#{node['kube-hops']['istio_version']} $HOME/istio
     EOH
-  not_if { File.exist? "/home/#{node['kube-hops']['user'}/istioctl/bin" }
+  not_if { File.exist? "/home/#{node['kube-hops']['user']}/istio-#{node['kube-hops']['istio_version']}/bin/istioctl" }
 end
 
 #    port: <%= node['kube-hops']['apiserver']['port'] %>
@@ -85,6 +88,7 @@ end
 bash 'install-istio2' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })    
   code <<-EOH
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
@@ -95,7 +99,7 @@ end
 bash 'install-istio3' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  cwd "home/" + node['kube-hops']['user']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
@@ -118,6 +122,7 @@ end
 bash 'configure-istio' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
     chmod 400 $HOME/.kube/config
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
@@ -137,6 +142,7 @@ end
 bash 'install-knative' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
@@ -150,6 +156,7 @@ end
 bash 'configure-knative' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
@@ -166,6 +173,7 @@ end
 bash 'install-cert-manager' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
     cd /home/#{node['kube-hops']['user']}
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
@@ -177,6 +185,7 @@ end
 bash 'helm-cert-manager' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
     cd /home/#{node['kube-hops']['user']}
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
@@ -195,6 +204,7 @@ end
 bash 'install-kfserving' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
   code <<-EOH
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
     cd /home/#{node['kube-hops']['user']}
