@@ -19,34 +19,34 @@ bash 'install-helm' do
   group 'root'
   code <<-EOH
     export PATH=$PATH:/usr/local/bin
-    curl #{node['kube-hops']['helm_script_url']} | bash
+    cd "#{Chef::Config['file_cache_path']}"
+    curl -fsSL -o get_helm.sh #{node['kube-hops']['helm_script_url']}
+    chmod 700 get_helm.sh
+    ./get_helm.sh
     EOH
-#  not_if ""
 end
 
 bash 'configure-helm' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
+  ignore_failure true
   code <<-EOH
+    chmod 400 ~/.kube/config
     /usr/local/bin/helm repo add stable https://kubernetes-charts.storage.googleapis.com/
     /usr/local/bin/helm repo add jetstack https://charts.jetstack.io # cert-manager
     /usr/local/bin/helm repo update
     EOH
-#  not_if ""
 end
 
 # Istio
 
 # Download binaries
 bash 'install-istio1' do
-  user 'root'
-  group 'root'
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
   code <<-EOH
-    cd "#{Chef::Config['file_cache_path']}"
-    export PATH=$PATH:/usr/local/bin
     curl -L #{node['kube-hops']['istio_script_url']} | ISTIO_VERSION=#{node['kube-hops']['istio_version']} sh -
     EOH
-#  not_if ""
 end
 
 #    port: <%= node['kube-hops']['apiserver']['port'] %>
@@ -55,6 +55,8 @@ bash 'install-istio2' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
+    export PATH=$PATH:/usr/local/bin:$HOME/.istioctl/bin
+
     cat <<EOF | kubectl apply -f -
     apiVersion: v1
     kind: Namespace
@@ -64,14 +66,15 @@ bash 'install-istio2' do
         name: istio-system
     EOF
 
-    /usr/local/bin/helm --kube-apiserver https://#{private_ip}:#{node['kube-hops']['apiserver']['port']}\
-      template istio-#{node['kube-hops']['istio_version']}/manifests/charts/istio-operator/ \
+#      --kube-apiserver https://#{private_ip}:#{node['kube-hops']['apiserver']['port']} \
+#      --insecure-skip-tls-verify \
+
+    /usr/local/bin/helm template istio-#{node['kube-hops']['istio_version']}/manifests/charts/istio-operator/ \
       --set hub=docker.io/istio \
       --set tag=#{node['kube-hops']['istio_version']} \
       --set operatorNamespace=istio-operator \
       --set watchedNamespaces=istio-system | kubectl apply -f -
     EOH
-#  not_if ""
 end
 
 # Install Istio Operator: without sidecar injection
@@ -81,6 +84,7 @@ bash 'configure-istio' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
+    export PATH=$PATH:/usr/local/bin:$HOME/.istioctl/bin
     cat <<EOF | istio-#{node['kube-hops']['istio_version']}/bin/istioctl manifest install -f -
     apiVersion: install.istio.io/v1alpha1
     kind: IstioOperator
@@ -135,7 +139,7 @@ bash 'install-knative' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   code <<-EOH
-    kubectl apply -f https://github.com/knative/operator/releases/download/v0.17.0/operator.yaml
+    kubectl apply -f #{node['kube-hops']['knative_chart']}
     EOH
 #  not_if ""
 end
@@ -181,8 +185,10 @@ bash 'install-cert-manager' do
 
     /usr/local/bin/helm install \
       cert-manager jetstack/cert-manager \
+#      --kube-apiserver https://#{private_ip}:#{node['kube-hops']['apiserver']['port']} \
+#      --insecure-skip-tls-verify \
       --namespace cert-manager \
-      --version v1.0.1 \
+      --version v#{node['kube-hops']['certmgr_version']} \
       --set installCRDs=true
     EOH
 #  not_if ""
