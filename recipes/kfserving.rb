@@ -27,7 +27,13 @@ template "/home/#{node['kube-hops']['user']}/knative-configure.yml" do
 end
 
 template "/home/#{node['kube-hops']['user']}/certmgr.yml" do
-  source "knative-configure.yml.erb"
+  source "certmgr.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
+template "/home/#{node['kube-hops']['user']}/cert-manager.crds.yaml" do
+  source "cert-manager.crds.yaml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
 end
@@ -181,6 +187,7 @@ bash 'install-cert-manager' do
     export KUBECONFIG=$KUBECONFIG:/home/#{node['kube-hops']['user']}/.kube/config
     export PATH=$PATH:/usr/local/bin:$HOME/istio/bin
     kubectl apply -f certmgr.yml
+    kubectl apply -f cert-manager.crds.yaml
     EOH
 end
 
