@@ -4,7 +4,7 @@ metadata:
   name: hopsworks-admin
 subjects:
 - kind: User
-  name: hopsworks
+  name: <%= node['kube-hops']['hopsworks_user'] %>
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
