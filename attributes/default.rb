@@ -83,9 +83,9 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 default['kube-hops']['kfserving_enabled']                  = "true"
 
 default['kube-hops']['istio_version']                      = "1.7.2"
+default['kube-hops']['kfserving_version']                  = "0.3.0"
 # default['kube-hops']['knative_version']                    = "0.17.0"
 # default['kube-hops']['cert-manager_version']               = "1.0.1"
-# default['kube-hops']['kfserving_version']                  = "0.3.0"
 
 default['kube-hops']['istio_url']                          = node['download_url'] + "/kfserving/istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz"
 # default['kube-hops']['knative_chart']                      = node['download_url'] + "/kfserving/knative/#{node['kube-hops']['knative_version']}/operator.yaml"
