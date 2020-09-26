@@ -45,32 +45,32 @@ template "/home/#{node['kube-hops']['user']}/kfserving.yml" do
 end
 
 
-bash 'install-helm' do
-  user 'root'
-  group 'root'
-  code <<-EOH
-    cd "#{Chef::Config['file_cache_path']}"
-    export PATH=$PATH:/usr/local/bin
-    curl -fsSL -o get_helm.sh #{node['kube-hops']['helm_script_url']}
-    chmod 700 get_helm.sh
-    ./get_helm.sh
-    EOH
-end
+# bash 'install-helm' do
+#   user 'root'
+#   group 'root'
+#   code <<-EOH
+#     cd "#{Chef::Config['file_cache_path']}"
+#     export PATH=$PATH:/usr/local/bin
+#     curl -fsSL -o get_helm.sh #{node['kube-hops']['helm_script_url']}
+#     chmod 700 get_helm.sh
+#     ./get_helm.sh
+#     EOH
+# end
 
-bash 'configure-helm' do
-  user node['kube-hops']['user']
-  group node['kube-hops']['group']
-  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })    
-#  ignore_failure true
-  code <<-EOH
-    cd /home/#{node['kube-hops']['user']}
-    export PATH=$PATH:/usr/local/bin
-    chmod 400 .kube/config
-    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-    helm repo add jetstack https://charts.jetstack.io # cert-manager
-    helm repo update
-    EOH
-end
+# bash 'configure-helm' do
+#   user node['kube-hops']['user']
+#   group node['kube-hops']['group']
+#   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })    
+# #  ignore_failure true
+#   code <<-EOH
+#     cd /home/#{node['kube-hops']['user']}
+#     export PATH=$PATH:/usr/local/bin
+#     chmod 400 .kube/config
+#     helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+#     helm repo add jetstack https://charts.jetstack.io # cert-manager
+#     helm repo update
+#     EOH
+# end
 
 # Istio
 
@@ -147,7 +147,7 @@ end
 
 # Install Knative Operator
 # Note: Only knative serving is required. (Knative eventing can be installed independently)
-bash 'install-knative' do
+bash 'install-knative1' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
@@ -161,7 +161,7 @@ bash 'install-knative' do
 end
 
 # Install Knative Serving component
-bash 'configure-knative' do
+bash 'configure-knative2' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })      
