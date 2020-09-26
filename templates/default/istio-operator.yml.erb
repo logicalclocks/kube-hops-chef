@@ -9,11 +9,13 @@ spec:
       # The third-party-jwt is not enabled on all k8s.
       # See: https://istio.io/docs/ops/best-practices/security/#configure-third-party-service-account-tokens
       jwtPolicy: first-party-jwt
+
   addonComponents:
     pilot:
       enabled: true
     prometheus:
       enabled: false
+
   components:
     ingressGateways:
       - name: istio-ingressgateway
@@ -29,10 +31,9 @@ spec:
             ports:
             - port: 15020
               name: status-port
-              targetPort: 15020
             - port: 80
-              name: http2
               targetPort: 8080
+              name: http2
             - port: 443
-              name: https
               targetPort: 8443
+              name: https
