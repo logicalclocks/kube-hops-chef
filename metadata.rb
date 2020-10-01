@@ -20,6 +20,11 @@ recipe 'kube-hops::addons', 'Deploy addons on the cluster'
 recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
 
 
+
+attribute "kube-hops/hopsworks_user",
+          :description =>  "The user the hopsworks web-app used to authenticate to Kubernetes",
+          :type => 'string'
+
 attribute "kube-hops/device",
           :description =>  "Device plugin to configure for master and nodes, for no device set '' or 'nvidia' for NVIDIA GPUs",
           :type => 'string'
