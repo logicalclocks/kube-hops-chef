@@ -34,19 +34,26 @@ end
 
 # Knative
 
-template "/home/#{node['kube-hops']['user']}/knative-serving-crds.yaml" do
+directory "/home/#{node['kube-hops']['user']}/knative" do
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+  mode '0700'
+  action :create
+end
+
+template "/home/#{node['kube-hops']['user']}/knative/knative-serving-crds.yaml" do
   source "knative-serving-crds.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
 end
 
-template "/home/#{node['kube-hops']['user']}/knative-serving.yaml" do
+template "/home/#{node['kube-hops']['user']}/knative/knative-serving.yaml" do
   source "knative-serving.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
 end
 
-template "/home/#{node['kube-hops']['user']}/knative-istio.yaml" do
+template "/home/#{node['kube-hops']['user']}/knative/knative-istio.yaml" do
   source "knative-istio.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
@@ -55,19 +62,19 @@ end
 kube_hops_kubectl 'apply-knative-serving-crds' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "/home/#{node['kube-hops']['user']}/knative-serving-crds.yaml"
+  url "/home/#{node['kube-hops']['user']}/knative/knative-serving-crds.yaml"
 end
 
 kube_hops_kubectl 'apply-knative-serving' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "/home/#{node['kube-hops']['user']}/knative-serving.yaml"
+  url "/home/#{node['kube-hops']['user']}/knative/knative-serving.yaml"
 end
 
 kube_hops_kubectl 'apply-knative-istio-controller' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "/home/#{node['kube-hops']['user']}/knative-istio.yaml"
+  url "/home/#{node['kube-hops']['user']}/knative/knative-istio.yaml"
 end
 
 # Cert-manager
