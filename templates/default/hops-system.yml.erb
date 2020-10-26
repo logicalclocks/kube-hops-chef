@@ -21,16 +21,12 @@ metadata:
 data:
   hopsworksAPI: |-
     {
-        "host": "<%= private_recipe_ip('hopsworks', 'default') %>",
-        <%= if node.attribute?('hopsworks') and node['hopsworks'].attribute?('https') and node['hopsworks']['https'].attribute?('port') %>
-            "port": "node['hopsworks']['https']['port']"
-        <% else %>
-            "port": "8181"
-        <% end %>
+        "host": "<%= @hopsworks_ip %>",
+        "port": "<%= @hopsworks_port %>"
     }
   storageInitializer: |-
     {
-        "image": "<%= default['kube-hops']['model_storage_initializer_image'] %>",
+        "image": "<%= node['kube-hops']['model_storage_initializer_image'] %>",
         "cpuRequest": "100m",
         "cpuLimit": "1",
         "memoryRequest": "100Mi",

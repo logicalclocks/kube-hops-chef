@@ -111,10 +111,18 @@ end
 
 # Hops system config
 
+hopsworks_endpoint = node['kube-hops']['pki']['ca_api'].split(':', 2)
+hopsworks_ip = hopsworks_endpoint.first
+hopsworks_port = hopsworks_endpoint.last
+
 template "/home/#{node['kube-hops']['user']}/hops-system.yaml" do
   source "hops-system.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  variables({
+    'hopsworks_ip': hopsworks_ip,
+    'hopsworks_port': hopsworks_port
+  })
 end
 
 kube_hops_kubectl 'apply-hops-system' do
@@ -125,7 +133,14 @@ end
 
 # Model Serving Admission Controller
 
-template "/home/#{node['kube-hops']['user']}/model-serving-webhook.yaml" do
+directory "/home/#{node['kube-hops']['user']}/model-serving-webhook" do
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+  mode '0700'
+  action :create
+end
+
+template "/home/#{node['kube-hops']['user']}/model-serving-webhook/model-serving-webhook.yaml.template" do
   source "model-serving-webhook.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
@@ -138,30 +153,30 @@ bash 'configure-model-serving-webhook-tls' do
   cwd ::Dir.home(node['kube-hops']['user'])
   code <<-EOH
     namespace="hops-system"
-    service_name=model-serving-webhook
+    service_name="model-serving-webhook"
+    webhook_dir="model-serving-webhook"
     keys_dir="$(mktemp -d)"
     chmod 0700 "$keys_dir"
-    cd "$keys_dir"
 
     # Generate the CA cert and private key
-    openssl req -nodes -new -x509 -keyout ca.key -out ca.crt -subj "/CN=Admission Controller Model Serving CA"
+    openssl req -nodes -new -x509 -keyout ${keys_dir}/ca.key -out ${keys_dir}/ca.crt -subj "/CN=Admission Controller Model Serving CA"
 
     # Generate the private key for the webhook server
-    openssl genrsa -out ${service_name}-tls.key 2048
+    openssl genrsa -out ${keys_dir}/${service_name}-tls.key 2048
 
     # Generate a Certificate Signing Request (CSR) for the private key, and sign it with the private key of the CA.
-    openssl req -new -key ${service_name}-tls.key -subj "/CN=$service_name.$namespace.svc" |
-      openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -out ${service_name}-tls.crt
+    openssl req -new -key ${keys_dir}/${service_name}-tls.key -subj "/CN=$service_name.$namespace.svc" |
+      openssl x509 -req -CA ${keys_dir}/ca.crt -CAkey ${keys_dir}/ca.key -CAcreateserial -out ${keys_dir}/${service_name}-tls.crt
 
-    echo "Creating yaml files ..."
-    kubectl -n $namespace create secret tls model-serving-webhook-tls \
-        --cert "${keys_dir}/model-serving-webhook-tls.crt" \
-        --key "${keys_dir}/model-serving-webhook-tls.key" \
+    # Create yaml files
+    kubectl -n $namespace create secret tls ${service_name}-tls \
+        --cert "${keys_dir}/${service_name}-tls.crt" \
+        --key "${keys_dir}/${service_name}-tls.key" \
         --dry-run=client --output=yaml \
-        >>"$yaml_dir/model-serving-webhook-tls.yaml"
+        > ${webhook_dir}/${service_name}-tls.yaml
     ca_pem_b64="$(openssl base64 -A <"${keys_dir}/ca.crt")"
-    sed -e 's@${CA_PEM_B64}@'"$ca_pem_b64"'@g' <"$yaml_dir/webhook-config.yaml.template" \
-        >>"$yaml_dir/webhook-config.yaml"
+    sed -e 's@${CA_PEM_B64}@'"$ca_pem_b64"'@g' <"${webhook_dir}/${service_name}.yaml.template" \
+        > ${webhook_dir}/${service_name}.yaml
 
     rm -rf "$keys_dir"
     EOH
@@ -170,5 +185,5 @@ end
 kube_hops_kubectl 'apply-model-serving-webhook' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "/home/#{node['kube-hops']['user']}/model-serving-webhook.yaml"
+  url "/home/#{node['kube-hops']['user']}/model-serving-webhook"
 end
