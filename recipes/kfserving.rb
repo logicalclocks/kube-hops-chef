@@ -2,21 +2,31 @@
 
 # Istio
 
+directory "/home/#{node['kube-hops']['user']}/istio" do
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+  mode '0700'
+  action :create
+end
+
 bash 'install-istioctl' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
   cwd ::Dir.home(node['kube-hops']['user'])
   code <<-EOH
+    cd istio
+    istio_tar="istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz"
     wget -nc #{node['kube-hops']['istio_url']}
-    tar zxf istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz
+    tar zxf $istio_tar
+    rm -f $istio_tar
     rm -f istio
     ln -s istio-#{node['kube-hops']['istio_version']} istio
     EOH
-  not_if { File.exist? "/home/#{node['kube-hops']['user']}/istio-#{node['kube-hops']['istio_version']}/bin/istioctl" }
+  not_if { File.exist? "/home/#{node['kube-hops']['user']}/istio/istio-#{node['kube-hops']['istio_version']}/bin/istioctl" }
 end
 
-template "/home/#{node['kube-hops']['user']}/istio-operator.yaml" do
+template "/home/#{node['kube-hops']['user']}/istio/istio-operator.yaml" do
   source "istio-operator.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
@@ -28,6 +38,7 @@ bash 'apply-istio' do
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
   cwd ::Dir.home(node['kube-hops']['user'])
   code <<-EOH
+    cd istio
     istio/bin/istioctl install -f istio-operator.yaml
     EOH
 end
