@@ -70,22 +70,23 @@ default['kube-hops']['docker_img_version']                 = node['install']['ve
 default['kube-hops']['docker_img_tar_url']                 = node['download_url'] + "/kube/docker-images/#{node['kube-hops']['docker_img_version']}/docker-images.tar"
 default['kube-hops']['docker_img_reg_url']                 = ""
 
-
 #
 # KF Serving
 #
 # VERSIONS:
-# Knative -> 0.17 // latest
+# Knative -> 0.17
 # Istio -> 1.7.2 // <1.6 requires Helm 2 // >1.5.2 required by Knative
-# Cert-manager -> 1.0.1 // latest
+# Cert-manager -> 1.0.1
 # KFServing -> 0.3.0  // 0.4.0 not supported in Kubernetes 1.18
 
 default['kube-hops']['kfserving_enabled']                  = "true"
 
 default['kube-hops']['istio_version']                      = "1.7.2"
 default['kube-hops']['kfserving_version']                  = "0.3.0"
-# default['kube-hops']['knative_version']                    = "0.17.0"
-# default['kube-hops']['cert-manager_version']               = "1.0.1"
 
 default['kube-hops']['istio_url']                          = node['download_url'] + "/kfserving/istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz"
-# default['kube-hops']['knative_chart']                      = node['download_url'] + "/kfserving/knative/#{node['kube-hops']['knative_version']}/operator.yaml"
+
+# Model serving admission controller
+
+default['kube-hops']['model_serving_webhook_image'] = "javierdlrm/model-serving-admission-controller:latest"
+default['kube-hops']['model_storage_initializer_image'] = "javierdlrm/model-storage-initializer:latest"
