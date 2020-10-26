@@ -198,6 +198,7 @@ bash 'configure-model-serving-webhook-tls' do
 
     rm -rf "$keys_dir"
     EOH
+  not_if { File.exist? "/home/#{node['kube-hops']['user']}/model-serving-webhook/model-serving-webhook.yaml" }
 end
 
 kube_hops_kubectl 'apply-model-serving-webhook' do
