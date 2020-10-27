@@ -83,7 +83,6 @@ default['kube-hops']['kfserving_enabled']                  = "true"
 
 default['kube-hops']['istio_version']                      = "1.7.2"
 default['kube-hops']['kfserving_version']                  = "0.3.0"
-
 default['kube-hops']['istio_url']                          = node['download_url'] + "/kfserving/istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz"
 
 # Model serving admission controller
