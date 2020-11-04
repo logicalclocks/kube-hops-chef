@@ -1,0 +1,63 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: model-serving-webhook
+  namespace: hops-system
+webhooks:
+  - name: model-serving-webhook.hops-system.svc
+    clientConfig:
+      service:
+        name: model-serving-webhook
+        namespace: hops-system
+        path: "/mutate"
+      caBundle: ${CA_PEM_B64}
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-serving-webhook
+  namespace: hops-system
+  labels:
+    app: model-serving-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-serving-webhook
+  template:
+    metadata:
+      labels:
+        app: model-serving-webhook
+    spec:
+      containers:
+        - name: server
+          image: "<%= node['kube-hops']['model_serving_webhook_image'] %>"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8443
+              name: webhook-api
+          volumeMounts:
+            - name: model-serving-webhook-tls-certs
+              mountPath: /secrets/tls
+              readOnly: true
+      volumes:
+        - name: model-serving-webhook-tls-certs
+          secret:
+            secretName: model-serving-webhook-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: model-serving-webhook
+  namespace: hops-system
+spec:
+  selector:
+    app: model-serving-webhook
+  ports:
+    - port: 443
+      targetPort: webhook-api
