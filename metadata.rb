@@ -3,7 +3,7 @@ maintainer              'Logical Clocks AB'
 maintainer_email        'fabio@logicalclocks.com'
 license                 ''
 description             'Installs/Configures kube-hops-chef'
-version                 '2.0.0'
+version                 '2.1.0'
 
 cookbook 'sysctl', '~> 1.0.3'
 cookbook 'kernel_module', '~> 1.1.1'
