@@ -84,6 +84,7 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 default['kube-hops']['kfserving']['enabled']               = "true"
 default['kube-hops']['kfserving']['version']               = "0.3.0"
 default['kube-hops']['kfserving']['base_dir']              = node['kube-hops']['dir'] + "/kfserving"
+default['kube-hops']['kfserving']['img_tar_url']           = node['download_url'] + "/kube/kfserving/kfserving-v#{node['kube-hops']['kfserving']['version']}.tgz"
 
 # Istio
 
@@ -92,7 +93,7 @@ default['kube-hops']['istio']['base_dir']                  = node['kube-hops']['
 default['kube-hops']['istio']['tar_name']                  = "istio-#{node['kube-hops']['istio']['version']}-linux-amd64"
 default['kube-hops']['istio']['home']                      = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}"
 default['kube-hops']['istio']['tar']                       = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
-default['kube-hops']['istio']['download_url']              = node['download_url'] + "/kfserving/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
+default['kube-hops']['istio']['download_url']              = node['download_url'] + "/kube/kfserving/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
 
 # Knative
 
@@ -110,5 +111,11 @@ default['kube-hops']['hops-system']['base_dir']            = node['kube-hops']['
 # Model serving admission controller
 
 default['kube-hops']['model-serving-webhook']['base_dir']  = node['kube-hops']['hops-system']['base_dir'] + "/model-serving-webhook"
-default['kube-hops']['model-serving-webhook']['image']     = node['kube-hops']['docker_img_reg_url'] + "/model-serving-webhook:#{node['kube-hops']['docker_img_version']}"
-default['kube-hops']['model-storage-initializer']['image'] = node['kube-hops']['docker_img_reg_url'] + "/model-storage-initializer:#{node['kube-hops']['docker_img_version']}"
+default['kube-hops']['model-serving-webhook']['image']     = "model-serving-webhook:#{node['kube-hops']['docker_img_version']}"
+default['kube-hops']['model-storage-initializer']['image'] = "model-storage-initializer:#{node['kube-hops']['docker_img_version']}"
+
+# Filebeat
+
+default['kube-hops']['filebeat']['enabled']               = "true"
+default['kube-hops']['filebeat']['image']                 = "filebeat:#{node['kube-hops']['docker_img_version']}"
+default['kube-hops']['filebeat']['base_dir']              = node['kube-hops']['dir'] + "/filebeat"

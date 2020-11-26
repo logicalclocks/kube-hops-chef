@@ -12,13 +12,15 @@ depends 'ndb'
 depends 'consul'
 depends 'hops'
 depends 'magic_shell', '~> 1.0.0'
+depends 'hopslog'
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
 recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
 recipe 'kube-hops::node', 'Configure a node as Kubernetes slave'
 recipe 'kube-hops::addons', 'Deploy addons on the cluster'
 recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
-recipe 'kube-hops::kfserving', 'Configure and install KFServing (helm, istio, knative) on Kubernetes'
+recipe 'kube-hops::kfserving', 'Configure and install KFServing (istio, knative, ...) on Kubernetes'
+recipe 'kube-hops::filebeat', 'Configure and install Filebeat for model server logging on Kubernetes'
 
 
 attribute "kube-hops/hopsworks_user",
@@ -159,4 +161,8 @@ attribute "kube-hops/docker_max_gpus_allocation",
 
 attribute "kube-hops/kfserving/enabled",
           :description =>  "Default true. Set to 'false' to disable kfserving",
+          :type => 'string'
+
+attribute "kube-hops/filebeat/enabled",
+          :description =>  "Default true. Set to 'false' to disable filebeat",
           :type => 'string'
