@@ -158,5 +158,5 @@ attribute "kube-hops/docker_max_gpus_allocation",
           :type => 'string'
 
 attribute "kube-hops/kfserving_enabled",
-          :description =>  "Default false. Set to 'true' to enable kfserving",
+          :description =>  "Default true. Set to 'false' to disable kfserving",
           :type => 'string'
