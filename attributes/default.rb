@@ -3,6 +3,8 @@ include_attribute "ndb"
 default['kube-hops']['user']                              = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 default['kube-hops']['group']                             = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 default['kube-hops']['hopsworks_user']                    = "hopsworks"
+default['kube-hops']['dir']                               = (node['install']['dir'].empty? ? "/srv" : node['install']['dir']) + "/kube"
+default['kube-hops']['user-home']                         = "/home/#{node['kube-hops']['user']}"
 
 default['kube-hops']['device']                            = ""
 
@@ -79,14 +81,34 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 # Cert-manager -> 1.0.1
 # KFServing -> 0.3.0  // 0.4.0 not supported in Kubernetes 1.18
 
-default['kube-hops']['kfserving_enabled']                  = "true"
+default['kube-hops']['kfserving']['enabled']               = "true"
+default['kube-hops']['kfserving']['version']               = "0.3.0"
+default['kube-hops']['kfserving']['base_dir']              = node['kube-hops']['dir'] + "/kfserving"
 
-default['kube-hops']['istio_version']                      = "1.7.2"
-default['kube-hops']['kfserving_version']                  = "0.3.0"
+# Istio
 
-default['kube-hops']['istio_url']                          = node['download_url'] + "/kfserving/istio-#{node['kube-hops']['istio_version']}-linux-amd64.tar.gz"
+default['kube-hops']['istio']['version']                   = "1.7.2"
+default['kube-hops']['istio']['base_dir']                  = node['kube-hops']['dir'] + "/istio"
+default['kube-hops']['istio']['tar_name']                  = "istio-#{node['kube-hops']['istio']['version']}-linux-amd64"
+default['kube-hops']['istio']['home']                      = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}"
+default['kube-hops']['istio']['tar']                       = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
+default['kube-hops']['istio']['download_url']              = node['download_url'] + "/kfserving/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
+
+# Knative
+
+default['kube-hops']['knative']['base_dir']                = node['kube-hops']['dir'] + "/knative"
+
+# Cert-manager
+
+default['kube-hops']['cert-manager']['base_dir']           = node['kube-hops']['dir'] + "/cert-manager"
+
+# Hops-system
+# Containing yaml files installed in hops-system namespace. (e.g webhook)
+
+default['kube-hops']['hops-system']['base_dir']            = node['kube-hops']['dir'] + "/hops-system"
 
 # Model serving admission controller
 
-default['kube-hops']['model_serving_webhook_image'] = node['kube-hops']['docker_img_reg_url'] + "/model-serving-admission-controller:latest"
-default['kube-hops']['model_storage_initializer_image'] = node['kube-hops']['docker_img_reg_url'] + "/model-storage-initializer:latest"
+default['kube-hops']['model-serving-webhook']['base_dir']  = node['kube-hops']['hops-system']['base_dir'] + "/model-serving-webhook"
+default['kube-hops']['model-serving-webhook']['image']     = node['kube-hops']['docker_img_reg_url'] + "/model-serving-admission-controller:latest"
+default['kube-hops']['model-storage-initializer']['image'] = node['kube-hops']['docker_img_reg_url'] + "/model-storage-initializer:latest"

@@ -347,7 +347,7 @@ spec:
                             imagePullPolicy:
                               description:
                                 "Image pull policy. One of Always, Never,
-                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving_version'] %> tag is
+                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving']['version'] %> tag is
                                 specified, or IfNotPresent otherwise. Cannot be updated.
                                 More info: https://kubernetes.io/docs/concepts/containers/images#updating-images"
                               type: string
@@ -1485,7 +1485,7 @@ spec:
                             imagePullPolicy:
                               description:
                                 "Image pull policy. One of Always, Never,
-                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving_version'] %> tag is
+                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving']['version'] %> tag is
                                 specified, or IfNotPresent otherwise. Cannot be updated.
                                 More info: https://kubernetes.io/docs/concepts/containers/images#updating-images"
                               type: string
@@ -2854,7 +2854,7 @@ spec:
                             imagePullPolicy:
                               description:
                                 "Image pull policy. One of Always, Never,
-                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving_version'] %> tag is
+                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving']['version'] %> tag is
                                 specified, or IfNotPresent otherwise. Cannot be updated.
                                 More info: https://kubernetes.io/docs/concepts/containers/images#updating-images"
                               type: string
@@ -4048,7 +4048,7 @@ spec:
                             imagePullPolicy:
                               description:
                                 "Image pull policy. One of Always, Never,
-                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving_version'] %> tag is
+                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving']['version'] %> tag is
                                 specified, or IfNotPresent otherwise. Cannot be updated.
                                 More info: https://kubernetes.io/docs/concepts/containers/images#updating-images"
                               type: string
@@ -5186,7 +5186,7 @@ spec:
                             imagePullPolicy:
                               description:
                                 "Image pull policy. One of Always, Never,
-                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving_version'] %> tag is
+                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving']['version'] %> tag is
                                 specified, or IfNotPresent otherwise. Cannot be updated.
                                 More info: https://kubernetes.io/docs/concepts/containers/images#updating-images"
                               type: string
@@ -6555,7 +6555,7 @@ spec:
                             imagePullPolicy:
                               description:
                                 "Image pull policy. One of Always, Never,
-                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving_version'] %> tag is
+                                IfNotPresent. Defaults to Always if :v<%= node['kube-hops']['kfserving']['version'] %> tag is
                                 specified, or IfNotPresent otherwise. Cannot be updated.
                                 More info: https://kubernetes.io/docs/concepts/containers/images#updating-images"
                               type: string
@@ -7777,9 +7777,9 @@ data:
     {
         "alibi": {
             "image" : "docker.io/seldonio/kfserving-alibiexplainer",
-            "defaultImageVersion": "v<%= node['kube-hops']['kfserving_version'] %>",
+            "defaultImageVersion": "v<%= node['kube-hops']['kfserving']['version'] %>",
             "allowedImageVersions": [
-               "v<%= node['kube-hops']['kfserving_version'] %>"
+               "v<%= node['kube-hops']['kfserving']['version'] %>"
             ]
         }
     }
@@ -7790,7 +7790,7 @@ data:
     }
   logger: |-
     {
-        "image" : "gcr.io/kfserving/logger:v<%= node['kube-hops']['kfserving_version'] %>",
+        "image" : "gcr.io/kfserving/logger:v<%= node['kube-hops']['kfserving']['version'] %>",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
@@ -7826,25 +7826,25 @@ data:
         },
         "sklearn": {
             "image": "gcr.io/kfserving/sklearnserver",
-            "defaultImageVersion": "v<%= node['kube-hops']['kfserving_version'] %>",
+            "defaultImageVersion": "v<%= node['kube-hops']['kfserving']['version'] %>",
             "allowedImageVersions": [
-               "v<%= node['kube-hops']['kfserving_version'] %>"
+               "v<%= node['kube-hops']['kfserving']['version'] %>"
             ]
         },
         "xgboost": {
             "image": "gcr.io/kfserving/xgbserver",
-            "defaultImageVersion": "v<%= node['kube-hops']['kfserving_version'] %>",
+            "defaultImageVersion": "v<%= node['kube-hops']['kfserving']['version'] %>",
             "allowedImageVersions": [
-               "v<%= node['kube-hops']['kfserving_version'] %>"
+               "v<%= node['kube-hops']['kfserving']['version'] %>"
             ]
         },
         "pytorch": {
             "image": "gcr.io/kfserving/pytorchserver",
-            "defaultImageVersion": "v<%= node['kube-hops']['kfserving_version'] %>",
-            "defaultGpuImageVersion": "v<%= node['kube-hops']['kfserving_version'] %>-gpu",
+            "defaultImageVersion": "v<%= node['kube-hops']['kfserving']['version'] %>",
+            "defaultGpuImageVersion": "v<%= node['kube-hops']['kfserving']['version'] %>-gpu",
             "allowedImageVersions": [
-               "v<%= node['kube-hops']['kfserving_version'] %>",
-               "v<%= node['kube-hops']['kfserving_version'] %>-gpu"
+               "v<%= node['kube-hops']['kfserving']['version'] %>",
+               "v<%= node['kube-hops']['kfserving']['version'] %>-gpu"
             ]
         },
         "tensorrt": {
@@ -7857,7 +7857,7 @@ data:
     }
   storageInitializer: |-
     {
-        "image" : "gcr.io/kfserving/storage-initializer:v<%= node['kube-hops']['kfserving_version'] %>",
+        "image" : "gcr.io/kfserving/storage-initializer:v<%= node['kube-hops']['kfserving']['version'] %>",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
@@ -7967,7 +7967,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: SECRET_NAME
               value: kfserving-webhook-server-cert
-          image: gcr.io/kfserving/kfserving-controller:v<%= node['kube-hops']['kfserving_version'] %>
+          image: gcr.io/kfserving/kfserving-controller:v<%= node['kube-hops']['kfserving']['version'] %>
           imagePullPolicy: Always
           name: manager
           ports:

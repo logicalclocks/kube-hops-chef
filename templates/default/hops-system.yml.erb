@@ -21,12 +21,12 @@ metadata:
 data:
   hopsworksAPI: |-
     {
-        "host": "<%= @hopsworks_ip %>",
+        "host": "<%= @hopsworks_fqdn %>",
         "port": "<%= @hopsworks_port %>"
     }
   storageInitializer: |-
     {
-        "image": "<%= node['kube-hops']['model_storage_initializer_image'] %>",
+        "image": "<%= node['kube-hops']['model-storage-initializer']['image'] %>",
         "cpuRequest": "100m",
         "cpuLimit": "1",
         "memoryRequest": "100Mi",
