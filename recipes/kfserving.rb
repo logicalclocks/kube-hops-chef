@@ -210,41 +210,49 @@ template "#{node['kube-hops']['model-serving-webhook']['base_dir']}/model-servin
   group node['kube-hops']['group']
 end
 
+kube_certs = "#{node['certs']['dir']}/kube/certs"
+kube_private = "#{node['certs']['dir']}/kube/private"
+
 bash 'configure-model-serving-webhook-tls' do
-  user node['kube-hops']['user']
-  group node['kube-hops']['group']
-  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
-  cwd ::Dir.home(node['kube-hops']['user'])
+  user 'root'
+  group 'root'
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']),
+                 'KEYPW' => node['kube-hops']['pki']['ca_keypw'] })
+  cwd "#{node['kube-hops']['model-serving-webhook']['base_dir']}"
   code <<-EOH
+    set -e
+
     namespace="hops-system"
     service_name="model-serving-webhook"
-    webhook_dir="model-serving-webhook"
-    keys_dir="$(mktemp -d)"
-    chmod 0700 "$keys_dir"
-
-    # Generate the CA cert and private key
-    openssl req -nodes -new -x509 -keyout ${keys_dir}/ca.key -out ${keys_dir}/ca.crt -subj "/CN=Admission Controller Model Serving CA"
+    tmp_certs="$(mktemp -d)"
+    chmod 0700 "$tmp_certs"
 
     # Generate the private key for the webhook server
-    openssl genrsa -out ${keys_dir}/${service_name}-tls.key 2048
+    [ -f ${tmp_certs}/${service_name}-tls.key.pem ] || openssl genrsa -out ${tmp_certs}/${service_name}-tls.key.pem 4096
 
-    # Generate a Certificate Signing Request (CSR) for the private key, and sign it with the private key of the CA.
-    openssl req -new -key ${keys_dir}/${service_name}-tls.key -subj "/CN=$service_name.$namespace.svc" |
-      openssl x509 -req -CA ${keys_dir}/ca.crt -CAkey ${keys_dir}/ca.key -CAcreateserial -out ${keys_dir}/${service_name}-tls.crt
+    # Generate a Certificate Signing Request (CSR) for the private key
+    [ -f ${tmp_certs}/${service_name}-tls.csr.pem ] || openssl req -new -key ${tmp_certs}/${service_name}-tls.key.pem -subj "/CN=$service_name.$namespace.svc" \
+      -out ${tmp_certs}/${service_name}-tls.csr.pem -passout pass:${KEYPW}
+
+    # Sign CSR
+    [ -f ${tmp_certs}/${service_name}-tls.crt.pem ] || openssl x509 -req -CA #{kube_certs}/kube-ca.cert.pem -CAkey #{kube_private}/kube-ca.key.pem -CAcreateserial \
+      -passin pass:${KEYPW} -in ${tmp_certs}/${service_name}-tls.csr.pem -out ${tmp_certs}/${service_name}-tls.crt.pem
 
     # Create yaml files
     kubectl -n $namespace create secret tls ${service_name}-tls \
-        --cert "${keys_dir}/${service_name}-tls.crt" \
-        --key "${keys_dir}/${service_name}-tls.key" \
+        --cert "${tmp_certs}/${service_name}-tls.crt.pem" \
+        --key "${tmp_certs}/${service_name}-tls.key.pem" \
         --dry-run=client --output=yaml \
-        > ${webhook_dir}/${service_name}-tls.yaml
-    ca_pem_b64="$(openssl base64 -A <"${keys_dir}/ca.crt")"
-    sed -e 's@${CA_PEM_B64}@'"$ca_pem_b64"'@g' <"${webhook_dir}/${service_name}.yaml.template" \
-        > ${webhook_dir}/${service_name}.yaml
+        > ${service_name}-tls.yaml
 
-    rm -rf "$keys_dir"
+    ca_pem_b64="$(openssl base64 -A <"${tmp_certs}/${service_name}-tls.crt.pem")"
+    sed -e 's@${CA_PEM_B64}@'"$ca_pem_b64"'@g' <"${service_name}.yaml.template" \
+        > ${service_name}.yaml
+
+    rm -rf "$tmp_certs"
     EOH
-  not_if { File.exist? "/home/#{node['kube-hops']['user']}/model-serving-webhook/model-serving-webhook.yaml" }
+  not_if { File.exist? "#{node['kube-hops']['model-serving-webhook']['base_dir']}/model-serving-webhook.yaml" }
+end
 
 kube_hops_kubectl 'apply-model-serving-webhook-tls' do
   user node['kube-hops']['user']
