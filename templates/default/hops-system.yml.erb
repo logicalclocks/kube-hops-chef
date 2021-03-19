@@ -26,7 +26,7 @@ data:
     }
   storageInitializer: |-
     {
-        "image": "<%= node['kube-hops']['model-storage-initializer']['image'] %>",
+        "image": "<%= node['kube-hops']['docker_img_reg_url'] %>/<%= node['kube-hops']['model-storage-initializer']['image'] %>",
         "cpuRequest": "100m",
         "cpuLimit": "1",
         "memoryRequest": "100Mi",

@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: "<%= node['kube-hops']['model-serving-webhook']['image'] %>"
+          image: "<%= node['kube-hops']['docker_img_reg_url'] %>/<%= node['kube-hops']['model-serving-webhook']['image'] %>"
           imagePullPolicy: Always
           ports:
             - containerPort: 8443
