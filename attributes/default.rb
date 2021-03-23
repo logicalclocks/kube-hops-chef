@@ -112,7 +112,7 @@ default['kube-hops']['hops-system']['base_dir']            = node['kube-hops']['
 
 default['kube-hops']['model-serving-webhook']['base_dir']  = node['kube-hops']['hops-system']['base_dir'] + "/model-serving-webhook"
 default['kube-hops']['model-serving-webhook']['image']     = "model-serving-webhook:#{node['kube-hops']['docker_img_version']}"
-default['kube-hops']['model-storage-initializer']['image'] = "model-storage-initializer:#{node['kube-hops']['docker_img_version']}"
+default['kube-hops']['storage-initializer']['image'] = "storage-initializer:#{node['kube-hops']['docker_img_version']}"
 
 # Filebeat
 
