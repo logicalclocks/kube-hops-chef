@@ -77,12 +77,12 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 #
 # VERSIONS:
 # Knative -> 0.17
-# Istio -> 1.7.2 // <1.6 requires Helm 2 // >1.5.2 required by Knative
-# Cert-manager -> 1.0.1
-# KFServing -> 0.3.0  // 0.4.0 not supported in Kubernetes 1.18
+# Istio -> 1.7.2
+# Cert-manager -> 1.2.0
+# KFServing -> 0.5.1
 
 default['kube-hops']['kfserving']['enabled']               = "true"
-default['kube-hops']['kfserving']['version']               = "0.3.0"
+default['kube-hops']['kfserving']['version']               = "0.5.1"
 default['kube-hops']['kfserving']['base_dir']              = node['kube-hops']['dir'] + "/kfserving"
 default['kube-hops']['kfserving']['img_tar_url']           = node['download_url'] + "/kube/kfserving/kfserving-v#{node['kube-hops']['kfserving']['version']}.tgz"
 
@@ -112,7 +112,7 @@ default['kube-hops']['hops-system']['base_dir']            = node['kube-hops']['
 
 default['kube-hops']['model-serving-webhook']['base_dir']  = node['kube-hops']['hops-system']['base_dir'] + "/model-serving-webhook"
 default['kube-hops']['model-serving-webhook']['image']     = "model-serving-webhook:#{node['kube-hops']['docker_img_version']}"
-default['kube-hops']['storage-initializer']['image'] = "storage-initializer:#{node['kube-hops']['docker_img_version']}"
+default['kube-hops']['storage-initializer']['image']       = "storage-initializer:#{node['kube-hops']['docker_img_version']}"
 
 # Filebeat
 
