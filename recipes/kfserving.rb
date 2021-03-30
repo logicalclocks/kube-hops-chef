@@ -20,15 +20,6 @@ bash "load" do
   EOH
 end
 
-# Create base dir
-
-directory "#{node['kube-hops']['dir']}" do
-  owner node['kube-hops']['user']
-  group node['kube-hops']['group']
-  mode "0700"
-  action :create
-end
-
 # Istio
 
 remote_file "#{node['kube-hops']['istio']['tar']}" do

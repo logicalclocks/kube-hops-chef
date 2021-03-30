@@ -77,3 +77,13 @@ when 'debian'
     EOH
   end
 end
+
+
+
+# For kf-serving, create base dir
+directory "#{node['kube-hops']['dir']}" do
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+  mode "0700"
+  action :create
+end
