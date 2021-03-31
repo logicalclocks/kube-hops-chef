@@ -11,11 +11,16 @@ webhooks:
         namespace: hops-system
         path: "/mutate"
       caBundle: ${CA_PEM_B64}
+    objectSelector:
+      matchExpressions:
+      - key: serving.hops.works/id
+        operator: Exists
     rules:
       - operations: ["CREATE"]
         apiGroups: [""]
         apiVersions: ["v1"]
         resources: ["pods"]
+        scope: "Namespaced"
 ---
 apiVersion: apps/v1
 kind: Deployment
