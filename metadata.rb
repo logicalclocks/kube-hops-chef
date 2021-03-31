@@ -163,6 +163,10 @@ attribute "kube-hops/kfserving/enabled",
           :description =>  "Default true. Set to 'false' to disable kfserving",
           :type => 'string'
 
+attribute "kube-hops/kfserving/img_tar_url",
+          :description =>  "Remote container images registry from which to fetch the kfserving and dependencies images",
+          :type => 'string'
+
 attribute "kube-hops/filebeat/enabled",
           :description =>  "Default true. Set to 'false' to disable filebeat",
           :type => 'string'
