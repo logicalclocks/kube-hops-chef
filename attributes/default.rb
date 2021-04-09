@@ -116,6 +116,5 @@ default['kube-hops']['storage-initializer']['image']       = "storage-initialize
 
 # Filebeat
 
-default['kube-hops']['filebeat']['enabled']               = "true"
 default['kube-hops']['filebeat']['image']                 = "filebeat:#{node['kube-hops']['docker_img_version']}"
 default['kube-hops']['filebeat']['base_dir']              = node['kube-hops']['dir'] + "/filebeat"

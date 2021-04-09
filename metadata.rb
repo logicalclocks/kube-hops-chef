@@ -21,6 +21,7 @@ recipe 'kube-hops::addons', 'Deploy addons on the cluster'
 recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
 recipe 'kube-hops::kfserving', 'Configure and install KFServing (istio, knative, ...) on Kubernetes'
 recipe 'kube-hops::filebeat', 'Configure and install Filebeat for model server logging on Kubernetes'
+recipe 'kube-hops::hops-system', 'Create and configure Hops-system namespace in Kubernetes for configuration and core components'
 
 
 attribute "kube-hops/hopsworks_user",
@@ -165,8 +166,4 @@ attribute "kube-hops/kfserving/enabled",
 
 attribute "kube-hops/kfserving/img_tar_url",
           :description =>  "Remote container images registry from which to fetch the kfserving and dependencies images",
-          :type => 'string'
-
-attribute "kube-hops/filebeat/enabled",
-          :description =>  "Default true. Set to 'false' to disable filebeat",
           :type => 'string'
