@@ -81,7 +81,7 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 # Cert-manager -> 1.2.0
 # KFServing -> 0.5.1
 
-default['kube-hops']['kfserving']['enabled']               = "true"
+default['kube-hops']['kfserving']['enabled']               = node['install']['kubernetes']
 default['kube-hops']['kfserving']['version']               = "0.5.1"
 default['kube-hops']['kfserving']['base_dir']              = node['kube-hops']['dir'] + "/kfserving"
 default['kube-hops']['kfserving']['img_tar_url']           = node['download_url'] + "/kube/kfserving/kfserving-v#{node['kube-hops']['kfserving']['version']}.tgz"
