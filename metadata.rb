@@ -13,6 +13,7 @@ depends 'consul'
 depends 'hops'
 depends 'magic_shell', '~> 1.0.0'
 depends 'hopslog'
+depends 'kkafka'
 
 recipe 'kube-hops::ca', 'Create and configure Kubernetes\'s CA'
 recipe 'kube-hops::master', 'Configure a node as Kubernetes master'

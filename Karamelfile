@@ -27,6 +27,7 @@ dependencies:
       - kube-hops::master
       - kube-hops::addons      
       - hops::docker_registry
+      - kkafka::default
 
 # Wait to run the hopsworks recipe after install
   - recipe: kube-hops::hopsworks
