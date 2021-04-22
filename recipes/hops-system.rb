@@ -27,13 +27,16 @@ if node.attribute?('hopsworks') and node['hopsworks'].attribute?('https') and no
   hopsworks_api_port = node['hopsworks']['https']['port']
 end
 
+kafka_brokers = consul_helper.get_service_fqdn("kafka") + ":#{node['kkafka']['broker']['port']}"
+
 template "#{node['kube-hops']['hops-system']['base_dir']}/hops-system.yaml" do
   source "hops-system.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables({
     'hopsworks_fqdn': hopsworks_api_fqdn,
-    'hopsworks_port': hopsworks_api_port
+    'hopsworks_port': hopsworks_api_port,
+    'kafka_brokers': kafka_brokers
   })
 end
 
