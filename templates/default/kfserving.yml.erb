@@ -16232,7 +16232,7 @@ spec:
         - name: SECRET_NAME
           value: kfserving-webhook-server-cert
         image: gcr.io/kfserving/kfserving-controller:v0.5.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: manager
         ports:
         - containerPort: 9443
