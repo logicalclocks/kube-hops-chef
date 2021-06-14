@@ -476,6 +476,7 @@ data:
   # This is the Go import path for the binary that is containerized
   # and substituted here.
   queueSidecarImage: gcr.io/knative-releases/knative.dev/serving/cmd/queue:v0.17.0
+  registriesSkippingTagResolving: "<%= @registry_addr %>"
   _example: |
     ################################
     #                              #
