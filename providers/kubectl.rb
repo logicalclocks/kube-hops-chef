@@ -9,3 +9,14 @@ action :apply do
     EOH
   end
 end
+
+action :taint do 
+  bash "apply-taint" do
+    user new_resource.user
+    group new_resource.group
+    environment ({ 'HOME' => ::Dir.home(new_resource.user) })
+    code <<-EOH
+      kubectl taint nodes #{new_resource.node} #{new_resource.name} --overwrite
+    EOH
+  end
+end

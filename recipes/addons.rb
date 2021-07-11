@@ -70,6 +70,19 @@ end
 include_recipe "kube-hops::hops-system"
 include_recipe "kube-hops::filebeat"
 
+# Apply node taints
+node['kube-hops']['taints'].split(",").each do |node_taint|
+  node_taint = node_taint[1, node_taint.length-2]
+  node = node_taint.split(",")[0]
+  taint = node_taint.split(",")[1]
+
+  kube_hops_kubectl taint do
+    user node['kube-hops']['user']
+    group node['kube-hops']['group']
+    node node
+  end
+end
+
 if node['kube-hops']['kfserving']['enabled'].casecmp?("true")
   include_recipe "kube-hops::kfserving"
 end

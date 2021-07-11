@@ -65,6 +65,10 @@ attribute "kube-hops/hostname_override",
           :description =>  "Flag to force Kubernetes use FQDN of host as node name. Default: true",
           :type => 'string'
 
+attribute "kube-hops/taints",
+          :description =>  "Comma separated list of taints (node,taint)",
+          :type => 'string'
+
 attribute "kube-hops/apiserver/port",
           :description =>  "Port on which the apiserver listens for requests",
           :type => 'string'
