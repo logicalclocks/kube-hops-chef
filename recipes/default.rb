@@ -48,6 +48,28 @@ if node['kube-hops']['image_repo'].eql?("")
   end
 end
 
+if node['kube-hops']['kfserving']['enabled'].casecmp?("true")
+  # Load kfserving images
+  # This is done in the default recipe so that both the master 
+  # and node recipe pull the necessary docker images
+  kfserving_images = "#{Chef::Config['file_cache_path']}/kfserving-v#{node['kube-hops']['kfserving']['version']}.tgz"
+  remote_file kfserving_images do
+    source node['kube-hops']['kfserving']['img_tar_url']
+    owner node['kube-hops']['user']
+    group node['kube-hops']['group']
+    mode "0644"
+  end
+  
+  bash "load" do
+    user 'root'
+    group 'root'
+    code <<-EOH
+      docker load < #{kfserving_images}
+    EOH
+  end
+end
+
+
 # Install gem as helper to send Hopsworks requrests to sign certificates
 chef_gem 'http-cookie'
 
