@@ -16,7 +16,7 @@ action :taint do
     group new_resource.group
     environment ({ 'HOME' => ::Dir.home(new_resource.user) })
     code <<-EOH
-      kubectl taint nodes #{new_resource.node} #{new_resource.name} --overwrite
+      kubectl taint nodes #{new_resource.k8s_node} #{new_resource.name} --overwrite
     EOH
   end
 end

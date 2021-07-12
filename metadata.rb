@@ -66,7 +66,7 @@ attribute "kube-hops/hostname_override",
           :type => 'string'
 
 attribute "kube-hops/taints",
-          :description =>  "Comma separated list of taints (node,taint)",
+          :description =>  "A list of node,taints in the format:  (node1,taint)(node2,taint)",
           :type => 'string'
 
 attribute "kube-hops/apiserver/port",
