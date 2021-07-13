@@ -69,6 +69,10 @@ attribute "kube-hops/taints",
           :description =>  "A list of node,taints in the format:  (node1,taint)(node2,taint)",
           :type => 'string'
 
+attribute "kube-hops/labels",
+          :description =>  "A list of node,labels in the format:  (node1,label)(node2,label)",
+          :type => 'string'
+
 attribute "kube-hops/apiserver/port",
           :description =>  "Port on which the apiserver listens for requests",
           :type => 'string'

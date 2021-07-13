@@ -37,6 +37,7 @@ default['kube-hops']['hostname_override']                 = "true"
 
 # Nodes configuration
 default['kube-hops']['taints']                            = ""
+default['kube-hops']['labels']                            = ""
 
 # Apiserver
 default['kube-hops']['apiserver']['port']                 = "6443"
