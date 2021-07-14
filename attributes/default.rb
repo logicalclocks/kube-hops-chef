@@ -117,6 +117,9 @@ default['kube-hops']['model-serving-webhook']['base_dir']  = node['kube-hops']['
 default['kube-hops']['model-serving-webhook']['image']     = "model-serving-webhook:#{node['kube-hops']['docker_img_version']}"
 default['kube-hops']['storage-initializer']['image']       = "storage-initializer:#{node['kube-hops']['docker_img_version']}"
 
+# Model serving deployment configuration
+default['kube-hops']['serving_node_labels']                = ""
+
 # Inference logger
 
 default['kube-hops']['inference-logger']['image']             = "inference-logger:#{node['kube-hops']['docker_img_version']}"
