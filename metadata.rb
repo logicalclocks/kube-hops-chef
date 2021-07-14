@@ -177,7 +177,10 @@ attribute "kube-hops/kfserving/img_tar_url",
           :description =>  "Remote container images registry from which to fetch the kfserving and dependencies images",
           :type => 'string'
 
-
 attribute "kube-hops/serving_node_labels",
           :description =>  "The labels to apply to the KfServing pods",
+          :type => 'string'
+
+attribute "kube-hops/serving_node_tolerations",
+          :description =>  "The tolerations to apply to the KfServing pods",
           :type => 'string'

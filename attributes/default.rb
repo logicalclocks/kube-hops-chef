@@ -119,6 +119,7 @@ default['kube-hops']['storage-initializer']['image']       = "storage-initialize
 
 # Model serving deployment configuration
 default['kube-hops']['serving_node_labels']                = ""
+default['kube-hops']['serving_node_tolerations']           = ""
 
 # Inference logger
 
