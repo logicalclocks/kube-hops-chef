@@ -72,9 +72,9 @@ include_recipe "kube-hops::filebeat"
 
 # Apply node taints
 node['kube-hops']['taints'].split(")").each do |node_taint|
-  node_taint = node_taint[1, node_taint.length-1]
-  node_name = node_taint.split(",")[0]
-  taint = node_taint.split(",")[1]
+  node_taint_splits = node_taint[1, node_taint.length-1].split(",")
+  node_name = node_taint_splits[0]
+  taint = node_taint_splits[1]
 
   kube_hops_kubectl "#{taint}" do
     user node['kube-hops']['user']
@@ -86,9 +86,9 @@ end
 
 # Apply node labels
 node['kube-hops']['labels'].split(")").each do |node_label|
-  node_label = node_label[1, node_label.length-1]
-  node_name = node_label.split(",")[0]
-  label = node_label.split(",")[1]
+  node_label_splits = node_label[1, node_label.length-1].split(",")
+  node_name = node_label_splits[0]
+  label = node_label_splits[1]
 
   kube_hops_kubectl "#{label}" do
     user node['kube-hops']['user']
