@@ -70,6 +70,34 @@ end
 include_recipe "kube-hops::hops-system"
 include_recipe "kube-hops::filebeat"
 
+# Apply node taints
+node['kube-hops']['taints'].split(")").each do |node_taint|
+  node_taint_splits = node_taint[1, node_taint.length-1].split(",")
+  node_name = node_taint_splits[0]
+  taint = node_taint_splits[1]
+
+  kube_hops_kubectl "#{taint}" do
+    user node['kube-hops']['user']
+    group node['kube-hops']['group']
+    k8s_node node_name
+    action :taint
+  end
+end
+
+# Apply node labels
+node['kube-hops']['labels'].split(")").each do |node_label|
+  node_label_splits = node_label[1, node_label.length-1].split(",")
+  node_name = node_label_splits[0]
+  label = node_label_splits[1]
+
+  kube_hops_kubectl "#{label}" do
+    user node['kube-hops']['user']
+    group node['kube-hops']['group']
+    k8s_node node_name
+    action :label
+  end
+end
+
 if node['kube-hops']['kfserving']['enabled'].casecmp?("true")
   include_recipe "kube-hops::kfserving"
 end

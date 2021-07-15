@@ -22,10 +22,10 @@ default['kube-hops']['bin']['download_url']               = "#{node['download_ur
 
 
 # Resource allocation configuration
-default['kube-hops']['docker_max_memory_allocation'] = "8192"
-default['kube-hops']['docker_max_cores_allocation']  = "4"
-default['kube-hops']['docker_cores_fraction']        = "1.0"
-default['kube-hops']['docker_max_gpus_allocation']   = "0"
+default['kube-hops']['docker_max_memory_allocation']      = "8192"
+default['kube-hops']['docker_max_cores_allocation']       = "4"
+default['kube-hops']['docker_cores_fraction']             = "1.0"
+default['kube-hops']['docker_max_gpus_allocation']        = "0"
 
 # Network configuration
 default['kube-hops']['cidr']                              = "10.244.0.0/16"
@@ -34,6 +34,10 @@ default['kube-hops']['fallback_dns']                      = ""
 default['kube-hops']['flannel']['iface-regex']            = ""
 default['kube-hops']['cluster_domain']                    = "cluster.local"
 default['kube-hops']['hostname_override']                 = "true"
+
+# Nodes configuration
+default['kube-hops']['taints']                            = ""
+default['kube-hops']['labels']                            = ""
 
 # Apiserver
 default['kube-hops']['apiserver']['port']                 = "6443"
@@ -63,7 +67,6 @@ default['kube-hops']['pki']['verify_hopsworks_cert']       = "true"
 default['kube-hops']['hopsworks_cert_pwd']                 = "adminpw"
 
 # Images configuration
-
 default['kube-hops']['pull_policy']                        = "Always"
 
 default['kube-hops']['docker_dir']                         = node['install']['dir'].empty? ? "/var/lib/docker" : "#{node['install']['dir']}/docker"
@@ -113,6 +116,10 @@ default['kube-hops']['hops-system']['base_dir']            = node['kube-hops']['
 default['kube-hops']['model-serving-webhook']['base_dir']  = node['kube-hops']['hops-system']['base_dir'] + "/model-serving-webhook"
 default['kube-hops']['model-serving-webhook']['image']     = "model-serving-webhook:#{node['kube-hops']['docker_img_version']}"
 default['kube-hops']['storage-initializer']['image']       = "storage-initializer:#{node['kube-hops']['docker_img_version']}"
+
+# Model serving deployment configuration
+default['kube-hops']['serving_node_labels']                = ""
+default['kube-hops']['serving_node_tolerations']           = ""
 
 # Inference logger
 
