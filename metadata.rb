@@ -182,5 +182,5 @@ attribute "kube-hops/serving_node_labels",
           :type => 'string'
 
 attribute "kube-hops/serving_node_tolerations",
-          :description =>  "The tolerations to apply to the KfServing pods",
+          :description =>  "The tolerations attached to model serving pods, in the format key1:operator1[:value1]:effect1,key2:operator2[:value2]:effect2",
           :type => 'string'
