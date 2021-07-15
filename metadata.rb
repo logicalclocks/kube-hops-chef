@@ -178,7 +178,7 @@ attribute "kube-hops/kfserving/img_tar_url",
           :type => 'string'
 
 attribute "kube-hops/serving_node_labels",
-          :description =>  "The labels to apply to the KfServing pods",
+          :description =>  "The labels used for node selection in model serving pods, in the format key1=value1,key2=value2",
           :type => 'string'
 
 attribute "kube-hops/serving_node_tolerations",
