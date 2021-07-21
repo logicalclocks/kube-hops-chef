@@ -65,6 +65,14 @@ attribute "kube-hops/hostname_override",
           :description =>  "Flag to force Kubernetes use FQDN of host as node name. Default: true",
           :type => 'string'
 
+attribute "kube-hops/taints",
+          :description =>  "A list of node,taints in the format:  (node1,taint)(node2,taint)",
+          :type => 'string'
+
+attribute "kube-hops/labels",
+          :description =>  "A list of node,labels in the format:  (node1,label)(node2,label)",
+          :type => 'string'
+
 attribute "kube-hops/apiserver/port",
           :description =>  "Port on which the apiserver listens for requests",
           :type => 'string'
@@ -167,4 +175,12 @@ attribute "kube-hops/kfserving/enabled",
 
 attribute "kube-hops/kfserving/img_tar_url",
           :description =>  "Remote container images registry from which to fetch the kfserving and dependencies images",
+          :type => 'string'
+
+attribute "kube-hops/serving_node_labels",
+          :description =>  "The labels used for node selection in model serving pods, in the format key1=value1,key2=value2",
+          :type => 'string'
+
+attribute "kube-hops/serving_node_tolerations",
+          :description =>  "The tolerations attached to model serving pods, in the format key1:operator1[:value1]:effect1,key2:operator2[:value2]:effect2",
           :type => 'string'
