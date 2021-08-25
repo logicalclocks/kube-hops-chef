@@ -2,18 +2,22 @@
 # Create user and group for Kubernetes
 
 group node['kube-hops']['group'] do
+  gid node['kube-hops']['group_id']
   action :create
   not_if "getent group #{node['kube-hops']['group']}"
+  not_if { node['install']['external_users'].casecmp("true") == 0 }
 end
 
 user node['kube-hops']['user'] do
   home "/home/#{node['kube-hops']['user']}"
+  uid node['kube-hops']['user_id']
   gid node['kube-hops']['group']
   system true
   shell "/bin/bash"
   manage_home true
   action :create
   not_if "getent passwd #{node['kube-hops']['user']}"
+  not_if { node['install']['external_users'].casecmp("true") == 0 }
 end
 
 

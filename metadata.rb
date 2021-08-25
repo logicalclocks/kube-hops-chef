@@ -24,6 +24,21 @@ recipe 'kube-hops::kfserving', 'Configure and install KFServing (istio, knative,
 recipe 'kube-hops::filebeat', 'Configure and install Filebeat for model server logging on Kubernetes'
 recipe 'kube-hops::hops-system', 'Create and configure Hops-system namespace in Kubernetes for configuration and core components'
 
+attribute "kube-hops/user",
+          :description =>  "The user running Kubernetes",
+          :type => 'string'
+
+attribute "kube-hops/user_id",
+          :description =>  "Kubernetes user id. Default: 1523",
+          :type => 'string'
+
+attribute "kube-hops/group",
+          :description =>  "Group of the user running Kubernetes",
+          :type => 'string'
+
+attribute "kube-hops/group_id",
+          :description =>  "Kubernetes group id. Default: 1518",
+          :type => 'string'
 
 attribute "kube-hops/hopsworks_user",
           :description =>  "The user the hopsworks web-app used to authenticate to Kubernetes",
