@@ -1,7 +1,9 @@
 include_attribute "ndb"
 
 default['kube-hops']['user']                              = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
+default['kube-hops']['user_id']                           = '1523'
 default['kube-hops']['group']                             = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
+default['kube-hops']['group_id']                          = '1518'
 default['kube-hops']['hopsworks_user']                    = "hopsworks"
 default['kube-hops']['dir']                               = (node['install']['dir'].empty? ? "/srv" : node['install']['dir']) + "/kube"
 default['kube-hops']['user-home']                         = "/home/#{node['kube-hops']['user']}"
