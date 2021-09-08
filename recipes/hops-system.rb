@@ -22,9 +22,11 @@ end
 # Install namespace
 
 hopsworks_api_fqdn = consul_helper.get_service_fqdn("hopsworks.glassfish")
-hopsworks_api_port = 8181
-if node.attribute?('hopsworks') and node['hopsworks'].attribute?('https') and node['hopsworks']['https'].attribute?('port')
-  hopsworks_api_port = node['hopsworks']['https']['port']
+hopsworks_api_port = 8182
+if node.attribute?("hopsworks")
+  if node['hopsworks'].attribute?('internal') and node['hopsworks']['internal'].attribute?('port')
+    hopsworks_api_port = node['hopsworks']['internal']['port']
+  end
 end
 
 kafka_brokers = consul_helper.get_service_fqdn("kafka") + ":#{node['kkafka']['broker']['port']}"
