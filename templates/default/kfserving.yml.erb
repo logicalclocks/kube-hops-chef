@@ -16871,7 +16871,7 @@ spec:
           defaultMode: 420
           secretName: kfserving-webhook-server-cert
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: serving-cert
@@ -16885,7 +16885,7 @@ spec:
     name: selfsigned-issuer
   secretName: kfserving-webhook-server-cert
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: selfsigned-issuer

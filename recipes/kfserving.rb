@@ -54,7 +54,7 @@ bash 'apply-istio' do
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
   cwd "#{node['kube-hops']['istio']['base_dir']}"
   code <<-EOH
-    istio-#{node['kube-hops']['istio']['version']}/bin/istioctl install -f istio-operator.yaml
+    istio-#{node['kube-hops']['istio']['version']}/bin/istioctl install --skip-confirmation -f istio-operator.yaml
     EOH
 end
 
