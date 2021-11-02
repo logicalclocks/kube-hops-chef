@@ -81,19 +81,19 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 # KF Serving
 #
 # VERSIONS:
-# Knative -> 0.17
-# Istio -> 1.7.2
-# Cert-manager -> 1.2.0
-# KFServing -> 0.5.1
+# Knative -> 0.22
+# Istio -> 1.8.5
+# Cert-manager -> 1.5.3
+# KFServing -> 0.6.1
 
 default['kube-hops']['kfserving']['enabled']               = node['install']['kubernetes']
-default['kube-hops']['kfserving']['version']               = "0.5.1"
+default['kube-hops']['kfserving']['version']               = "0.6.1"
 default['kube-hops']['kfserving']['base_dir']              = node['kube-hops']['dir'] + "/kfserving"
 default['kube-hops']['kfserving']['img_tar_url']           = node['download_url'] + "/kube/kfserving/#{node['install']['version']}/kfserving-v#{node['kube-hops']['kfserving']['version']}.tgz"
 
 # Istio
 
-default['kube-hops']['istio']['version']                   = "1.7.2"
+default['kube-hops']['istio']['version']                   = "1.8.6"
 default['kube-hops']['istio']['base_dir']                  = node['kube-hops']['dir'] + "/istio"
 default['kube-hops']['istio']['tar_name']                  = "istio-#{node['kube-hops']['istio']['version']}-linux-amd64"
 default['kube-hops']['istio']['home']                      = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}"
