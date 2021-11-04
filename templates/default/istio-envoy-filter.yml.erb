@@ -1,0 +1,66 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: model-serving-ext-authz
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+      app: istio-ingressgateway
+  configPatches:
+    - applyTo: CLUSTER
+      match:
+        context: GATEWAY
+        cluster:
+          service: model-serving-authenticator.hops-system.svc.cluster.local
+          portNumber: 80
+      patch:
+        operation: MERGE
+        value:
+          name: model-serving-authenticator.hops-system.svc.cluster.local
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          name: "0.0.0.0_8080"
+          filterChain:
+            filter:
+              name: "envoy.http_connection_manager"
+              subFilter:
+                name: "envoy.router"
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.ext_authz
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+            failureModeAllow: false
+            httpService:
+              authorizationRequest:
+                allowedHeaders:
+                  patterns:
+                    - exact: authorization
+                    - exact: user-agent
+                    - exact: cookie
+                    - exact: x-forwarded-host
+                    - exact: x-forwarded-proto
+                    - exact: x-forwarded-uri
+                    - exact: x-forwarded-method
+              authorizationResponse:
+                allowedClientHeaders:
+                  patterns:
+                    - exact: set-cookie
+                    - exact: authorization
+                allowedUpstreamHeaders:
+                  patterns:
+                    - exact: set-cookie
+                    - exact: authorization
+                    - exact: x-user-info
+              serverUri:
+                cluster: model-serving-authenticator.hops-system.svc.cluster.local
+                timeout: 5s
+                uri: http://model-serving-authenticator.hops-system.svc.cluster.local:80/
+            statusOnError:
+              code: Forbidden

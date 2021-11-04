@@ -53,6 +53,19 @@ data:
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi"
     }
+  authenticator: |-
+    {
+        "allowedProjectUserRoles": [ "Data owner", "Data scientist" ],
+        "allowedUserRoles": [ "HOPS_ADMIN", "HOPS_USER" ]
+    }
+  predictor: |-
+    {
+        "terminationGracePeriodSeconds": 3
+    }
+  transformer: |-
+    {
+        "terminationGracePeriodSeconds": 3
+    }
 ---
 apiVersion: v1
 kind: ConfigMap
