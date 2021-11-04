@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-serving-authenticator
+  namespace: hops-system
+  labels:
+    app: model-serving-authenticator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-serving-authenticator
+  template:
+    metadata:
+      labels:
+        app: model-serving-authenticator
+    spec:
+      serviceAccountName: model-serving-authenticator
+      containers:
+        - name: server
+          image: "<%= node['kube-hops']['docker_img_reg_url'] %>/<%= node['kube-hops']['model-serving-authenticator']['image'] %>"
+          imagePullPolicy: Always
+          ports:
+            - name: auth-api
+              containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: model-serving-authenticator
+  namespace: hops-system
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  selector:
+    app: model-serving-authenticator
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: auth-api
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: model-serving-authenticator
+  namespace: hops-system
+spec:
+  gateways:
+  - mesh
+  hosts:
+  - model-serving-authenticator.hops-system.svc.cluster.local
+  - model-serving-authenticator.hops-system.logicalclocks.com
+  http:
+  - route:
+    - destination:
+        host: model-serving-authenticator.hops-system.svc.cluster.local
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: model-serving-authenticator
+  namespace: hops-system
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: model-serving-authenticator-cluster-role
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: model-serving-authenticator-cluster-role-binding
+subjects:
+- kind: ServiceAccount
+  name: model-serving-authenticator
+  namespace: hops-system
+  apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: model-serving-authenticator-cluster-role
+  apiGroup: ""
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: model-serving-authenticator-role
+  namespace: hops-system
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: model-serving-authenticator-role-binding
+  namespace: hops-system
+subjects:
+- kind: ServiceAccount
+  name: model-serving-authenticator
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: model-serving-authenticator-role
+  apiGroup: ""
