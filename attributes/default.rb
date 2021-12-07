@@ -133,6 +133,10 @@ default['kube-hops']['model-serving-authenticator']['image']     = "model-servin
 
 default['kube-hops']['inference-logger']['image']             = "inference-logger:#{node['kube-hops']['docker_img_version']}"
 
+# Sklearnserver
+
+default['kube-hops']['sklearnserver']['image']            = "sklearnserver"  # tag is appended by kfserving with node['kube-hops']['docker_img_version'] (see kfserving.yml.erb)
+
 # Filebeat
 
 default['kube-hops']['filebeat']['image']                 = "filebeat:#{node['kube-hops']['docker_img_version']}"
