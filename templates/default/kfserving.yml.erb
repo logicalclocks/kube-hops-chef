@@ -16574,8 +16574,8 @@ data:
         },
         "sklearn": {
           "v1": {
-            "image": "kfserving/sklearnserver",
-            "defaultImageVersion": "v0.6.1",
+            "image": "<%= node['kube-hops']['docker_img_reg_url'] %>/<%= node['kube-hops']['sklearnserver']['image'] %>",
+            "defaultImageVersion": "<%= node['kube-hops']['docker_img_version'] %>",
             "supportedFrameworks": [
               "sklearn"
             ],
