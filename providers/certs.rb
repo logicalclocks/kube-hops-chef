@@ -85,6 +85,39 @@ action :generate do
                 else
                   raise "Error signing certificate #{new_resource.name}"
                 end
+
+                if new_resource.name === "hopsmon"
+                  #pass the key and certificate to hopsmon
+                  crt = {data: ::File.read("#{new_resource.path}/#{new_resource.name}.crt")}
+                  kagent_param "/tmp" do
+                    executing_cookbook "kube-hops"
+                    executing_recipe "hopsmon"
+                    cookbook "hopsmonitor"
+                    recipe "prometheus"
+                    param "kube-crt"
+                    value "'" + JSON.generate(crt) + "'"
+                  end
+
+                  key = {data: ::File.read("#{new_resource.path}/#{new_resource.name}.key")}
+                  kagent_param "/tmp" do
+                    executing_cookbook "kube-hops"
+                    executing_recipe "hopsmon"
+                    cookbook "hopsmonitor"
+                    recipe "prometheus"
+                    param "kube-key"
+                    value  "'" + JSON.generate(key) + "'"
+                  end
+
+                  ca = {data: ::File.read("#{node['certs']['dir']}/kube/certs/kube-ca.cert.pem")}
+                  kagent_param "/tmp" do
+                    executing_cookbook "kube-hops"
+                    executing_recipe "hopsmon"
+                    cookbook "hopsmonitor"
+                    recipe "prometheus"
+                    param "kube-ca"
+                    value  "'" + JSON.generate(ca) + "'"
+                  end
+                end
             else
                 puts response.body
                 raise "Error logging in"
@@ -92,7 +125,6 @@ action :generate do
           end
         end
       end
-
     else
 
       # Sign the certificate with a local CA

@@ -23,6 +23,7 @@ recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
 recipe 'kube-hops::kfserving', 'Configure and install KFServing (istio, knative, ...) on Kubernetes'
 recipe 'kube-hops::filebeat', 'Configure and install Filebeat for model server logging on Kubernetes'
 recipe 'kube-hops::hops-system', 'Create and configure Hops-system namespace in Kubernetes for configuration and core components'
+recipe 'kube-hops::hopsmon', "Create and configure certificates for hopsmon"
 
 attribute "kube-hops/user",
           :description =>  "The user running Kubernetes",
@@ -199,3 +200,11 @@ attribute "kube-hops/serving_node_labels",
 attribute "kube-hops/serving_node_tolerations",
           :description =>  "The tolerations attached to model serving pods, in the format key1:operator1[:value1]:effect1,key2:operator2[:value2]:effect2",
           :type => 'string'
+
+attribute "kube-hops/master/private_ips",
+          :description =>  "The private ips for the Kube master server(s)",
+          :type => 'array'
+
+attribute "kube-hops/master/public_ips",
+          :description =>  "The private ips for the Kube master server(s)",
+          :type => 'array'

@@ -17,6 +17,7 @@ dependencies:
 
   - recipe: kube-hops::addons
     global:
+      - kube-hops::ca
       - kube-hops::node
       - kube-hops::master
       - hops::docker_registry
