@@ -44,6 +44,9 @@ kind: ConfigMap
 metadata:
   name: hops-system--serving
   namespace: hops-system
+  labels:
+    serving.hops.works/reserved: "true"
+    serving.hops.works/scope: serving
 data:
   storageInitializer: |-
     {
@@ -56,7 +59,8 @@ data:
   authenticator: |-
     {
         "allowedProjectUserRoles": [ "Data owner", "Data scientist" ],
-        "allowedUserRoles": [ "HOPS_ADMIN", "HOPS_USER" ]
+        "allowedUserRoles": [ "HOPS_ADMIN", "HOPS_USER" ],
+        "reSyncCacheSeconds": 0
     }
   predictor: |-
     {
