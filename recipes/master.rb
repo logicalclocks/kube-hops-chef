@@ -249,7 +249,7 @@ if node['kube-hops']['master']['untaint'].eql?("true")
       kubectl taint nodes --all node-role.kubernetes.io/master-
     EOH
     not_if "kubectl describe nodes #{node['fqdn']} | grep Taints | grep none", :environment => { 'HOME' => ::Dir.home(node['kube-hops']['user']) }
-    not_if { !node['install']['version'].eql?("") } # do not run if upgrading
+    only_if { node['install']['current_version'].eql?("") } # do not run if upgrading
   end
 end
 
