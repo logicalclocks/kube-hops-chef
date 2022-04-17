@@ -42,19 +42,20 @@ end
 # Kubelet: Kubernetes node agent
 
 # Download  and install binaries
-kubernetes_version = node['kube-hops']['kubernetes_version'][1..-1]
+#kubernetes_version = node['kube-hops']['kubernetes_version'][1..-1]
+kubernetes_version = node['kube-hops']['kubernetes_version']
 package_type = node['platform_family'].eql?("debian") ? "_amd64.deb" : ".x86_64.rpm"
 packages = ["cri-tools-#{node['kube-hops']['cri-tools_version']}#{package_type}", "kubelet-#{kubernetes_version}#{package_type}", "kubernetes-cni-#{node['kube-hops']['kubernetes-cni_version']}#{package_type}", "kubectl-#{kubernetes_version}#{package_type}", "kubeadm-#{kubernetes_version}#{package_type}"]
 
-packages.each do |pkg|
-  remote_file "#{Chef::Config['file_cache_path']}/#{pkg}" do
-    source "#{node['kube-hops']['bin']['download_url']}/#{pkg}"
-    owner 'root'
-    group 'root'
-    mode '0755'
-    action :create
-  end
-end
+# packages.each do |pkg|
+#   remote_file "#{Chef::Config['file_cache_path']}/#{pkg}" do
+#     source "#{node['kube-hops']['bin']['download_url']}/#{pkg}"
+#     owner 'root'
+#     group 'root'
+#     mode '0755'
+#     action :create
+#   end
+# end
 
 # Install packages & Platform specific configuration
 case node['platform_family']
@@ -77,7 +78,15 @@ when 'debian'
     group 'root'
     cwd Chef::Config['file_cache_path']
     code <<-EOH
-        apt-get install -y ./#{packages.join(" ./")}
+         apt-get install -y apt-transport-https ca-certificates curl
+         curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+         echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+         apt-get update
+#         apt-get install -y kubelet kubeadm kubectl
+#        apt-get install -y ./#{packages.join(" ./")}
+         apt install -y kubeadm=#{kubernetes_version}-00
+         apt-mark hold kubelet kubeadm kubectl cri-tools kubernetes-cni
     EOH
+    not_if "apt show kubeadm=#{kubernetes_version}-00"
   end
 end
