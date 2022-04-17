@@ -93,7 +93,7 @@ default['kube-hops']['kfserving']['img_tar_url']           = node['download_url'
 
 # Istio
 
-default['kube-hops']['istio']['version']                   = "1.8.6"
+default['kube-hops']['istio']['version']                   = "1.13.2"
 default['kube-hops']['istio']['base_dir']                  = node['kube-hops']['dir'] + "/istio"
 default['kube-hops']['istio']['tar_name']                  = "istio-#{node['kube-hops']['istio']['version']}-linux-amd64"
 default['kube-hops']['istio']['home']                      = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}"
