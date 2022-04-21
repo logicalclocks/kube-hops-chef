@@ -48,13 +48,13 @@ if node['kube-hops']['image_repo'].eql?("")
   end
 end
 
-if node['kube-hops']['kfserving']['enabled'].casecmp?("true")
-  # Load kfserving images
+if node['kube-hops']['kserve']['enabled'].casecmp?("true")
+  # Load kserve images
   # This is done in the default recipe so that both the master 
   # and node recipe pull the necessary docker images
-  kfserving_images = "#{Chef::Config['file_cache_path']}/kfserving-v#{node['kube-hops']['kfserving']['version']}.tgz"
-  remote_file kfserving_images do
-    source node['kube-hops']['kfserving']['img_tar_url']
+  kserve_images = "#{Chef::Config['file_cache_path']}/kserve-v#{node['kube-hops']['kserve']['version']}.tgz"
+  remote_file kserve_images do
+    source node['kube-hops']['kserve']['img_tar_url']
     owner node['kube-hops']['user']
     group node['kube-hops']['group']
     mode "0644"
@@ -64,7 +64,7 @@ if node['kube-hops']['kfserving']['enabled'].casecmp?("true")
     user 'root'
     group 'root'
     code <<-EOH
-      docker load < #{kfserving_images}
+      docker load < #{kserve_images}
     EOH
   end
 end

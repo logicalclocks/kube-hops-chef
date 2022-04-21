@@ -20,7 +20,7 @@ recipe 'kube-hops::master', 'Configure a node as Kubernetes master'
 recipe 'kube-hops::node', 'Configure a node as Kubernetes slave'
 recipe 'kube-hops::addons', 'Deploy addons on the cluster'
 recipe 'kube-hops::hopsworks', 'Configure Hopsworks to use Kubernetes'
-recipe 'kube-hops::kfserving', 'Configure and install KFServing (istio, knative, ...) on Kubernetes'
+recipe 'kube-hops::kserve', 'Configure and install KServe (istio, knative, ...) on Kubernetes'
 recipe 'kube-hops::filebeat', 'Configure and install Filebeat for model server logging on Kubernetes'
 recipe 'kube-hops::hops-system', 'Create and configure Hops-system namespace in Kubernetes for configuration and core components'
 recipe 'kube-hops::hopsmon', "Create and configure certificates for hopsmon"
@@ -185,12 +185,12 @@ attribute "kube-hops/docker_max_gpus_allocation",
           :description =>  "Maximum number of GPUs that can be allocated for Docker containers",
           :type => 'string'
 
-attribute "kube-hops/kfserving/enabled",
-          :description =>  "Default true. Set to 'false' to disable kfserving",
+attribute "kube-hops/kserve/enabled",
+          :description =>  "Default true. Set to 'false' to disable KServe",
           :type => 'string'
 
-attribute "kube-hops/kfserving/img_tar_url",
-          :description =>  "Remote container images registry from which to fetch the kfserving and dependencies images",
+attribute "kube-hops/kserve/img_tar_url",
+          :description =>  "Remote container images registry from which to fetch the KServe and dependencies images",
           :type => 'string'
 
 attribute "kube-hops/serving_node_labels",

@@ -98,7 +98,7 @@ node['kube-hops']['labels'].split(")").each do |node_label|
   end
 end
 
-if node['kube-hops']['kfserving']['enabled'].casecmp?("true")
-  include_recipe "kube-hops::kfserving"
+if node['kube-hops']['kserve']['enabled'].casecmp?("true")
+  include_recipe "kube-hops::kserve"
 end
 include_recipe "kube-hops::hopsmon"

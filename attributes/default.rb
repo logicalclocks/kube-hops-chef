@@ -82,23 +82,24 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 #
 # VERSIONS:
 # Knative -> 0.22
-# Istio -> 1.8.5
+# Istio -> 1.10.6
 # Cert-manager -> 1.5.3
-# KFServing -> 0.6.1
+# KServe -> 0.8
 
-default['kube-hops']['kfserving']['enabled']               = node['install']['kubernetes']
-default['kube-hops']['kfserving']['version']               = "0.6.1"
-default['kube-hops']['kfserving']['base_dir']              = node['kube-hops']['dir'] + "/kfserving"
-default['kube-hops']['kfserving']['img_tar_url']           = node['download_url'] + "/kube/kfserving/#{node['install']['version']}/kfserving-v#{node['kube-hops']['kfserving']['version']}.tgz"
+default['kube-hops']['kserve']['enabled']               = node['install']['kubernetes']
+default['kube-hops']['kserve']['version']               = "0.7.0"
+default['kube-hops']['kserve']['base_dir']              = node['kube-hops']['dir'] + "/kserve"
+default['kube-hops']['kserve']['img_tar_url']           = node['download_url'] + "/kube/kserve/#{node['install']['version']}/kserve-v#{node['kube-hops']['kserve']['version']}.tgz"
+default['kube-hops']['kfserving']['enabled']            = node['kube-hops']['kserve']['enabled']  # for backward compatibility 
 
 # Istio
 
-default['kube-hops']['istio']['version']                   = "1.8.6"
+default['kube-hops']['istio']['version']                   = "1.10.6"
 default['kube-hops']['istio']['base_dir']                  = node['kube-hops']['dir'] + "/istio"
 default['kube-hops']['istio']['tar_name']                  = "istio-#{node['kube-hops']['istio']['version']}-linux-amd64"
 default['kube-hops']['istio']['home']                      = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}"
 default['kube-hops']['istio']['tar']                       = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
-default['kube-hops']['istio']['download_url']              = node['download_url'] + "/kube/kfserving/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
+default['kube-hops']['istio']['download_url']              = node['download_url'] + "/kube/kserve/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
 default['kube-hops']['istio']['ingress_http_port']         = "32080"
 default['kube-hops']['istio']['ingress_https_port']        = "32443"
 default['kube-hops']['istio']['ingress_status_port']       = "32021"
@@ -139,7 +140,7 @@ default['kube-hops']['inference-logger']['image']                      = "infere
 
 # Sklearnserver
 
-default['kube-hops']['sklearnserver']['image']                         = "sklearnserver"  # tag is appended by # # kfserving with node['kube-hops']['docker_img_version'] (see kfserving.yml.erb)
+default['kube-hops']['sklearnserver']['image']                         = "sklearnserver"  # tag is appended by kserve with node['kube-hops']['docker_img_version'] (see kserve.yml.erb)
 
 # Filebeat
 
