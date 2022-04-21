@@ -84,7 +84,7 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 # Knative -> 0.22
 # Istio -> 1.10.6
 # Cert-manager -> 1.5.3
-# KServe -> 0.8
+# KServe -> 0.7
 
 default['kube-hops']['kserve']['enabled']               = node['install']['kubernetes']
 default['kube-hops']['kserve']['version']               = "0.7.0"
