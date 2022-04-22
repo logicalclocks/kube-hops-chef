@@ -126,18 +126,27 @@ default['kube-hops']['serving_node_tolerations']           = ""
 
 # Model serving authenticator
 
-default['kube-hops']['model-serving-authenticator']['base_dir']  = node['kube-hops']['hops-system']['base_dir'] + "/model-serving-authenticator"
-default['kube-hops']['model-serving-authenticator']['image']     = "model-serving-authenticator:#{node['kube-hops']['docker_img_version']}"
+default['kube-hops']['model-serving-authenticator']['base_dir']        = node['kube-hops']['hops-system']['base_dir'] + "/model-serving-authenticator"
+default['kube-hops']['model-serving-authenticator']['image']           = "model-serving-authenticator:#{node['kube-hops']['docker_img_version']}"
 
 # Inference logger
 
-default['kube-hops']['inference-logger']['image']             = "inference-logger:#{node['kube-hops']['docker_img_version']}"
+default['kube-hops']['inference-logger']['image']                      = "inference-logger:#{node['kube-hops']['docker_img_version']}"
 
 # Sklearnserver
 
-default['kube-hops']['sklearnserver']['image']            = "sklearnserver"  # tag is appended by kfserving with node['kube-hops']['docker_img_version'] (see kfserving.yml.erb)
+default['kube-hops']['sklearnserver']['image']                         = "sklearnserver"  # tag is appended by # # kfserving with node['kube-hops']['docker_img_version'] (see kfserving.yml.erb)
 
 # Filebeat
 
-default['kube-hops']['filebeat']['image']                 = "filebeat:#{node['kube-hops']['docker_img_version']}"
-default['kube-hops']['filebeat']['base_dir']              = node['kube-hops']['dir'] + "/filebeat"
+default['kube-hops']['filebeat']['image']                              = "filebeat:#{node['kube-hops']['docker_img_version']}"
+default['kube-hops']['filebeat']['base_dir']                           = node['kube-hops']['dir'] + "/filebeat"
+
+default['kube-hops']['monitoring']['certs-dir']                        = "#{node['kube-hops']['hops-system']['base_dir']}/hopsmon-certs"
+default['kube-hops']['monitoring']['cert-crt']                         = "#{node['kube-hops']['monitoring']['certs-dir']}/hopsmon.crt"
+default['kube-hops']['monitoring']['cert-key']                         = "#{node['kube-hops']['monitoring']['certs-dir']}/hopsmon.key"
+
+default['kube-hops']['monitoring']['kube-state-metrics-image-version'] = "v1.7.2"
+default['kube-hops']['monitoring']['kube-state-metrics-image-url']     = node['download_url'] + "/kube/monitoring/kube-state-metrics-#{node['kube-hops']['monitoring']['kube-state-metrics-image-version']}.tar"
+default['kube-hops']['monitoring']['kube-state-metrics-image-tar']     = "kube-state-metrics-#{node['kube-hops']['monitoring']['kube-state-metrics-image-version']}.tar"
+default['kube-hops']['monitoring']['user']                             = "hopsmon"

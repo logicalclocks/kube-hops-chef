@@ -101,3 +101,4 @@ end
 if node['kube-hops']['kfserving']['enabled'].casecmp?("true")
   include_recipe "kube-hops::kfserving"
 end
+include_recipe "kube-hops::hopsmon"
