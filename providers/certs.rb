@@ -91,7 +91,7 @@ action :generate do
                   crt = {data: ::File.read("#{new_resource.path}/#{new_resource.name}.crt")}
                   kagent_param "/tmp" do
                     executing_cookbook "kube-hops"
-                    executing_recipe "hopsmon"
+                    executing_recipe "addons"
                     cookbook "hopsmonitor"
                     recipe "prometheus"
                     param "kube-crt"
@@ -101,7 +101,7 @@ action :generate do
                   key = {data: ::File.read("#{new_resource.path}/#{new_resource.name}.key")}
                   kagent_param "/tmp" do
                     executing_cookbook "kube-hops"
-                    executing_recipe "hopsmon"
+                    executing_recipe "addons"
                     cookbook "hopsmonitor"
                     recipe "prometheus"
                     param "kube-key"
@@ -111,7 +111,7 @@ action :generate do
                   ca = {data: ::File.read("#{node['certs']['dir']}/kube/certs/kube-ca.cert.pem")}
                   kagent_param "/tmp" do
                     executing_cookbook "kube-hops"
-                    executing_recipe "hopsmon"
+                    executing_recipe "addons"
                     cookbook "hopsmonitor"
                     recipe "prometheus"
                     param "kube-ca"
