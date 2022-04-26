@@ -99,6 +99,9 @@ default['kube-hops']['istio']['tar_name']                  = "istio-#{node['kube
 default['kube-hops']['istio']['home']                      = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}"
 default['kube-hops']['istio']['tar']                       = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
 default['kube-hops']['istio']['download_url']              = node['download_url'] + "/kube/kfserving/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
+default['kube-hops']['istio']['ingress_http_port']         = "32080"
+default['kube-hops']['istio']['ingress_https_port']        = "32443"
+default['kube-hops']['istio']['ingress_status_port']       = "32021"
 
 # Knative
 
