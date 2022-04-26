@@ -1395,7 +1395,7 @@ metadata:
   annotations:
     knative.dev/example-checksum: "74c3fc6a"
 data:
-  logicalclocks.com: |
+  <%= node['kube-hops']['knative']['domain_name'] %>: |
   svc.cluster.local: |
   _example: |
     ################################

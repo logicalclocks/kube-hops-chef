@@ -106,6 +106,7 @@ default['kube-hops']['istio']['ingress_status_port']       = "32021"
 # Knative
 
 default['kube-hops']['knative']['base_dir']                = node['kube-hops']['dir'] + "/knative"
+default['kube-hops']['knative']['domain_name']             = "logicalclocks.com"
 
 # Cert-manager
 

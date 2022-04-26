@@ -51,7 +51,7 @@ spec:
   - mesh
   hosts:
   - model-serving-authenticator.hops-system.svc.cluster.local
-  - model-serving-authenticator.hops-system.logicalclocks.com
+  - model-serving-authenticator.hops-system.<%= node['kube-hops']['knative']['domain_name'] %>
   http:
   - route:
     - destination:
