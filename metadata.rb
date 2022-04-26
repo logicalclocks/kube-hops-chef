@@ -201,6 +201,18 @@ attribute "kube-hops/serving_node_tolerations",
           :description =>  "The tolerations attached to model serving pods, in the format key1:operator1[:value1]:effect1,key2:operator2[:value2]:effect2",
           :type => 'string'
 
+attribute "kube-hops/istio/ingress_http_port",
+          :description =>  "HTTP port for the istio ingress gateway. The range of valid ports is 30000-32767.",
+          :type => 'string'
+
+attribute "kube-hops/istio/ingress_https_port",
+          :description =>  "HTTPS port for the istio ingress gateway. The range of valid ports is 30000-32767.",
+          :type => 'string'
+
+attribute "kube-hops/istio/ingress_status_port",
+          :description =>  "Status port for the istio ingress gateway. The range of valid ports is 30000-32767.",
+          :type => 'string'
+
 attribute "kube-hops/master/private_ips",
           :description =>  "The private ips for the Kube master server(s)",
           :type => 'array'
