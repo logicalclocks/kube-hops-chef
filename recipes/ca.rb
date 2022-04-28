@@ -139,7 +139,7 @@ bash 'generate-and-sign-key' do
     chmod 400 hopsworks.key.pem
     chown #{node['kube-hops']['pki']['ca_api_user']} hopsworks.key.pem
     openssl req -subj "/CN=hopsworks" -passin pass:#{node['kube-hops']['hopsworks_cert_pwd']} -passout pass:#{node['kube-hops']['hopsworks_cert_pwd']} -key hopsworks.key.pem -new -sha256 -out hopsworks.csr.pem
-    openssl ca -batch -config ../kube-ca.cnf -passin pass:#{node['kube-hops']['pki']['ca_keypw']} -extensions v3_ext -days 365 -notext -md sha256 -in hopsworks.csr.pem -out hopsworks.cert.pem
+    openssl ca -batch -config ../kube-ca.cnf -passin pass:#{node['kube-hops']['pki']['ca_keypw']} -extensions v3_ext -days #{node['kube-hops']['pki']['days']} -notext -md sha256 -in hopsworks.csr.pem -out hopsworks.cert.pem
     chmod 400 hopsworks.cert.pem
     chown #{node['kube-hops']['pki']['ca_api_user']} hopsworks.cert.pem
   EOH
