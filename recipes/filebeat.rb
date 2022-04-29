@@ -1,7 +1,7 @@
 #
 # Install Filebeat
 #
-# Model server logging for both KFServing and K8s deployments
+# Model server logging for both KServe and K8s deployments
 
 logstash_fqdn = consul_helper.get_service_fqdn("logstash")
 logstash_serving_endpoint = logstash_fqdn + ":#{node['logstash']['beats']['serving_port']}"

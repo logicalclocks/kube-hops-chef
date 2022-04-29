@@ -1,5 +1,5 @@
 #
-# Install KFServing and dependencies
+# Install KServe and dependencies
 #
 
 # Istio
@@ -150,25 +150,25 @@ bash 'wait-for-cert-manager' do
     EOH
 end
 
-# KFServing
+# KServe
 
-directory "#{node['kube-hops']['kfserving']['base_dir']}" do
+directory "#{node['kube-hops']['kserve']['base_dir']}" do
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   mode '0700'
   action :create
 end
 
-template "#{node['kube-hops']['kfserving']['base_dir']}/kfserving.yaml" do
-  source "kfserving.yml.erb"
+template "#{node['kube-hops']['kserve']['base_dir']}/kserve.yaml" do
+  source "kserve.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
 end
 
-kube_hops_kubectl 'apply-kfseving' do
+kube_hops_kubectl 'apply-kserve' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "#{node['kube-hops']['kfserving']['base_dir']}/kfserving.yaml"
+  url "#{node['kube-hops']['kserve']['base_dir']}/kserve.yaml"
 end
 
 # Model Serving Admission Controller

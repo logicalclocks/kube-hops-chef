@@ -22,7 +22,7 @@ dependencies:
       - kube-hops::master
       - hops::docker_registry
 
-  - recipe: kube-hops::kfserving
+  - recipe: kube-hops::kserve
     global:
       - kube-hops::node
       - kube-hops::master
