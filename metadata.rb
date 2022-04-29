@@ -213,6 +213,10 @@ attribute "kube-hops/istio/ingress_status_port",
           :description =>  "Status port for the istio ingress gateway. The range of valid ports is 30000-32767.",
           :type => 'string'
 
+attribute "kube-hops/istio/ingress_http10",
+          :description =>  "Whether to enable HTTP 1.0 in the istio ingress gateway",
+          :type => 'string'
+
 attribute "kube-hops/knative/domain_name",
           :description =>  "Domain name for the knative gateway. It is visible in the host header of the inference requests.",
           :type => 'string'

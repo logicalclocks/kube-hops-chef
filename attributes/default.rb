@@ -102,6 +102,7 @@ default['kube-hops']['istio']['download_url']              = node['download_url'
 default['kube-hops']['istio']['ingress_http_port']         = "32080"
 default['kube-hops']['istio']['ingress_https_port']        = "32443"
 default['kube-hops']['istio']['ingress_status_port']       = "32021"
+default['kube-hops']['istio']['ingress_http10']            = "false"
 
 # Knative
 
