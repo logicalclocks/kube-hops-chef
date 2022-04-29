@@ -90,7 +90,6 @@ default['kube-hops']['kserve']['enabled']               = node['install']['kuber
 default['kube-hops']['kserve']['version']               = "0.7.0"
 default['kube-hops']['kserve']['base_dir']              = node['kube-hops']['dir'] + "/kserve"
 default['kube-hops']['kserve']['img_tar_url']           = node['download_url'] + "/kube/kserve/#{node['install']['version']}/kserve-v#{node['kube-hops']['kserve']['version']}.tgz"
-default['kube-hops']['kfserving']['enabled']            = node['kube-hops']['kserve']['enabled']  # for backward compatibility 
 
 # Istio
 
