@@ -4,7 +4,7 @@ metadata:
   name: hopsmon-rbac
 rules:
   - apiGroups: [""]
-    resources: ["nodes/metrics", "nodes", "pods", "endpoints", "services", "namespaces", "nodes/proxy"]
+    resources: ["nodes/metrics", "nodes", "pods", "pods/proxy", "pods/metrics", "endpoints", "endpoints/proxy", "endpoints/metrics", "services", "services/proxy", "services/proxy", "namespaces", "nodes/proxy"]
     verbs: ["get", "watch", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
