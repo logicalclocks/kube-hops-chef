@@ -1,4 +1,5 @@
 include_attribute "ndb"
+include_attribute "tensorflow"
 
 default['kube-hops']['user']                              = node['install']['user'].empty? ? "kubernetes" : node['install']['user']
 default['kube-hops']['user_id']                           = '1523'
@@ -141,6 +142,10 @@ default['kube-hops']['inference-logger']['image']                      = "infere
 # Sklearnserver
 
 default['kube-hops']['sklearnserver']['image']                         = "sklearnserver"  # tag is appended by kserve with node['kube-hops']['docker_img_version'] (see kserve.yml.erb)
+
+# KServe TF Serving
+
+default['kube-hops']['kserve']['tensorflow']['version']                =  node['tensorflow']['version']
 
 # Filebeat
 
