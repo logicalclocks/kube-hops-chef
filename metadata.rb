@@ -9,6 +9,7 @@ cookbook 'sysctl', '~> 1.0.3'
 cookbook 'kernel_module', '~> 1.1.1'
 depends 'kagent'
 depends 'ndb'
+depends 'tensorflow'
 depends 'consul'
 depends 'hops'
 depends 'magic_shell', '~> 1.0.0'
@@ -191,6 +192,10 @@ attribute "kube-hops/kserve/enabled",
 
 attribute "kube-hops/kserve/img_tar_url",
           :description =>  "Remote container images registry from which to fetch the KServe and dependencies images",
+          :type => 'string'
+
+attribute "kube-hops/kserve/tensorflow/version",
+          :description =>  "TensorFlow version to use in KServe TensorFlow serving server",
           :type => 'string'
 
 attribute "kube-hops/serving_node_labels",
