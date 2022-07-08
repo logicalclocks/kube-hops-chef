@@ -145,7 +145,7 @@ default['kube-hops']['sklearnserver']['image']                         = "sklear
 
 # KServe TF Serving
 
-default['kube-hops']['kserve']['tensorflow']['version']                =  node['tensorflow']['version']
+default['kube-hops']['kserve']['tensorflow']['version']                =  node['tensorflow']['serving']['version']
 
 # Filebeat
 
