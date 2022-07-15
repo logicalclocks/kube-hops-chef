@@ -81,7 +81,9 @@ action :generate do
 
                 if ( response.is_a? (Net::HTTPSuccess))
                   json_response = ::JSON.parse(response.body)
-                  ::File.write("#{new_resource.path}/#{new_resource.name}.crt", json_response['signedCert'])
+                  signedCert = json_response['signedCert']
+                  intermediateCACert = json_response['intermediateCaCert']
+                  ::File.write("#{new_resource.path}/#{new_resource.name}.crt", signedCert)
                 else
                   raise "Error signing certificate #{new_resource.name}"
                 end
@@ -108,7 +110,7 @@ action :generate do
                     value  "'" + JSON.generate(key) + "'"
                   end
 
-                  ca = {data: ::File.read("#{node['certs']['dir']}/kube/certs/kube-ca.cert.pem")}
+                  ca = {data: intermediateCACert}
                   kagent_param "/tmp" do
                     executing_cookbook "kube-hops"
                     executing_recipe "addons"
