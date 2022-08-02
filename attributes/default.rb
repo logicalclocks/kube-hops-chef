@@ -27,7 +27,6 @@ default['kube-hops']['bin']['download_url']               = "#{node['download_ur
 # Resource allocation configuration
 default['kube-hops']['docker_max_memory_allocation']      = "8192"
 default['kube-hops']['docker_max_cores_allocation']       = "4"
-default['kube-hops']['docker_cores_fraction']             = "1.0"
 default['kube-hops']['docker_max_gpus_allocation']        = "0"
 
 # Network configuration
@@ -129,6 +128,11 @@ default['kube-hops']['storage-initializer']['image']       = "storage-initialize
 
 default['kube-hops']['serving_node_labels']                = ""
 default['kube-hops']['serving_node_tolerations']           = ""
+default['kube-hops']['serving_max_memory_allocation']      = "-1"   # no upper limit
+default['kube-hops']['serving_max_cores_allocation']       = "-1.0" # no upper limit
+default['kube-hops']['serving_max_gpus_allocation']        = "-1"   # no upper limit
+default['kube-hops']['serving_max_num_instances']          = "10"   # possible values: >=-1, where -1 means no limit
+default['kube-hops']['serving_min_num_instances']          = "-1"   # possible values: >=-1, where -1 means no limit and 0 enforces scale-to-zero when available (e.g., kserve)
 
 # Model serving authenticator
 
