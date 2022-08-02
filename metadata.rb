@@ -178,10 +178,6 @@ attribute "kube-hops/docker_max_cores_allocation",
           :description =>  "Maximum number of cores that can be allocated for Docker containers",
           :type => 'string'
 
-attribute "kube-hops/docker_cores_fraction",
-          :description =>  "Fraction used to scale core allocation",
-          :type => 'string'
-
 attribute "kube-hops/docker_max_gpus_allocation",
           :description =>  "Maximum number of GPUs that can be allocated for Docker containers",
           :type => 'string'
@@ -204,6 +200,26 @@ attribute "kube-hops/serving_node_labels",
 
 attribute "kube-hops/serving_node_tolerations",
           :description =>  "The tolerations attached to model serving pods, in the format key1:operator1[:value1]:effect1,key2:operator2[:value2]:effect2",
+          :type => 'string'
+
+attribute "kube-hops/serving_max_memory_allocation",
+          :description =>  "Maximum memory resources to be allocated for model deployments. Possible values are >=-1, where -1 means no limit.",
+          :type => 'string'
+
+attribute "kube-hops/serving_max_cores_allocation",
+          :description =>  "Maximum cores to be allocated for model deployments. Possible values are >=-1, where -1 means no limit.",
+          :type => 'string'
+
+attribute "kube-hops/serving_max_gpus_allocation",
+          :description =>  "Maximum gpus to be allocated for model deployments. Possible values are >=-1, where -1 means no limit.",
+          :type => 'string'
+
+attribute "kube-hops/serving_max_num_instances",
+          :description =>  "Maximum number of replicas in each model deployment. Possible values are >=-1, where -1 means no limit.",
+          :type => 'string'
+
+attribute "kube-hops/serving_min_num_instances",
+          :description =>  "Minimum number of replicas in each model deployment. Possible values are >=-1, where -1 means no limit and 0 enforces scale-to-zero when available (e.g., kserve).",
           :type => 'string'
 
 attribute "kube-hops/istio/ingress_http_port",
