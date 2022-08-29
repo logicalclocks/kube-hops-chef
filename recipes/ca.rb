@@ -80,9 +80,9 @@ bash 'generate-key/trustStore' do
   cwd kube_hopsworkscerts
   code <<-EOH
     set -e
-    openssl pkcs12 -export -in hopsworks.cert.pem -inkey hopsworks.key.pem -out cert_and_key.p12 -name hopsworks -CAfile intermediate_ca.pem -caname root -password pass:#{node['kube-hops']['hopsworks_cert_pwd']}
+    openssl pkcs12 -export -in hopsworks.cert.pem -inkey hopsworks.key.pem -out cert_and_key.p12 -name hopsworks -CAfile kube-ca.cert.pem -caname root -password pass:#{node['kube-hops']['hopsworks_cert_pwd']}
     keytool -importkeystore -destkeystore hopsworks__kstore.jks -srckeystore cert_and_key.p12 -srcstoretype PKCS12 -alias hopsworks -srcstorepass #{node['kube-hops']['hopsworks_cert_pwd']} -deststorepass #{node['kube-hops']['hopsworks_cert_pwd']} -destkeypass #{node['kube-hops']['hopsworks_cert_pwd']}
-    keytool -import -noprompt -trustcacerts -alias CARoot -file intermediate_ca.pem -keystore hopsworks__tstore.jks -srcstorepass #{node['kube-hops']['hopsworks_cert_pwd']} -deststorepass #{node['kube-hops']['hopsworks_cert_pwd']} -destkeypass #{node['kube-hops']['hopsworks_cert_pwd']}
+    keytool -import -noprompt -trustcacerts -alias CARoot -file kube-ca.cert.pem -keystore hopsworks__tstore.jks -srcstorepass #{node['kube-hops']['hopsworks_cert_pwd']} -deststorepass #{node['kube-hops']['hopsworks_cert_pwd']} -destkeypass #{node['kube-hops']['hopsworks_cert_pwd']}
 
     chmod 400 hopsworks__tstore.jks
     chmod 400 hopsworks__kstore.jks
