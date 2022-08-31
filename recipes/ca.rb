@@ -70,7 +70,7 @@ bash "move kube-ca pem file" do
   code <<-EOH
     mv #{kube_intermediate_ca_dir}/certs/kube-ca.cert.pem #{kube_hopsworkscerts}/kube-ca.cert.pem
   EOH
-  only_if conda.is_upgrade
+  only_if conda_helpers.is_upgrade
   not_if { ::File.exist?("#{kube_hopsworkscerts}/kube-ca.cert.pem") }
 end
 
