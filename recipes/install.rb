@@ -67,6 +67,8 @@ when 'rhel'
     code <<-EOH
         yum install -y #{packages.join(" ")}
     EOH
+    retries 10
+    retry_delay 30
     not_if "yum list installed kubeadm-#{kubernetes_version}"
   end
 
@@ -79,5 +81,7 @@ when 'debian'
     code <<-EOH
         apt-get install -y ./#{packages.join(" ./")}
     EOH
+    retries 10
+    retry_delay 30
   end
 end
