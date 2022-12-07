@@ -22,9 +22,15 @@ end
 # Install g++ to be able to install http-cookie gem
 case node['platform_family']
 when 'rhel'
-  package 'gcc-c++'
+  package 'gcc-c++' do
+    retries 10
+    retry_delay 30
+  end
 when 'debian'
-  package 'g++'
+  package 'g++' do
+    retries 10
+    retry_delay 30
+  end
 end
 
 # If AirGapped installation, download control plane images from download_url and load them 
