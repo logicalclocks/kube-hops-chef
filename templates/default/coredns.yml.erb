@@ -1,3 +1,5 @@
+# v1.9.4
+# https://github.com/coredns/deployment/blob/master/kubernetes/coredns.yaml.sed
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -59,18 +61,26 @@ data:
           lameduck 5s
         }
         ready
-        kubernetes CLUSTER_DOMAIN REVERSE_CIDRS {
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
           fallthrough in-addr.arpa ip6.arpa
         }
         prometheus :9153
-        forward . UPSTREAMNAMESERVER {
+        forward . <%= @fallback_dns %> {
           max_concurrent 1000
         }
         cache 30
         loop
         reload
         loadbalance
-    }STUBDOMAINS
+    }
+    <%= node['consul']['domain'] %>:53 {
+      errors
+      cache 30
+      forward . /etc/resolv.conf
+    }
+    in-addr.arpa ip6.arpa {
+      forward . <%= @fallback_dns %>
+    }
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -188,7 +198,7 @@ spec:
   selector:
     k8s-app: kube-dns
     app.kubernetes.io/name: coredns
-  clusterIP: CLUSTER_DNS_IP
+  clusterIP: <%= node['kube-hops']['dns_ip'] %>
   ports:
     - name: dns
       port: 53

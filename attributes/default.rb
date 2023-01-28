@@ -11,18 +11,25 @@ default['kube-hops']['user-home']                         = "/home/#{node['kube-
 
 default['kube-hops']['device']                            = ""
 
+default['kube-hops']['download_url_gibson'] = 'https://repo.hops.works/dev/gibson'
+
 # General cluster configuration
-default['kube-hops']['kubernetes_version']                = "v1.18.8"
-default['kube-hops']['kubernetes-cni_version']            = "0.8.7"
-default['kube-hops']['cri-tools_version']                 = "1.13.0"
+default['kube-hops']['kubernetes_version']                = "v1.26.1"
+default['kube-hops']['kubernetes-cni_version']            = "1.2.0"
+default['kube-hops']['cri-tools_version']                 = "1.26.0"
 default['kube-hops']['cluster_name']                      = "hops-kubernetes"
-default['kube-hops']['image_repo']                        = "k8s.gcr.io"
+default['kube-hops']['image_repo']                        = "registry.k8s.io"
+
 
 default['kube-hops']['control_plane_imgs_url']            = "#{node['download_url']}/kube/kube-control-plane-#{node['kube-hops']['kubernetes_version']}.tar"
 
 # Binaries configuration
-default['kube-hops']['bin']['download_url']               = "#{node['download_url']}/kube/#{node['kube-hops']['kubernetes_version']}/#{node['platform_family']}"
+default['kube-hops']['bin']['download_url']               = "#{node['kube-hops']['download_url_gibson']}/kube/#{node['kube-hops']['kubernetes_version']}/#{node['platform_family']}"
+default['kube-hops']['kubernetes-cni']['download_url']    = "#{node['kube-hops']['download_url_gibson']}/kube/#{node['kube-hops']['kubernetes_version']}/#{node['platform_family']}/cni-plugins-linux-amd64-v#{node['kube-hops']['kubernetes-cni_version']}.tgz"
 
+#cri_dockerd
+default['kube-hops']['cri_dockerd']['version']            = "0.3.1"
+default['kube-hops']['cri_dockerd']['download_url']       = "#{node['kube-hops']['download_url_gibson']}/kube/#{node['kube-hops']['kubernetes_version']}/#{node['platform_family']}"
 
 # Resource allocation configuration
 default['kube-hops']['docker_max_memory_allocation']      = "8192"
@@ -40,6 +47,7 @@ default['kube-hops']['hostname_override']                 = "true"
 # Nodes configuration
 default['kube-hops']['taints']                            = ""
 default['kube-hops']['labels']                            = ""
+default['kube-hops']['cri_socket']                        = "unix:///var/run/cri-dockerd.sock"
 
 # Apiserver
 default['kube-hops']['apiserver']['port']                 = "6443"
@@ -82,23 +90,23 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 #
 # VERSIONS:
 # Knative -> 0.22
-# Istio -> 1.10.6
-# Cert-manager -> 1.5.3
-# KServe -> 0.7
+# Istio -> 1.16.1
+# Cert-manager -> v1.11.0
+# KServe -> 0.10.0
 
 default['kube-hops']['kserve']['enabled']               = node['install']['kubernetes']
-default['kube-hops']['kserve']['version']               = "0.7.0"
+default['kube-hops']['kserve']['version']               = "0.10.0"
 default['kube-hops']['kserve']['base_dir']              = node['kube-hops']['dir'] + "/kserve"
-default['kube-hops']['kserve']['img_tar_url']           = node['download_url'] + "/kube/kserve/#{node['install']['version']}/kserve-v#{node['kube-hops']['kserve']['version']}.tgz"
+default['kube-hops']['kserve']['img_tar_url']           = node['kube-hops']['download_url_gibson']+ "/kube/kserve/#{node['install']['version']}/kserve-v#{node['kube-hops']['kserve']['version']}.tgz"
 
 # Istio
 
-default['kube-hops']['istio']['version']                   = "1.10.6"
+default['kube-hops']['istio']['version']                   = "1.16.1"
 default['kube-hops']['istio']['base_dir']                  = node['kube-hops']['dir'] + "/istio"
 default['kube-hops']['istio']['tar_name']                  = "istio-#{node['kube-hops']['istio']['version']}-linux-amd64"
 default['kube-hops']['istio']['home']                      = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}"
 default['kube-hops']['istio']['tar']                       = node['kube-hops']['dir'] + "/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
-default['kube-hops']['istio']['download_url']              = node['download_url'] + "/kube/kserve/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
+default['kube-hops']['istio']['download_url']              = node['kube-hops']['download_url_gibson'] + "/kube/kserve/#{node['kube-hops']['istio']['tar_name']}.tar.gz"
 default['kube-hops']['istio']['ingress_http_port']         = "32080"
 default['kube-hops']['istio']['ingress_https_port']        = "32443"
 default['kube-hops']['istio']['ingress_status_port']       = "32021"
@@ -160,7 +168,7 @@ default['kube-hops']['monitoring']['certs-dir']                        = "#{node
 default['kube-hops']['monitoring']['cert-crt']                         = "#{node['kube-hops']['monitoring']['certs-dir']}/hopsmon.crt"
 default['kube-hops']['monitoring']['cert-key']                         = "#{node['kube-hops']['monitoring']['certs-dir']}/hopsmon.key"
 
-default['kube-hops']['monitoring']['kube-state-metrics-image-version'] = "v1.7.2"
-default['kube-hops']['monitoring']['kube-state-metrics-image-url']     = node['download_url'] + "/kube/monitoring/kube-state-metrics-#{node['kube-hops']['monitoring']['kube-state-metrics-image-version']}.tar"
+default['kube-hops']['monitoring']['kube-state-metrics-image-version'] = "v2.7.0"
+default['kube-hops']['monitoring']['kube-state-metrics-image-url']     = node['kube-hops']['download_url_gibson'] + "/kube/monitoring/kube-state-metrics-#{node['kube-hops']['monitoring']['kube-state-metrics-image-version']}.tar"
 default['kube-hops']['monitoring']['kube-state-metrics-image-tar']     = "kube-state-metrics-#{node['kube-hops']['monitoring']['kube-state-metrics-image-version']}.tar"
 default['kube-hops']['monitoring']['user']                             = "hopsmon"

@@ -3,6 +3,13 @@ include_recipe "kube-hops::default"
 
 private_ip = my_private_ip()
 
+directory node['kube-hops']['conf_dir']  do
+  owner "root"
+  group "root"
+  mode "755"
+  not_if { ::File.directory?(node['kube-hops']['conf_dir']) }
+end
+
 # Create pki directories
 directory node['kube-hops']['pki']['dir'] do
   owner node['kube-hops']['user']
@@ -149,6 +156,13 @@ template "#{node['kube-hops']['conf_dir']}/kubeadm.conf" do
   })
 end
 
+directory "#{node['kube-hops']['conf_dir']}/manifests"  do
+  owner "root"
+  group "root"
+  mode "755"
+  not_if { ::File.directory?("#{node['kube-hops']['conf_dir']}/manifests") }
+end
+
 bash 'init-master' do
   user 'root'
   group 'root'
@@ -231,6 +245,16 @@ template "/home/#{node['kube-hops']['user']}/coredns.yml" do
   })
 end
 
+#kubernetes v1.26 already comes with coredns
+bash "delete-existing-coredns-config" do
+  user  node['kube-hops']['user']
+  group  node['kube-hops']['user']
+  environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
+  code <<-EOH
+      kubectl delete -f /home/#{node['kube-hops']['user']}/coredns.yml
+  EOH
+end
+
 kube_hops_kubectl 'apply_coredns' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
@@ -246,7 +270,7 @@ if node['kube-hops']['master']['untaint'].eql?("true")
     retries 6
     retry_delay 30
     code <<-EOH
-      kubectl taint nodes --all node-role.kubernetes.io/master-
+      kubectl taint nodes --all node-role.kubernetes.io/control-plane-
     EOH
     not_if "kubectl describe nodes #{node['fqdn']} | grep Taints | grep none", :environment => { 'HOME' => ::Dir.home(node['kube-hops']['user']) }
     only_if { node['install']['current_version'].eql?("") } # do not run if upgrading

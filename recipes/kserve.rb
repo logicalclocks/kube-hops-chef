@@ -1,5 +1,7 @@
 #
 # Install KServe and dependencies
+# v0.10
+# https://github.com/kserve/kserve/releases/download/v0.10.0/kserve.yaml
 #
 
 # Istio
@@ -165,11 +167,24 @@ template "#{node['kube-hops']['kserve']['base_dir']}/kserve.yaml" do
   group node['kube-hops']['group']
 end
 
+template "#{node['kube-hops']['knative']['base_dir']}/kserve-serving-runtimes.yaml" do
+  source "kserve-serving-runtimes.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
 kube_hops_kubectl 'apply-kserve' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   url "#{node['kube-hops']['kserve']['base_dir']}/kserve.yaml"
 end
+
+kube_hops_kubectl 'apply-kserve-serving-runtimes' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  url "#{node['kube-hops']['knative']['base_dir']}/kserve-serving-runtimes.yaml"
+end
+
 
 # Model Serving Admission Controller
 
@@ -191,6 +206,8 @@ kube_hops_certs 'model-serving-webhook' do
   subject     "/CN=model-serving-webhook.hops-system.svc"
   not_if      { ::File.exist?("#{node['kube-hops']['model-serving-webhook']['base_dir']}/model-serving-webhook.crt") }
 end
+
+
 
 bash 'configure-model-serving-webhook-tls' do
   user 'root'

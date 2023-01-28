@@ -5,54 +5,34 @@ metadata:
   name: monitoring
 ---
 apiVersion: v1
+automountServiceAccountToken: false
 kind: ServiceAccount
 metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/version: 2.7.0
   name: kube-state-metrics
   namespace: monitoring
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: Role
-metadata:
-  name: kube-state-metrics-resizer
-  namespace: monitoring
-rules:
-  - apiGroups: [""]
-    resources:
-      - pods
-    verbs: ["get"]
-  - apiGroups: ["extensions"]
-    resources:
-      - deployments
-    resourceNames: ["kube-state-metrics"]
-    verbs: ["get", "update"]
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: RoleBinding
-metadata:
-  name: kube-state-metrics
-  namespace: monitoring
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: kube-state-metrics-resizer
-subjects:
-  - kind: ServiceAccount
-    name: kube-state-metrics
-    namespace: monitoring
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-# kubernetes versions before 1.8.0 should use rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/version: 2.7.0
   name: kube-state-metrics
 rules:
-  - apiGroups: [""]
+  - apiGroups:
+      - ""
     resources:
       - configmaps
       - secrets
       - nodes
       - pods
       - services
+      - serviceaccounts
       - resourcequotas
       - replicationcontrollers
       - limitranges
@@ -60,50 +40,117 @@ rules:
       - persistentvolumes
       - namespaces
       - endpoints
-    verbs: ["list", "watch"]
-  - apiGroups: ["extensions"]
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - apps
     resources:
-      - daemonsets
-      - deployments
-      - replicasets
-      - ingresses
-    verbs: ["list", "watch"]
-  - apiGroups: ["apps"]
-    resources:
-      - daemonsets
-      - deployments
-      - replicasets
       - statefulsets
-    verbs: ["list", "watch"]
-  - apiGroups: ["batch"]
+      - daemonsets
+      - deployments
+      - replicasets
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - batch
     resources:
       - cronjobs
       - jobs
-    verbs: ["list", "watch"]
-  - apiGroups: ["autoscaling"]
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - autoscaling
     resources:
       - horizontalpodautoscalers
-    verbs: ["list", "watch"]
-  - apiGroups: ["policy"]
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - subjectaccessreviews
+    verbs:
+      - create
+  - apiGroups:
+      - policy
     resources:
       - poddisruptionbudgets
-    verbs: ["list", "watch"]
-  - apiGroups: ["certificates.k8s.io"]
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - certificates.k8s.io
     resources:
       - certificatesigningrequests
-    verbs: ["list", "watch"]
-  - apiGroups: ["storage.k8s.io"]
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - storage.k8s.io
     resources:
       - storageclasses
-    verbs: ["list", "watch"]
-  - apiGroups: ["autoscaling.k8s.io"]
+      - volumeattachments
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - admissionregistration.k8s.io
     resources:
-      - verticalpodautoscalers
-    verbs: ["list", "watch"]
+      - mutatingwebhookconfigurations
+      - validatingwebhookconfigurations
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - networkpolicies
+      - ingressclasses
+      - ingresses
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterrolebindings
+      - clusterroles
+      - rolebindings
+      - roles
+    verbs:
+      - list
+      - watch
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/version: 2.7.0
   name: kube-state-metrics
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -118,59 +165,72 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: kube-state-metrics
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/version: 2.7.0
   name: kube-state-metrics
   namespace: monitoring
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: kube-state-metrics
-  replicas: 1
+      app.kubernetes.io/name: kube-state-metrics
   template:
     metadata:
       labels:
-        app: kube-state-metrics
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: kube-state-metrics
+        app.kubernetes.io/version: 2.7.0
     spec:
-      serviceAccountName: kube-state-metrics
+      automountServiceAccountToken: true
       containers:
-        - name: kube-state-metrics
-          image: quay.io/coreos/kube-state-metrics:v1.7.2
-          ports:
-            - name: http-metrics
-              containerPort: 8080
-            - name: telemetry
-              containerPort: 8081
+        - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.7.0
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8080
             initialDelaySeconds: 5
             timeoutSeconds: 5
+          name: kube-state-metrics
+          ports:
+            - containerPort: 8080
+              name: http-metrics
+            - containerPort: 8081
+              name: telemetry
           readinessProbe:
             httpGet:
               path: /
-              port: 8080
+              port: 8081
             initialDelaySeconds: 5
             timeoutSeconds: 5
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsUser: 65534
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: kube-state-metrics
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/version: 2.7.0
   name: kube-state-metrics
   namespace: monitoring
-  labels:
-    app: kube-state-metrics
-  annotations:
-    prometheus.io/scrape: 'true'
 spec:
+  clusterIP: None
   ports:
     - name: http-metrics
       port: 8080
       targetPort: http-metrics
-      protocol: TCP
     - name: telemetry
       port: 8081
       targetPort: telemetry
-      protocol: TCP
   selector:
-    app: kube-state-metrics
+    app.kubernetes.io/name: kube-state-metrics

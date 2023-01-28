@@ -1,3 +1,5 @@
+#Version: 1.9.0
+#https://github.com/knative/serving/releases/download/knative-v1.9.0/serving-core.yaml
 # Copyright 2018 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -4431,7 +4433,7 @@ metadata:
 spec:
   # This is the Go import path for the binary that is containerized
   # and substituted here.
-  image: gcr.io/knative-releases/knative.dev/serving/cmd/queue@sha256:ccfa0604ac462ee5d3462f4d2eccbd030f9760c203861e8a5cbbab0651cc6211
+  image: gcr.io/knative-releases/knative.dev/serving/cmd/queue:v1.9.0
 
 ---
 # Copyright 2018 The Knative Authors
@@ -4828,7 +4830,8 @@ metadata:
 data:
   # This is the Go import path for the binary that is containerized
   # and substituted here.
-  queue-sidecar-image: gcr.io/knative-releases/knative.dev/serving/cmd/queue@sha256:ccfa0604ac462ee5d3462f4d2eccbd030f9760c203861e8a5cbbab0651cc6211
+  queue-sidecar-image: gcr.io/knative-releases/knative.dev/serving/cmd/queue:v1.9.0
+  registries-skipping-tag-resolving: "<%= @registry_addr %>"
   _example: |-
     ################################
     #                              #
@@ -4941,6 +4944,8 @@ metadata:
   annotations:
     knative.dev/example-checksum: "26c09de5"
 data:
+  <%= node['kube-hops']['knative']['domain_name'] %>: |
+  svc.cluster.local: |
   _example: |
     ################################
     #                              #
@@ -5006,6 +5011,11 @@ metadata:
   annotations:
     knative.dev/example-checksum: "d3565159"
 data:
+  # Indicates whether Kubernetes nodeSelector support is enabled
+  kubernetes.podspec-nodeselector: "enabled"
+
+  # Indicates whether Kubernetes tolerations support is enabled
+  kubernetes.podspec-tolerations: "enabled"
   _example: |-
     ################################
     #                              #
@@ -5881,7 +5891,7 @@ spec:
         - name: activator
           # This is the Go import path for the binary that is containerized
           # and substituted here.
-          image: gcr.io/knative-releases/knative.dev/serving/cmd/activator@sha256:f9ed20f316f33d529d72e9002b940bb6d2d8daa76361623787f4b87526196c9f
+          image: gcr.io/knative-releases/knative.dev/serving/cmd/activator:v1.9.0
           # The numbers are based on performance test results from
           # https://github.com/knative/serving/issues/1625#issuecomment-511930023
           resources:
@@ -6048,7 +6058,7 @@ spec:
         - name: autoscaler
           # This is the Go import path for the binary that is containerized
           # and substituted here.
-          image: gcr.io/knative-releases/knative.dev/serving/cmd/autoscaler@sha256:6699846e900830294e4ec4cc2c2b000a1c5fa5fe3e8846624ead01cdf0e4a8d3
+          image: gcr.io/knative-releases/knative.dev/serving/cmd/autoscaler:v1.9.0
           resources:
             requests:
               cpu: 100m
@@ -6184,7 +6194,7 @@ spec:
         - name: controller
           # This is the Go import path for the binary that is containerized
           # and substituted here.
-          image: gcr.io/knative-releases/knative.dev/serving/cmd/controller@sha256:8fc3dac5d9e9c788bd250d49f411e419d3655e427e15b6a0b73a03935132f738
+          image: gcr.io/knative-releases/knative.dev/serving/cmd/controller:v1.9.0
           resources:
             requests:
               cpu: 100m
@@ -6298,7 +6308,7 @@ spec:
         - name: domain-mapping
           # This is the Go import path for the binary that is containerized
           # and substituted here.
-          image: gcr.io/knative-releases/knative.dev/serving/cmd/domain-mapping@sha256:98ee56cb1815e90d9985616a664ce133679c790120c3b8a3e04a7488486727d1
+          image: gcr.io/knative-releases/knative.dev/serving/cmd/domain-mapping:v1.9.0
           resources:
             requests:
               cpu: 30m
@@ -6388,7 +6398,7 @@ spec:
         - name: domainmapping-webhook
           # This is the Go import path for the binary that is containerized
           # and substituted here.
-          image: gcr.io/knative-releases/knative.dev/serving/cmd/domain-mapping-webhook@sha256:26cb5fdb9a5fe575919869331172e2b73de01084c043191748fbd45ba443abc2
+          image: gcr.io/knative-releases/knative.dev/serving/cmd/domain-mapping-webhook:v1.9.0
           resources:
             requests:
               cpu: 100m
@@ -6589,7 +6599,7 @@ spec:
         - name: webhook
           # This is the Go import path for the binary that is containerized
           # and substituted here.
-          image: gcr.io/knative-releases/knative.dev/serving/cmd/webhook@sha256:67f619672751867e70f60321be906cec40a77d0d849cc2354fbc4415c01c3442
+          image: gcr.io/knative-releases/knative.dev/serving/cmd/webhook:v1.9.0
           resources:
             requests:
               cpu: 100m

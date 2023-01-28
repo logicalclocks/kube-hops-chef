@@ -19,6 +19,72 @@ service 'docker' do
   action [:enable, :start]
 end
 
+case node['platform_family']
+when "rhel"
+  systemd_path = "/usr/lib/systemd/system"
+when "debian"
+  systemd_path = "/lib/systemd/system"
+end
+
+#install cri-dockerd
+package_type = node['platform_family'].eql?("debian") ? "_amd64.deb" : ".x86_64.rpm"
+cri_dockerd = "cri-dockerd-#{node['kube-hops']['cri_dockerd']['version']}#{package_type}"
+remote_file "#{Chef::Config['file_cache_path']}/#{cri_dockerd}" do
+  source "#{node['kube-hops']['cri_dockerd']['download_url']}/#{cri_dockerd}"
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
+
+case node['platform_family']
+when 'rhel'
+
+  bash "install_cri_dockerd" do
+    user 'root'
+    group 'root'
+    cwd Chef::Config['file_cache_path']
+    code <<-EOH
+        yum install -y #{cri_dockerd}
+    EOH
+  end
+
+when 'debian'
+
+  bash "install_cri_dockerd" do
+    user 'root'
+    group 'root'
+    cwd Chef::Config['file_cache_path']
+    code <<-EOH
+        apt-get install -y ./#{cri_dockerd}
+    EOH
+  end
+end
+
+#create a service for cri-dockerd
+template "#{systemd_path}/cri-docker.service" do
+  source "cri-docker.service.erb"
+  owner "root"
+  group "root"
+end
+
+template "#{systemd_path}/cri-docker.socket" do
+  source "cri-docker.socket.erb"
+  owner "root"
+  group "root"
+end
+
+bash "enable_cri_docker_service" do
+  user 'root'
+  group 'root'
+  code <<-EOH
+        systemctl daemon-reload
+        systemctl enable cri-docker.service
+        systemctl enable --now cri-docker.socket
+        systemctl restart kubelet
+  EOH
+end
+
 # Install g++ to be able to install http-cookie gem
 case node['platform_family']
 when 'rhel'
@@ -54,26 +120,7 @@ if node['kube-hops']['image_repo'].eql?("")
   end
 end
 
-if node['kube-hops']['kserve']['enabled'].casecmp?("true")
-  # Load kserve images
-  # This is done in the default recipe so that both the master 
-  # and node recipe pull the necessary docker images
-  kserve_images = "#{Chef::Config['file_cache_path']}/kserve-v#{node['kube-hops']['kserve']['version']}.tgz"
-  remote_file kserve_images do
-    source node['kube-hops']['kserve']['img_tar_url']
-    owner node['kube-hops']['user']
-    group node['kube-hops']['group']
-    mode "0644"
-  end
-  
-  bash "load" do
-    user 'root'
-    group 'root'
-    code <<-EOH
-      docker load < #{kserve_images}
-    EOH
-  end
-end
+#temporarily deleted code for downloading kserve images. Need to get the upgraded images kserve installs and package them
 
 remote_file "#{node['kube-hops']['monitoring']['kube-state-metrics-image-tar']}" do
   source node['kube-hops']['monitoring']['kube-state-metrics-image-url']

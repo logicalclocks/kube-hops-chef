@@ -1,3 +1,5 @@
+# v0.10.0
+# https://github.com/kserve/kserve/releases/download/v0.10.0/kserve-runtimes.yaml
 apiVersion: serving.kserve.io/v1alpha1
 kind: ClusterServingRuntime
 metadata:
@@ -145,7 +147,7 @@ spec:
         - --model_name={{.Name}}
         - --model_dir=/mnt/models
         - --http_port=8080
-      image: kserve/sklearnserver:v0.10.0
+      image: "<%= node['kube-hops']['docker_img_reg_url'] %>/<%= node['kube-hops']['sklearnserver']['image'] %>:<%= node['kube-hops']['docker_img_version'] %>"
       name: kserve-container
       resources:
         limits:

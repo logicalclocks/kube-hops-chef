@@ -36,6 +36,12 @@ bash 'disable-swap' do
     EOH
 end
 
+# Install conntrack required by Kubernetes Version ≥ 1.18. https://github.com/kubesphere/kubekey#requirements-and-recommendations
+package 'conntrack' do
+  retries 10
+  retry_delay 30
+end
+
 # Install:
 # Kubeadm: utility to boostrap a kubernetes cluster
 # Kubectl: command line tool to manage a kubernetes cluster
@@ -43,8 +49,8 @@ end
 
 # Download  and install binaries
 kubernetes_version = node['kube-hops']['kubernetes_version'][1..-1]
-package_type = node['platform_family'].eql?("debian") ? "_amd64.deb" : ".x86_64.rpm"
-packages = ["cri-tools-#{node['kube-hops']['cri-tools_version']}#{package_type}", "kubelet-#{kubernetes_version}#{package_type}", "kubernetes-cni-#{node['kube-hops']['kubernetes-cni_version']}#{package_type}", "kubectl-#{kubernetes_version}#{package_type}", "kubeadm-#{kubernetes_version}#{package_type}"]
+packages = ["crictl-#{node['kube-hops']['cri-tools_version']}", "kubelet-#{kubernetes_version}", "kubectl-#{kubernetes_version}", "kubeadm-#{kubernetes_version}"]
+kubernetes_cni = "kubernetes-cni"
 
 packages.each do |pkg|
   remote_file "#{Chef::Config['file_cache_path']}/#{pkg}" do
@@ -56,32 +62,91 @@ packages.each do |pkg|
   end
 end
 
-# Install packages & Platform specific configuration
+packages.each do |pkg|
+  bash "install_pkg_#{pkg}" do
+    user 'root'
+    group 'root'
+    cwd Chef::Config['file_cache_path']
+    code <<-EOH
+        echo "Installing package #{pkg}"
+        bin=#{pkg.gsub("-"+kubernetes_version, "").gsub("-"+node['kube-hops']['cri-tools_version'], "")}
+        mv #{pkg} /usr/bin/$bin
+        chmod +x /usr/bin/$bin
+    EOH
+  end
+end
+
 case node['platform_family']
-when 'rhel'
+when "rhel"
+  systemd_path = "/usr/lib/systemd/system"
+when "debian"
+  systemd_path = "/lib/systemd/system"
+end
 
-  bash "install_pkgs" do
-    user 'root'
-    group 'root'
-    cwd Chef::Config['file_cache_path']
-    code <<-EOH
-        yum install -y #{packages.join(" ")}
-    EOH
-    retries 10
-    retry_delay 30
-    not_if "yum list installed kubeadm-#{kubernetes_version}"
-  end
+#create a service for kubelet
+kubelet_service = "kubelet"
+kubelet_systemd_script = "#{systemd_path}/#{kubelet_service}.service"
+kubelet_dropin_service_dir = "/etc/systemd/system/kubelet.service.d"
 
-when 'debian'
+template kubelet_systemd_script do
+  source "#{kubelet_service}-service.erb"
+  owner "root"
+  group "root"
+end
 
-  bash "install_pkgs" do
-    user 'root'
-    group 'root'
-    cwd Chef::Config['file_cache_path']
-    code <<-EOH
-        apt-get install -y ./#{packages.join(" ./")}
-    EOH
-    retries 10
-    retry_delay 30
-  end
+directory kubelet_dropin_service_dir do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+  not_if { ::File.directory?(kubelet_dropin_service_dir) }
+end
+
+template "#{kubelet_dropin_service_dir}/10-kubeadm.conf" do
+  source "kubelet-service-dropin.erb"
+  owner "root"
+  group "root"
+end
+
+bash "enable_and_start_kubelet_service" do
+  user 'root'
+  group 'root'
+  code <<-EOH
+    systemctl daemon-reload
+    systemctl enable #{kubelet_service}
+    systemctl start #{kubelet_service}
+  EOH
+end
+
+remote_file "#{Chef::Config['file_cache_path']}/#{kubernetes_cni}" do
+  source "#{node['kube-hops']['kubernetes-cni']['download_url']}"
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
+
+#create the cni installation dir in /opt
+directory "/opt/cni" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+
+directory "/opt/cni/bin" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+
+bash "install_cni_plugins" do
+  user 'root'
+  group 'root'
+  cwd Chef::Config['file_cache_path']
+  code <<-EOH
+    tar xvf #{kubernetes_cni} -C /opt/cni/bin
+    chmod +x /opt/cni/bin/*
+  EOH
 end
