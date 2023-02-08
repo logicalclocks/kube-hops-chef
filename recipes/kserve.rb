@@ -207,8 +207,6 @@ kube_hops_certs 'model-serving-webhook' do
   not_if      { ::File.exist?("#{node['kube-hops']['model-serving-webhook']['base_dir']}/model-serving-webhook.crt") }
 end
 
-
-
 bash 'configure-model-serving-webhook-tls' do
   user 'root'
   group 'root'

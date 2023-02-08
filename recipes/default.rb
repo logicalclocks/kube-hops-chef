@@ -120,7 +120,26 @@ if node['kube-hops']['image_repo'].eql?("")
   end
 end
 
-#temporarily deleted code for downloading kserve images. Need to get the upgraded images kserve installs and package them
+if node['kube-hops']['kserve']['enabled'].casecmp?("true")
+  # Load kserve images
+  # This is done in the default recipe so that both the master
+  # and node recipe pull the necessary docker images
+  kserve_images = "#{Chef::Config['file_cache_path']}/kserve-v#{node['kube-hops']['kserve']['version']}.tgz"
+  remote_file kserve_images do
+    source node['kube-hops']['kserve']['img_tar_url']
+    owner node['kube-hops']['user']
+    group node['kube-hops']['group']
+    mode "0644"
+  end
+
+  bash "load" do
+    user 'root'
+    group 'root'
+    code <<-EOH
+      docker load < #{kserve_images}
+    EOH
+  end
+end
 
 remote_file "#{node['kube-hops']['monitoring']['kube-state-metrics-image-tar']}" do
   source node['kube-hops']['monitoring']['kube-state-metrics-image-url']
