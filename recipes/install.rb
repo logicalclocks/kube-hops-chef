@@ -84,6 +84,7 @@ when "debian"
 end
 
 #create a service for kubelet
+#the service will not be able to start until cri-dockerd is installed. It will be restarted later by kubeadmin
 kubelet_service = "kubelet"
 kubelet_systemd_script = "#{systemd_path}/#{kubelet_service}.service"
 kubelet_dropin_service_dir = "/etc/systemd/system/kubelet.service.d"
