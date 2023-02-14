@@ -49,7 +49,9 @@ kube_hops_kubectl 'apply_kube_state_metrics' do
   url "#{node['kube-hops']['conf_dir']}/kube-state-metrics.yaml"
 end
 
-# standalone cadvisor
+# run standalone cadvisor
+# K8s 1.24 has removed the Docker plugin from cAdvisor and kubelet can no longer retrieve Docker container
+# information such as image, pod, container labels, etc. through cAdvisor.
 template "#{node['kube-hops']['conf_dir']}/cadvisor.yaml" do
   source "cadvisor.yml.erb"
   owner node['kube-hops']['user']
