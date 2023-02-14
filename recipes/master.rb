@@ -245,6 +245,12 @@ template "/home/#{node['kube-hops']['user']}/coredns.yml" do
   })
 end
 
+template "coredns-autoscaler.yml" do
+  source "coredns-autoscaler.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
 #kubernetes v1.26 already comes with coredns
 bash "delete-existing-coredns-config" do
   user  node['kube-hops']['user']
@@ -259,6 +265,12 @@ kube_hops_kubectl 'apply_coredns' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   url "/home/#{node['kube-hops']['user']}/coredns.yml"
+end
+
+kube_hops_kubectl 'apply_coredns_autoscaler' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  url "/home/#{node['kube-hops']['user']}/coredns-autoscaler.yml"
 end
 
 # Untaint master
