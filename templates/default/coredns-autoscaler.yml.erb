@@ -152,7 +152,7 @@ spec:
 
             # Should keep target in sync with cluster/addons/dns/kube-dns.yaml.base
 
-            - --target=<%= node['kube-hops']['coredns']['autoscale_target_nodes'] %>
+            - --target=<%= node['kube-hops']['coredns']['autoscaler_target'] %>
 
             # When cluster is using large nodes(with more cores), "coresPerReplica" should dominate.
 
