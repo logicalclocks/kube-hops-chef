@@ -49,15 +49,16 @@ kube_hops_kubectl 'apply_kube_state_metrics' do
   url "#{node['kube-hops']['conf_dir']}/kube-state-metrics.yaml"
 end
 
-template "#{node['kube-hops']['conf_dir']}/hopsmon-rbac.yaml" do
-  source "hopsmon-rbac.yml.erb"
+# standalone cadvisor
+template "#{node['kube-hops']['conf_dir']}/cadvisor.yaml" do
+  source "cadvisor.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
 end
 
-kube_hops_kubectl 'apply_hopsmon_rbac' do
+kube_hops_kubectl 'apply_cadvisor' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "#{node['kube-hops']['conf_dir']}/hopsmon-rbac.yaml"
+  url "#{node['kube-hops']['conf_dir']}/cadvisor.yaml"
 end
 
