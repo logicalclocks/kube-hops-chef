@@ -245,7 +245,7 @@ template "/home/#{node['kube-hops']['user']}/coredns.yml" do
   })
 end
 
-template "coredns-autoscaler.yml" do
+template "/home/#{node['kube-hops']['user']}/coredns-autoscaler.yml" do
   source "coredns-autoscaler.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
