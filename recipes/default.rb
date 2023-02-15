@@ -26,6 +26,20 @@ when "debian"
   systemd_path = "/lib/systemd/system"
 end
 
+#Delete the default config.toml. It has the CRI plugin disabled
+file '/etc/containerd/config.toml' do
+  action :delete
+  only_if { File.exist? '/etc/containerd/config.toml' }
+end
+
+bash "restart_containerd" do
+  user 'root'
+  group 'root'
+  code <<-EOH
+      systemctl restart containerd
+  EOH
+end
+
 #install cri-dockerd
 package_type = node['platform_family'].eql?("debian") ? "_amd64.deb" : ".x86_64.rpm"
 cri_dockerd = "cri-dockerd-#{node['kube-hops']['cri_dockerd']['version']}#{package_type}"
