@@ -182,7 +182,7 @@ end
 kube_hops_kubectl 'apply-kserve-serving-runtimes' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "#{node['kube-hops']['knative']['base_dir']}/kserve-serving-runtimes.yaml"
+  url "#{node['kube-hops']['kserve']['base_dir']}/kserve-serving-runtimes.yaml"
 end
 
 
