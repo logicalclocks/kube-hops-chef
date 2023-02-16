@@ -95,10 +95,13 @@ spec:
   # replicas: not specified here:
   # 1. Default is 1.
   # 2. Will be tuned in real time if DNS horizontal auto-scaling is turned on.
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 1
+      maxSurge: 25%
   selector:
     matchLabels:
       k8s-app: kube-dns
