@@ -173,4 +173,4 @@ default['kube-hops']['monitoring']['kube-state-metrics-image-url']     = node['k
 default['kube-hops']['monitoring']['kube-state-metrics-image-tar']     = "kube-state-metrics-#{node['kube-hops']['monitoring']['kube-state-metrics-image-version']}.tar"
 default['kube-hops']['monitoring']['user']                             = "hopsmon"
 
-default['kube-hops']['coredns']['autoscale_target_nodes']              = "Deployment/coredns"
+default['kube-hops']['coredns-autoscaler']['target-deployment']        = "Deployment/coredns"
