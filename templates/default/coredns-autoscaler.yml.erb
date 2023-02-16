@@ -49,6 +49,14 @@ rules:
     verbs: ["get", "create"]
 
 ---
+apiVersion: v1
+data:
+  linear: '{"coresPerReplica":256,"includeUnschedulableNodes":true,"nodesPerReplica":16,"min":2,"preventSinglePointFailure":true}'
+kind: ConfigMap
+metadata:
+  name: kube-dns-autoscaler
+  namespace: kube-system
+---
 
 kind: ClusterRoleBinding
 
@@ -152,13 +160,7 @@ spec:
 
             # Should keep target in sync with cluster/addons/dns/kube-dns.yaml.base
 
-            - --target=<%= node['kube-hops']['coredns']['autoscaler_target'] %>
-
-            # When cluster is using large nodes(with more cores), "coresPerReplica" should dominate.
-
-            # If using small nodes, "nodesPerReplica" should dominate.
-
-            - --default-params={"linear":{"coresPerReplica":256,"nodesPerReplica":16,"preventSinglePointFailure":true,"includeUnschedulableNodes":true}}
+            - --target=<%= node['kube-hops']['coredns']['autoscale_target_nodes'] %>
 
             - --logtostderr=true
 
