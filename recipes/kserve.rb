@@ -167,7 +167,7 @@ template "#{node['kube-hops']['kserve']['base_dir']}/kserve.yaml" do
   group node['kube-hops']['group']
 end
 
-template "#{node['kube-hops']['knative']['base_dir']}/kserve-serving-runtimes.yaml" do
+template "#{node['kube-hops']['kserve']['base_dir']}/kserve-serving-runtimes.yaml" do
   source "kserve-serving-runtimes.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
