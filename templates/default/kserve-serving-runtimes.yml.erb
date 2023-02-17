@@ -180,7 +180,7 @@ spec:
         - --rest_api_timeout_in_ms=60000
       command:
         - /usr/bin/tensorflow_model_server
-      image: tensorflow/serving:2.6.2
+      image: tensorflow/serving: <%= node['kube-hops']['kserve']['tensorflow']['version'] %>
       name: kserve-container
       resources:
         limits:
