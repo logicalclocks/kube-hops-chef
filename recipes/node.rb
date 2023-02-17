@@ -3,6 +3,13 @@ include_recipe "kube-hops::default"
 
 master_cluster_ip = private_recipe_ip('kube-hops', 'master')
 
+directory node['kube-hops']['conf_dir']  do
+  owner "root"
+  group "root"
+  mode "755"
+  not_if { ::File.directory?(node['kube-hops']['conf_dir']) }
+end
+
 # Create pki directories
 directory node['kube-hops']['pki']['dir'] do
   owner node['kube-hops']['user']
