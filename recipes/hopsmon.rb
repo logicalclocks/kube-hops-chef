@@ -49,6 +49,18 @@ kube_hops_kubectl 'apply_kube_state_metrics' do
   url "#{node['kube-hops']['conf_dir']}/kube-state-metrics.yaml"
 end
 
+template "#{node['kube-hops']['conf_dir']}/hopsmon-rbac.yaml" do
+  source "hopsmon-rbac.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
+kube_hops_kubectl 'apply_hopsmon_rbac' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  url "#{node['kube-hops']['conf_dir']}/hopsmon-rbac.yaml"
+end
+
 # run standalone cadvisor
 # K8s 1.24 has removed the Docker plugin from cAdvisor and kubelet can no longer retrieve Docker container
 # information such as image, pod, container labels, etc. through cAdvisor.
