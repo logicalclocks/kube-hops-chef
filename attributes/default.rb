@@ -87,7 +87,7 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 # KF Serving
 #
 # VERSIONS:
-# Knative -> 0.22
+# Knative -> 1.9.0
 # Istio -> 1.16.1
 # Cert-manager -> v1.11.0
 # KServe -> 0.10.0
