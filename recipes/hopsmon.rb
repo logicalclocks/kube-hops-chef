@@ -61,3 +61,18 @@ kube_hops_kubectl 'apply_hopsmon_rbac' do
   url "#{node['kube-hops']['conf_dir']}/hopsmon-rbac.yaml"
 end
 
+# run standalone cadvisor
+# K8s 1.24 has removed the Docker plugin from cAdvisor and kubelet can no longer retrieve Docker container
+# information such as image, pod, container labels, etc. through cAdvisor.
+template "#{node['kube-hops']['conf_dir']}/cadvisor.yaml" do
+  source "cadvisor.yml.erb"
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+end
+
+kube_hops_kubectl 'apply_cadvisor' do
+  user node['kube-hops']['user']
+  group node['kube-hops']['group']
+  url "#{node['kube-hops']['conf_dir']}/cadvisor.yaml"
+end
+
