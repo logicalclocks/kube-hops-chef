@@ -1,3 +1,5 @@
+Chef::Recipe.send(:include, Hops::Helpers)
+
 # Start daemons
 include_recipe "kube-hops::default"
 
@@ -39,10 +41,14 @@ directory node['kube-hops']['kubelet_dir'] do
   mode "700"
 end
 
+docker_cgroup_driver = docker_cgroup_driver()
 template "#{node['kube-hops']['kubelet_dir']}/config.yaml" do
   source "kubelet-config.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  variables({
+    :docker_cgroup_driver => docker_cgroup_driver
+  })
 end
 
 # As we are not using kubeadm to join the node we need to template an env file for the
@@ -53,6 +59,9 @@ template "#{node['kube-hops']['kubelet_dir']}/kubeadm-flags.env" do
   owner "root"
   group "root"
   mode "644"
+  variables({
+    :docker_cgroup_driver => docker_cgroup_driver
+  })
 end
 
 service_name='kubelet'

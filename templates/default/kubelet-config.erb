@@ -15,7 +15,7 @@ authorization:
   webhook:
     cacheAuthorizedTTL: 5m0s
     cacheUnauthorizedTTL: 30s
-cgroupDriver: <%= node['hops']['cgroup-driver'] %>
+cgroupDriver: <%= @docker_cgroup_driver %>
 cgroupsPerQOS: true
 clusterDNS:
 - <%= node['kube-hops']['dns_ip'] %>

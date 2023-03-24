@@ -1,4 +1,4 @@
-KUBELET_KUBEADM_ARGS=--cgroup-driver=<%= node['hops']['cgroup-driver'] %> \
+KUBELET_KUBEADM_ARGS=--cgroup-driver=<%= @docker_cgroup_driver %> \
                     <% if node['kube-hops']['hostname_override'].casecmp?("true") -%>
                     --hostname-override=<%= node['fqdn'] %> \
                     <% end -%>
