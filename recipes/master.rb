@@ -1,3 +1,5 @@
+Chef::Recipe.send(:include, Hops::Helpers)
+
 # Start daemons
 include_recipe "kube-hops::default"
 
@@ -139,6 +141,7 @@ kube_hops_conf "admin" do
   not_if      { ::File.exist?("#{node['kube-hops']['conf_dir']}/admin.conf") }
 end
 
+docker_cgroup_driver = docker_cgroup_driver()
 if node['kube-hops']['hostname_override'].casecmp?("true")
   node_name = node['fqdn']
 else
@@ -152,7 +155,8 @@ template "#{node['kube-hops']['conf_dir']}/kubeadm.conf" do
   mode "700"
   variables ({
     'api_address': private_ip,
-    'node_name': node_name
+    'node_name': node_name,
+    'docker_cgroup_driver': docker_cgroup_driver
   })
 end
 
