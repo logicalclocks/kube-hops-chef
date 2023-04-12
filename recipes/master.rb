@@ -301,7 +301,7 @@ if node['kube-hops']['device'].eql?("nvidia")
     group node['kube-hops']['group']
     environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
     code <<-EOH
-      kubectl create -f "#{node['download_url']}/kube/nvidia/nvidia-device-plugin.yml"
+      kubectl create -f "#{node['kube-hops']['nvidia-device-plugin']['url']}"
     EOH
   end
 end
