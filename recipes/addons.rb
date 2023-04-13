@@ -113,38 +113,12 @@ end
 
 
 # create yml files required for fuse related stuff
-security_operator_file = "security-profile-operator.yml"
-fuse_seccomp_file = "fuse-seccomp.yml"
 smart_device_manager_file = "smart-device-manager-plugin.yml"
-
-template "#{node['kube-hops']['fuse']['assets_dir']}/#{security_operator_file}" do
-  source "security-profile-operator.yml.erb"
-  owner node['kube-hops']['user']
-  group node['kube-hops']['group']
-end
-
-template "#{node['kube-hops']['fuse']['assets_dir']}/#{fuse_seccomp_file}" do
-  source "fuse-seccomp.yml.erb"
-  owner node['kube-hops']['user']
-  group node['kube-hops']['group']
-end
 
 template "#{node['kube-hops']['fuse']['assets_dir']}/#{smart_device_manager_file}" do
   source "smart-device-manager-plugin.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
-end
-
-kube_hops_kubectl 'security-profile-operator' do
-  user node['kube-hops']['user']
-  group node['kube-hops']['group']
-  url "#{node['kube-hops']['fuse']['assets_dir']}/#{security_operator_file}"
-end
-
-kube_hops_kubectl 'fuse_seccomp' do
-  user node['kube-hops']['user']
-  group node['kube-hops']['group']
-  url "#{node['kube-hops']['fuse']['assets_dir']}/#{fuse_seccomp_file}"
 end
 
 kube_hops_kubectl 'smart_device_manager' do
