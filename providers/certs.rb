@@ -90,34 +90,31 @@ action :generate do
 
                 if new_resource.name === "hopsmon"
                   #pass the key and certificate to hopsmon
-                  crt = {data: ::File.read("#{new_resource.path}/#{new_resource.name}.crt")}
                   kagent_param "/tmp" do
                     executing_cookbook "kube-hops"
                     executing_recipe "addons"
                     cookbook "hopsmonitor"
                     recipe "prometheus"
                     param "kube-crt"
-                    value "'" + JSON.generate(crt) + "'"
+                    value "#{::File.read("#{new_resource.path}/#{new_resource.name}.crt")}"
                   end
 
-                  key = {data: ::File.read("#{new_resource.path}/#{new_resource.name}.key")}
                   kagent_param "/tmp" do
                     executing_cookbook "kube-hops"
                     executing_recipe "addons"
                     cookbook "hopsmonitor"
                     recipe "prometheus"
                     param "kube-key"
-                    value  "'" + JSON.generate(key) + "'"
+                    value "#{::File.read("#{new_resource.path}/#{new_resource.name}.key")}"
                   end
 
-                  ca = {data: intermediateCACert}
                   kagent_param "/tmp" do
                     executing_cookbook "kube-hops"
                     executing_recipe "addons"
                     cookbook "hopsmonitor"
                     recipe "prometheus"
                     param "kube-ca"
-                    value  "'" + JSON.generate(ca) + "'"
+                    value "#{intermediateCACert}"
                   end
                 end
             else
