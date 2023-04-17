@@ -172,3 +172,6 @@ default['kube-hops']['monitoring']['kube-state-metrics-image-tar']     = "kube-s
 default['kube-hops']['monitoring']['user']                             = "hopsmon"
 
 default['kube-hops']['coredns-autoscaler']['target-deployment']        = "Deployment/coredns"
+
+default['kube-hops']['nvidia-device-plugin']['version']                =  "0.13.0"
+default['kube-hops']['nvidia-device-plugin']['url']                    = node['download_url'] + "/kube/nvidia/device-plugin/#{node['kube-hops']['nvidia-device-plugin']['version']}/nvidia-device-plugin.yml"

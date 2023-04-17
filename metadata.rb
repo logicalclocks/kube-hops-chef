@@ -249,3 +249,7 @@ attribute "kube-hops/master/private_ips",
 attribute "kube-hops/master/public_ips",
           :description =>  "The private ips for the Kube master server(s)",
           :type => 'array'
+
+attribute "kube-hops/nvidia-device-plugin/version",
+          :description =>  "The version of the k8s NVIDIA device plugin to install",
+          :type => 'string'
