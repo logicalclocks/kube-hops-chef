@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: apparmor-loader
+  namespace: kube-system
+  labels:
+    daemon: apparmor-loader
+spec:
+  selector:
+    matchLabels:
+      daemon: apparmor-loader
+  template:
+    metadata:
+      name: apparmor-loader
+      labels:
+        daemon: apparmor-loader
+    spec:
+      containers:
+        - name: apparmor-loader
+          image: google/apparmor-loader:latest
+          args:
+            # Tell the loader to pull the /profiles directory every 30 seconds.
+            - -poll
+            - 30s
+            - /profiles
+          securityContext:
+            # The loader requires root permissions to actually load the profiles.
+            privileged: true
+          volumeMounts:
+            - name: sys
+              mountPath: /sys
+              readOnly: true
+            - name: apparmor-includes
+              mountPath: /etc/apparmor.d
+              readOnly: true
+            - name: profiles
+              mountPath: /profiles
+              readOnly: true
+      volumes:
+        # The /sys directory must be mounted to interact with the AppArmor module.
+        - name: sys
+          hostPath:
+            path: /sys
+        # The /etc/apparmor.d directory is required for most apparmor include templates.
+        - name: apparmor-includes
+          hostPath:
+            path: /etc/apparmor.d
+        # Map in the profile data.
+        - name: profiles
+          configMap:
+            name: <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %>
+  namespace: kube-system
+data:
+  <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %>: |-
+    #include <tunables/global>
+
+    profile fuse flags=(attach_disconnected,mediate_deleted) {
+      #include <abstractions/base>
+
+      network,
+      capability,
+      file,
+      umount,
+      # Host (privileged) processes may send signals to container processes.
+      signal (receive) peer=unconfined,
+      # dockerd may send signals to container processes (for "docker kill").
+      signal (receive) peer=hopsworks-hopsfsmount-docker,
+      # Container processes may send signals amongst themselves.
+      signal (send,receive) peer=hopsworks-hopsfsmount-docker,
+
+      deny @{PROC}/* w,   # deny write for all files directly in /proc (not in a subdir)
+      # deny write to files not in /proc/<number>/** or /proc/sys/**
+      deny @{PROC}/{[^1-9],[^1-9][^0-9],[^1-9s][^0-9y][^0-9s],[^1-9][^0-9][^0-9][^0-9/]*}/** w,
+      deny @{PROC}/sys/[^k]** w,  # deny /proc/sys except /proc/sys/k* (effectively /proc/sys/kernel)
+      deny @{PROC}/sys/kernel/{?,??,[^s][^h][^m]**} w,  # deny everything except shm* in /proc/sys/kernel/
+      deny @{PROC}/sysrq-trigger rwklx,
+      deny @{PROC}/kcore rwklx,
+
+      # we can narrow down mounts but because we unshare
+      # the mount namespace which remounts all filesystems
+      # we need to find a good combination
+      # TODO in the future
+      allow mount,
+
+      deny /sys/[^f]*/** wklx,
+      deny /sys/f[^s]*/** wklx,
+      deny /sys/fs/[^c]*/** wklx,
+      deny /sys/fs/c[^g]*/** wklx,
+      deny /sys/fs/cg[^r]*/** wklx,
+      deny /sys/firmware/** rwklx,
+      deny /sys/kernel/security/** rwklx,
+
+      # suppress ptrace denials when using 'docker ps' or using 'ps' inside a container
+      ptrace (trace,read,tracedby,readby) peer=hopsworks-hopsfsmount-docker,
+    }
