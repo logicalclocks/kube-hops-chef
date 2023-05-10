@@ -254,6 +254,6 @@ attribute "kube-hops/nvidia-device-plugin/version",
           :description =>  "The version of the k8s NVIDIA device plugin to install",
           :type => 'string'
 
-attribute "kube-hops/fuse/enable_apparmor_profile",
+attribute "kube-hops/fuse/apply_hopsworks_apparmor_profile",
           :description => "Apply the apparmor profile for containers that use hopsfs-mount",
           :type => 'string'
