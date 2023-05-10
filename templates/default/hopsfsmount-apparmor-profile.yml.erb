@@ -48,17 +48,17 @@ spec:
         # Map in the profile data.
         - name: profiles
           configMap:
-            name: <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %>
+            name: <%= node['hops']['docker']['hopsfsmount-apparmor-profile'] %>
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %>
+  name: <%= node['hops']['docker']['hopsfsmount-apparmor-profile'] %>
   namespace: kube-system
 data:
-  <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %>: |-
+  <%= node['hops']['docker']['hopsfsmount-apparmor-profile'] %>: |-
     @{PROC}=/proc/
-    profile <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %> flags=(attach_disconnected,mediate_deleted) {
+    profile <%= node['hops']['docker']['hopsfsmount-apparmor-profile'] %> flags=(attach_disconnected,mediate_deleted) {
       network,
       capability,
       file,
