@@ -57,11 +57,8 @@ metadata:
   namespace: kube-system
 data:
   <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %>: |-
-    #include <tunables/global>
-
-    profile fuse flags=(attach_disconnected,mediate_deleted) {
-      #include <abstractions/base>
-
+    @{PROC}=/proc/
+    profile <%= node['hops']['docker']['hopfsmount-apparmor-profile'] %> flags=(attach_disconnected,mediate_deleted) {
       network,
       capability,
       file,
