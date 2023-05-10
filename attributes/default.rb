@@ -114,10 +114,12 @@ default['kube-hops']['istio']['ingress_http10']            = "false"
 
 default['kube-hops']['knative']['base_dir']                = node['kube-hops']['dir'] + "/knative"
 default['kube-hops']['knative']['domain_name']             = "hopsworks.ai"
+default['kube-hops']['knative']['version']                 = 'v1.9.0'
 
 # Cert-manager
 
 default['kube-hops']['cert-manager']['base_dir']           = node['kube-hops']['dir'] + "/cert-manager"
+default['kube-hops']['cert-manager']['version']            = 'v1.11.0'
 
 # Hops-system
 # Containing yaml files installed in hops-system namespace. (e.g webhook)

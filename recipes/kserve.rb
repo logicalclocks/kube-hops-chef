@@ -133,6 +133,9 @@ template "#{node['kube-hops']['cert-manager']['base_dir']}/cert-manager.yaml" do
   source "cert-manager.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  variables ({
+    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+  })
 end
 
 kube_hops_kubectl 'apply-cert-manager' do

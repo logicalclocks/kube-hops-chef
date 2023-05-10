@@ -19708,7 +19708,7 @@ apiVersion: v1
 data:
   agent: |-
     {
-        "image" : "kserve/agent:v0.10.0",
+        "image" : "<%= @registry_addr %>/kserve/agent:<%= node['kube-hops']['kserve']['version'] %>",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
@@ -19716,7 +19716,7 @@ data:
     }
   batcher: |-
     {
-        "image" : "kserve/agent:v0.10.0",
+        "image" : "<%= @registry_addr %>/kserve/agent:<%= node['kube-hops']['kserve']['version'] %>",
         "memoryRequest": "1Gi",
         "memoryLimit": "1Gi",
         "cpuRequest": "1",
@@ -19772,7 +19772,7 @@ data:
     }
   logger: |-
     {
-        "image" : "kserve/agent:v0.10.0",
+        "image" : "<%= @registry_addr %>/kserve/agent:<%= node['kube-hops']['kserve']['version'] %>"
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
@@ -19794,7 +19794,7 @@ data:
     }
   storageInitializer: |-
     {
-        "image" : "kserve/storage-initializer:v0.10.0",
+        "image" : "<%= @registry_addr %>/kserve/storage-initializer:<%= node['kube-hops']['kserve']['version'] %>",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
@@ -19896,7 +19896,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: SECRET_NAME
               value: kserve-webhook-server-cert
-          image: kserve/kserve-controller:v0.10.0
+          image: <%= @registry_addr %>/kserve/kserve-controller:<%= node['kube-hops']['kserve']['version'] %>
           imagePullPolicy: Always
           name: manager
           ports:
@@ -19921,7 +19921,7 @@ spec:
             - --upstream=http://127.0.0.1:8080/
             - --logtostderr=true
             - --v=10
-          image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
+          image: <%= @registry_addr %>/kubebuilder/kube-rbac-proxy:v0.13.1
           name: kube-rbac-proxy
           ports:
             - containerPort: 8443
