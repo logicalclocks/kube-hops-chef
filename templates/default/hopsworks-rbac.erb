@@ -6,14 +6,8 @@ subjects:
 - kind: User
   name: <%= node['kube-hops']['hopsworks_user'] %>
   apiGroup: rbac.authorization.k8s.io
-- kind: User
-  name: hopsworks0.logicalclocks.com
-  apiGroup: rbac.authorization.k8s.io
-- kind: User
-  name: hopsworks1.logicalclocks.com
-  apiGroup: rbac.authorization.k8s.io
-- kind: User
-  name: hopsworks2.logicalclocks.com
+- kind: Group
+  name: kubernetes-admins
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
