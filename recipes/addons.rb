@@ -122,7 +122,7 @@ template "#{node['kube-hops']['fuse']['assets_dir']}/#{smart_device_manager_file
   group node['kube-hops']['group']
 end
 
-template "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmour_profile }" do
+template "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmor_profile }" do
   source "hopsfsmount-apparmor-profile.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
