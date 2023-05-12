@@ -178,4 +178,3 @@ default['kube-hops']['nvidia-device-plugin']['url']                    = node['d
 
 default['kube-hops']['device-manager']['fuse-max-devices']             = 30
 default['kube-hops']['assets_dir']['fuse']                             = node['kube-hops']['hops-system']['base_dir'] + "/fuse"
-default['kube-hops']['fuse']['apply_hopsworks_apparmor_profile']       = "true"
