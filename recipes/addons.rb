@@ -114,7 +114,7 @@ end
 
 # create and apply yml files required for fuse related stuff
 smart_device_manager_file = "smart-device-manager-plugin.yml"
-hopsfsmount_apparmour_profile = "hopsfsmount-apparmour-profile.yml"
+hopsfsmount_apparmor_profile = "hopsfsmount-apparmor-profile.yml"
 
 template "#{node['kube-hops']['fuse']['assets_dir']}/#{smart_device_manager_file}" do
   source "smart-device-manager-plugin.yml.erb"
