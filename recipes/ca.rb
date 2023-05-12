@@ -36,7 +36,7 @@ bash 'generate-and-sign-key' do
     openssl genrsa -passout pass:#{node['kube-hops']['hopsworks_cert_pwd']} -out hopsworks.key.pem #{node['kube-hops']['pki']['keysize']}
     chmod 400 hopsworks.key.pem
     chown #{node['kube-hops']['pki']['ca_api_user']} hopsworks.key.pem
-    openssl req -subj "/CN=#{node['fqdn']}/L=hopsworks/O=kubernetes-admins" -passin pass:#{node['kube-hops']['hopsworks_cert_pwd']} -passout pass:#{node['kube-hops']['hopsworks_cert_pwd']} -key hopsworks.key.pem -new -sha256 -out hopsworks.csr.pem
+    openssl req -subj "/CN=#{node['kube-hops']['hopsworks_user']}/L=#{node['fqdn']}" -passin pass:#{node['kube-hops']['hopsworks_cert_pwd']} -passout pass:#{node['kube-hops']['hopsworks_cert_pwd']} -key hopsworks.key.pem -new -sha256 -out hopsworks.csr.pem
   EOH
   not_if { ::File.exist?("#{kube_hopsworkscerts}/hopsworks.cert.pem") }
 end
