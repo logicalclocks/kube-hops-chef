@@ -138,6 +138,6 @@ end
 kube_hops_kubectl 'hopsfsmount_apparmor_profile' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmour_profile}"
+  url "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmor_profile}"
   only_if { node['hops']['docker']['load-hopsfsmount-apparmor-profile'].casecmp?("true") }
 end
