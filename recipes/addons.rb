@@ -112,7 +112,7 @@ end
 
 
 
-# create yml files required for fuse related stuff
+# create and apply yml files required for fuse related stuff
 smart_device_manager_file = "smart-device-manager-plugin.yml"
 hopsfsmount_apparmour_profile = "hopsfsmount-apparmour-profile.yml"
 
@@ -126,6 +126,7 @@ template "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmour_pro
   source "hopsfsmount-apparmor-profile.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  only_if { node['hops']['docker']['load-hopsfsmount-apparmor-profile'].casecmp?("true") }
 end
 
 kube_hops_kubectl 'smart_device_manager' do
@@ -138,4 +139,5 @@ kube_hops_kubectl 'hopsfsmount_apparmour_profile' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   url "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmour_profile}"
+  only_if { node['hops']['docker']['load-hopsfsmount-apparmor-profile'].casecmp?("true") }
 end
