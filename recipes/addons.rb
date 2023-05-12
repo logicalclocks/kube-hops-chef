@@ -135,7 +135,7 @@ kube_hops_kubectl 'smart_device_manager' do
   url "#{node['kube-hops']['fuse']['assets_dir']}/#{smart_device_manager_file}"
 end
 
-kube_hops_kubectl 'hopsfsmount_apparmour_profile' do
+kube_hops_kubectl 'hopsfsmount_apparmor_profile' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   url "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmour_profile}"
