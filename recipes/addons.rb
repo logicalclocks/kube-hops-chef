@@ -103,7 +103,7 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
 end
 include_recipe "kube-hops::hopsmon"
 
-directory "#{node['kube-hops']['fuse']['assets_dir']}" do
+directory "#{node['kube-hops']['assets_dir']['fuse']}" do
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   mode '0700'
@@ -116,13 +116,13 @@ end
 smart_device_manager_file = "smart-device-manager-plugin.yml"
 hopsfsmount_apparmor_profile = "hopsfsmount-apparmor-profile.yml"
 
-template "#{node['kube-hops']['fuse']['assets_dir']}/#{smart_device_manager_file}" do
+template "#{node['kube-hops']['assets_dir']['fuse']}/#{smart_device_manager_file}" do
   source "smart-device-manager-plugin.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
 end
 
-template "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmor_profile }" do
+template "#{node['kube-hops']['assets_dir']['fuse']}/#{hopsfsmount_apparmor_profile }" do
   source "hopsfsmount-apparmor-profile.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
@@ -132,12 +132,12 @@ end
 kube_hops_kubectl 'smart_device_manager' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "#{node['kube-hops']['fuse']['assets_dir']}/#{smart_device_manager_file}"
+  url "#{node['kube-hops']['assets_dir']['fuse']}/#{smart_device_manager_file}"
 end
 
 kube_hops_kubectl 'hopsfsmount_apparmor_profile' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
-  url "#{node['kube-hops']['fuse']['assets_dir']}/#{hopsfsmount_apparmor_profile}"
+  url "#{node['kube-hops']['assets_dir']['fuse']}/#{hopsfsmount_apparmor_profile}"
   only_if { node['hops']['docker']['load-hopsfsmount-apparmor-profile'].casecmp?("true") }
 end
