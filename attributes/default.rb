@@ -175,3 +175,6 @@ default['kube-hops']['coredns-autoscaler']['target-deployment']        = "Deploy
 
 default['kube-hops']['nvidia-device-plugin']['version']                =  "0.13.0"
 default['kube-hops']['nvidia-device-plugin']['url']                    = node['download_url'] + "/kube/nvidia/device-plugin/#{node['kube-hops']['nvidia-device-plugin']['version']}/nvidia-device-plugin.yml"
+
+default['kube-hops']['device-manager']['fuse-max-devices']             = 30
+default['kube-hops']['assets_dir']['fuse']                             = node['kube-hops']['hops-system']['base_dir'] + "/fuse"
