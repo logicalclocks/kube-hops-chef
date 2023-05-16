@@ -1,3 +1,5 @@
+Chef::Recipe.send(:include, Hops::Helpers)
+
 # Deploy RBAC rule for Hopsworks user
 template "#{node['kube-hops']['conf_dir']}/hopsworks-rbac.yaml" do
   source "hopsworks-rbac.erb"
