@@ -165,6 +165,7 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
         IMAGE=#{docker_registry}/$NAME:#{node['kube-hops']['knative']['version']}
         docker tag $NAME:#{node['kube-hops']['knative']['version']} $IMAGE
         docker push $IMAGE
+        docker rmi $NAME:#{node['kube-hops']['knative']['version']}
       done
     EOH
   end
@@ -179,6 +180,7 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
         IMAGE=#{docker_registry}/$NAME:#{node['kube-hops']['kserve']['version']}
         docker tag $NAME:#{node['kube-hops']['kserve']['version']} $IMAGE
         docker push $IMAGE
+        docker rmi $NAME:#{node['kube-hops']['kserve']['version']}
       done
     EOH
   end
@@ -193,6 +195,7 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
         IMAGE=#{docker_registry}/$NAME:#{node['kube-hops']['cert-manager']['version']}
         docker tag $NAME:#{node['kube-hops']['cert-manager']['version']} $IMAGE
         docker push $IMAGE
+        docker rmi $NAME:#{node['kube-hops']['cert-manager']['version']}
       done
     EOH
   end
@@ -207,6 +210,7 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
         IMAGE=#{docker_registry}/$NAME:#{node['kube-hops']['istio']['version'] }
         docker tag $NAME:#{node['kube-hops']['istio']['version'] } $IMAGE
         docker push $IMAGE
+        docker rmi $NAME:#{node['kube-hops']['istio']['version'] }
       done
     EOH
   end
@@ -221,6 +225,7 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
         IMAGE=#{docker_registry}/$NAME
         docker tag $NAME $IMAGE
         docker push $IMAGE
+        docker rmi $NAME
       done
     EOH
   end
@@ -232,6 +237,7 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
       IMAGE=kubebuilder/kube-rbac-proxy:v0.13.1
       docker tag $IMAGE  #{docker_registry}/$IMAGE
       docker push #{docker_registry}/$IMAGE
+      docker rmi $IMAGE
     EOH
   end
 end

@@ -93,7 +93,7 @@ default['kube-hops']['docker_img_reg_url']                 = ""
 # KServe -> 0.10.0
 
 default['kube-hops']['kserve']['enabled']               = node['install']['kubernetes']
-default['kube-hops']['kserve']['version']               = "0.10.0"
+default['kube-hops']['kserve']['version']               = "v0.10.0"
 default['kube-hops']['kserve']['base_dir']              = node['kube-hops']['dir'] + "/kserve"
 default['kube-hops']['kserve']['img_tar_url']           = "https://repo.hops.works/dev/gibson/kserve-v0.10.0.tgz"
 
