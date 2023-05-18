@@ -206,7 +206,7 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
     group 'root'
     code <<-EOH
       ISTIO_IMAGES=(#{istio_image_names.join(' ')})
-      for NAME in "${CERTMANAGER_IMAGES[@]}"; do
+      for NAME in "${ISTIO_IMAGES[@]}"; do
         IMAGE=#{docker_registry}/$NAME:#{node['kube-hops']['istio']['version'] }
         docker tag $NAME:#{node['kube-hops']['istio']['version'] } $IMAGE
         docker push $IMAGE
