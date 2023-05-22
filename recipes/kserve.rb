@@ -100,6 +100,9 @@ template "#{node['kube-hops']['knative']['base_dir']}/knative-istio.yaml" do
   source "knative-istio.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  variables ({
+    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+  })
 end
 
 kube_hops_kubectl 'apply-knative-serving-crds' do
