@@ -211,9 +211,6 @@ template "#{node['kube-hops']['model-serving-webhook']['base_dir']}/model-servin
   source "model-serving-webhook.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
-  variables ({
-    'registry_addr': registry_addr
-  })
 end
 
 kube_hops_certs 'model-serving-webhook' do
