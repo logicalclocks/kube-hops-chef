@@ -171,12 +171,18 @@ template "#{node['kube-hops']['kserve']['base_dir']}/kserve.yaml" do
   source "kserve.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  variables ({
+    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+  })
 end
 
 template "#{node['kube-hops']['kserve']['base_dir']}/kserve-serving-runtimes.yaml" do
   source "kserve-serving-runtimes.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  variables ({
+    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+  })
 end
 
 kube_hops_kubectl 'apply-kserve' do
@@ -205,6 +211,9 @@ template "#{node['kube-hops']['model-serving-webhook']['base_dir']}/model-servin
   source "model-serving-webhook.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  variables ({
+    'registry_addr': registry_addr
+  })
 end
 
 kube_hops_certs 'model-serving-webhook' do
