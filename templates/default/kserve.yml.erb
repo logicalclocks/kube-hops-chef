@@ -19772,7 +19772,7 @@ data:
     }
   logger: |-
     {
-        "image" : "<%= @registry_addr %>/kserve/agent:<%= node['kube-hops']['kserve']['version'] %>"
+        "image" : "<%= @registry_addr %>/kserve/agent:<%= node['kube-hops']['kserve']['version'] %>",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
