@@ -162,6 +162,8 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
     code <<-EOH
       KNATIVE_IMAGES=(#{knative_image_names.join(' ')})
       for NAME in "${KNATIVE_IMAGES[@]}"; do
+        #append the knative.dev prefix
+        NAME=knative.dev/$NAME
         IMAGE=#{docker_registry}/$NAME:#{node['kube-hops']['knative']['version']}
         docker tag $NAME:#{node['kube-hops']['knative']['version']} $IMAGE
         docker push $IMAGE
@@ -185,13 +187,15 @@ if node['kube-hops']['kserve']['enabled'].casecmp?("true")
     EOH
   end
 
-  certmanager_image_names = ["jetstack/cert-manager-controller", "jetstack/cert-manager-webhook", "jetstack/cert-manager-cainjector"]
+  certmanager_image_names = ["cert-manager-controller", "cert-manager-webhook", "cert-manager-cainjector"]
   bash "push_certmanager_images_to_local_registry" do
     user 'root'
     group 'root'
     code <<-EOH
       CERTMANAGER_IMAGES=(#{certmanager_image_names.join(' ')})
       for NAME in "${CERTMANAGER_IMAGES[@]}"; do
+        #append the quay.io/jetstack prefix
+        NAME=quay.io/jetstack/$NAME
         IMAGE=#{docker_registry}/$NAME:#{node['kube-hops']['cert-manager']['version']}
         docker tag $NAME:#{node['kube-hops']['cert-manager']['version']} $IMAGE
         docker push $IMAGE

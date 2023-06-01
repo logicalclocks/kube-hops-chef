@@ -5271,7 +5271,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cert-manager-cainjector
-          image: "<%= @registry_addr %>/jetstack/cert-manager-cainjector:<%= node['kube-hops']['cert-manager']['version'] %>"
+          image: "<%= @registry_addr %>/quay.io/jetstack/cert-manager-cainjector:<%= node['kube-hops']['cert-manager']['version'] %>"
           imagePullPolicy: IfNotPresent
           args:
             - --v=2
@@ -5328,7 +5328,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cert-manager-controller
-          image: "<%= @registry_addr %>/jetstack/cert-manager-controller:<%= node['kube-hops']['cert-manager']['version'] %>"
+          image: "<%= @registry_addr %>/quay.io/jetstack/cert-manager-controller:<%= node['kube-hops']['cert-manager']['version'] %>"
           imagePullPolicy: IfNotPresent
           args:
             - --v=2
@@ -5388,7 +5388,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cert-manager-webhook
-          image: "<%= @registry_addr %>/jetstack/cert-manager-webhook:<%= node['kube-hops']['cert-manager']['version'] %>"
+          image: "<%= @registry_addr %>/quay.io/jetstack/cert-manager-webhook:<%= node['kube-hops']['cert-manager']['version'] %>"
           imagePullPolicy: IfNotPresent
           args:
             - --v=2
