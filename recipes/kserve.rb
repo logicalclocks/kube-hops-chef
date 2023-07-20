@@ -1,3 +1,5 @@
+include_recipe "kube-hops::kserve_images"
+
 #
 # Install KServe and dependencies
 # v0.10
