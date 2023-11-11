@@ -29,6 +29,11 @@ dependencies:
       - kube-hops::addons      
       - hops::docker_registry
       - kkafka::default
+  
+  - recipe: kube-hops::hopsmon
+    global:
+      - kube-hops::master
+
 
 # Wait to run the hopsworks recipe after install
   - recipe: kube-hops::hopsworks
