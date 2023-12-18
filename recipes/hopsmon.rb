@@ -37,10 +37,32 @@ bash 'create-hopsmon-user-in-kubernetes' do
   not_if "kubectl config view | grep #{node['kube-hops']['monitoring']['user']}", :environment => { 'HOME' => ::Dir.home(node['kube-hops']['user']) }
 end
 
+registry_addr = consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+metrics_images = "#{Chef::Config['file_cache_path']}/#{::File.basename(node['kube-hops']['monitoring']['kube-state-metrics-image-url'])}"
+remote_file metrics_images do
+  source node['kube-hops']['monitoring']['kube-state-metrics-image-url']
+  owner node['kube-hops']['user']
+  group node['kube-hops']['group']
+  mode "0700"
+end
+
+bash 'load_kube_state_metrics_image' do
+  user 'root'
+  group 'root'
+  code <<-EOH
+      docker load < #{metrics_images}
+      docker tag kube-state-metrics:v2.7.0 #{registry_addr}/kube-state-metrics:v2.7.0
+      docker push #{registry_addr}/kube-state-metrics:v2.7.0
+  EOH
+end
+
 template "#{node['kube-hops']['conf_dir']}/kube-state-metrics.yaml" do
   source "kube-state-metrics.yml.erb"
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
+  variables ({
+    'registry_addr': registry_addr
+  })
 end
 
 kube_hops_kubectl 'apply_kube_state_metrics' do
