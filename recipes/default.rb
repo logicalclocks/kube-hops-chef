@@ -134,22 +134,6 @@ if node['kube-hops']['image_repo'].eql?("")
   end
 end
 
-remote_file "#{node['kube-hops']['monitoring']['kube-state-metrics-image-tar']}" do
-  source node['kube-hops']['monitoring']['kube-state-metrics-image-url']
-  owner node['kube-hops']['user']
-  group node['kube-hops']['group']
-  mode "0700"
-end
-
-bash 'load_kube_state_metrics_image' do
-  user 'root'
-  group 'root'
-  code <<-EOH
-      docker load < #{node['kube-hops']['monitoring']['kube-state-metrics-image-tar']}
-  EOH
-end
-
-
 # Install gem as helper to send Hopsworks requrests to sign certificates
 chef_gem 'http-cookie'
 

@@ -52,13 +52,18 @@ template "#{node['kube-hops']['istio']['base_dir']}/istio-operator.yaml" do
   group node['kube-hops']['group']
 end
 
+registry_addr = consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+
 bash 'apply-istio' do
   user node['kube-hops']['user']
   group node['kube-hops']['group']
   environment ({ 'HOME' => ::Dir.home(node['kube-hops']['user']) })
   cwd "#{node['kube-hops']['istio']['base_dir']}"
   code <<-EOH
-    istio-#{node['kube-hops']['istio']['version']}/bin/istioctl install --skip-confirmation -f istio-operator.yaml
+    istio-#{node['kube-hops']['istio']['version']}/bin/istioctl install \
+      --skip-confirmation \
+      -f istio-operator.yaml \
+      --set hub=#{registry_addr}/istio 
     EOH
 end
 
@@ -94,7 +99,7 @@ template "#{node['kube-hops']['knative']['base_dir']}/knative-serving.yaml" do
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables ({
-    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+    'registry_addr': registry_addr
   })
 end
 
@@ -103,7 +108,7 @@ template "#{node['kube-hops']['knative']['base_dir']}/knative-istio.yaml" do
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables ({
-    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+    'registry_addr': registry_addr
   })
 end
 
@@ -139,7 +144,7 @@ template "#{node['kube-hops']['cert-manager']['base_dir']}/cert-manager.yaml" do
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables ({
-    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+    'registry_addr': registry_addr
   })
 end
 
@@ -174,7 +179,7 @@ template "#{node['kube-hops']['kserve']['base_dir']}/kserve.yaml" do
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables ({
-    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+    'registry_addr': registry_addr
   })
 end
 
@@ -183,7 +188,7 @@ template "#{node['kube-hops']['kserve']['base_dir']}/kserve-serving-runtimes.yam
   owner node['kube-hops']['user']
   group node['kube-hops']['group']
   variables ({
-    'registry_addr': consul_helper.get_service_fqdn("registry") + ":#{node['hops']['docker']['registry']['port']}"
+    'registry_addr': registry_addr
   })
 end
 

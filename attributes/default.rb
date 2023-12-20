@@ -170,7 +170,6 @@ default['kube-hops']['monitoring']['cert-key']                         = "#{node
 
 default['kube-hops']['monitoring']['kube-state-metrics-image-version'] = "v2.7.0"
 default['kube-hops']['monitoring']['kube-state-metrics-image-url']     = node['download_url'] + "/kube/monitoring/kube-state-metrics-#{node['kube-hops']['monitoring']['kube-state-metrics-image-version']}.tar"
-default['kube-hops']['monitoring']['kube-state-metrics-image-tar']     = "kube-state-metrics-#{node['kube-hops']['monitoring']['kube-state-metrics-image-version']}.tar"
 default['kube-hops']['monitoring']['user']                             = "hopsmon"
 
 default['kube-hops']['coredns-autoscaler']['target-deployment']        = "Deployment/coredns"
