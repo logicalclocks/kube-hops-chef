@@ -32,7 +32,7 @@ bash "push_knative_images_to_local_registry" do
   EOH
 end
 
-kserve_image_names = ["kserve/kserve-controller", "kserve/agent", "kserve/storage-initializer"]
+kserve_image_names = ["kserve/kserve-controller", "kserve/agent", "kserve/storage-initializer", "kserve/alibi-explainer", "kserve/art-explainer"]
 bash "push_kserve_images_to_local_registry" do
   user 'root'
   group 'root'
