@@ -20479,12 +20479,12 @@ data:
   explainers: |-
     {
         "alibi": {
-            "image" : "<%= @registry_addr %>/kserve/alibi-explainer",
-            "defaultImageVersion": "<%= node['kube-hops']['kserve']['version'] %>"
+            "image" : "kserve/alibi-explainer",
+            "defaultImageVersion": "latest"
         },
         "art": {
-            "image" : "<%= @registry_addr %>/kserve/art-explainer",
-            "defaultImageVersion": "<%= node['kube-hops']['kserve']['version'] %>"
+            "image" : "kserve/art-explainer",
+            "defaultImageVersion": "latest"
         }
     }
   ingress: |-
