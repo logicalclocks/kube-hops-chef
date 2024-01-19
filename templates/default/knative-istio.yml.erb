@@ -66,6 +66,12 @@ spec:
         protocol: HTTP
       hosts:
         - "*"
+    - port:
+        number: 9010
+        name: grpc
+        protocol: GRPC
+        hosts:
+          - "*"
 
 ---
 # Copyright 2019 The Knative Authors
