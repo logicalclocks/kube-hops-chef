@@ -1,6 +1,6 @@
 # Note: This dropin only works with kubeadm and kubelet v1.11+
 [Service]
-Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf <%= @resolv_override %>"
 Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
 Environment="CRI_ENDPOINT=--container-runtime-endpoint <%= node['kube-hops']['cri_socket'] %>"
 # This is a file that "kubeadm init" and "kubeadm join" generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically
