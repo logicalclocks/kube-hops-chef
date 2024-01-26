@@ -87,6 +87,7 @@ when "debian"
     group 'root'
     code <<-EOH
       stubresolve=#{node['kube-hops']['conf_dir']}/kubelet-resolv-stub.conf
+      rm -f $stubresolve
       grep localdomain /etc/resolv.conf
       fix=$?
       set -e
