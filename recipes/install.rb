@@ -98,7 +98,8 @@ when "debian"
         ## Check if there are more search domains configured
         ## and remove only the 'localdomain'
         set +e
-        grep -E "search[[:space:]].+[[:space:]]*localdomain" $stubresolve
+        ## search localdomain something || search something localdomain
+        grep -E "search[[:space:]]+((.+localdomain)|(localdomain.+))" $stubresolve
         r=$?
         set -e
         if [[ "$r" -eq 0 ]]; then
