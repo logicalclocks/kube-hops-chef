@@ -81,6 +81,44 @@ when "rhel"
   systemd_path = "/usr/lib/systemd/system"
 when "debian"
   systemd_path = "/lib/systemd/system"
+
+  bash 'kubelet-resolv.conf-stub' do
+    user 'root'
+    group 'root'
+    code <<-EOH
+      stubresolve=#{node['kube-hops']['conf_dir']}/kubelet-resolv-stub.conf
+      rm -f $stubresolve
+      grep localdomain /etc/resolv.conf
+      fix=$?
+      set -e
+
+      if [[ "$fix" -eq 0 ]]; then
+        ## resolv.conf contains problematic search domain
+        cp -f /etc/resolv.conf $stubresolve
+
+        ## Check if there are more search domains configured
+        ## and remove only the 'localdomain'
+        set +e
+        ## search localdomain something || search something localdomain
+        grep -E "search[[:space:]]+((.+localdomain)|(localdomain.+))" $stubresolve
+        r=$?
+        set -e
+        if [[ "$r" -eq 0 ]]; then
+          sed -i 's/[[:space:]]localdomain//' $stubresolve
+        fi
+
+        ## Check if it is only the 'localdomain' configured
+        ## as search domain and remove the whole line
+        set +e
+        grep -E "search[[:space:]]localdomain$" $stubresolve
+        r=$?
+        set -e
+        if [[ "$r" -eq 0 ]]; then
+          sed -i '/search[[:space:]]localdomain/d' $stubresolve
+        fi
+      fi
+    EOH
+  end
 end
 
 #create a service for kubelet
@@ -107,6 +145,11 @@ template "#{kubelet_dropin_service_dir}/10-kubeadm.conf" do
   source "kubelet-service-dropin.erb"
   owner "root"
   group "root"
+  variables( lazy {
+    v = {}
+    v['resolv_override'] = ::File.exist?("#{node['kube-hops']['conf_dir']}/kubelet-resolv-stub.conf") ? "--resolv-conf=#{node['kube-hops']['conf_dir']}/kubelet-resolv-stub.conf" : ""
+    v
+  })
 end
 
 bash "enable_and_start_kubelet_service" do
